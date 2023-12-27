@@ -2,7 +2,7 @@
 
 if [ "$EUID" -ne 0 ]; then
     echo "This script must be run with sudo privileges."
-    echo "Please run it again with 'sudo ./start.sh'"
+    echo "Please run it again with 'sudo ./ubuntu-start.sh'"
     exit 1
 fi
 
