@@ -61,83 +61,50 @@ You can manage the simulated environment by using the built-in DVD Management Co
 ## Flight States
 
 Damn Vulnerable Drone simulates various drone states for a realistic testing environment. Users can manage the drone states in real-time by using the Management Console.
-1. Initial Boot & Configuration [INIT]
-2. Idle Standby [IDLE] (waiting for GCS connection)
-3. Active Flight [ACT]
-4. Autopilot Flight [AUTO]
-5. Emergency, Return-To-Home (RTH) Landing [RTH]
-6. Post-Flight Data Processing [POST]
-7. Shutdown [DOWN]
+1. Initial Boot & Configuration
+2. Idle Standby
+3. Active Flight
+4. Autopilot Flight
+5. Emergency, Return-To-Home (RTH) Landing
+6. Post-Flight Data Processing
+7. Shutdown
 
 # Attack Scenarios
 
 The list of attack scenarios below is organized by stages and as includes which flight mode to execute the attack in brackets.
 
-<details>
-  <summary>Reconnaissance</summary>
-
-  - [ ] Drone Discovery
-  - [ ] Ground Station Discovery
-  - [ ] Network Fingerprinting
-</details>
-
-<details>
-  <summary>Wireless Network Attacks</summary>
-
-  - [ ] WEP Network Cracking - using Aircrack-ng
-  - [ ] Man-in-the-Middle Eavesdropping - using Wireshark
-</details>
-
-<details>
-  <summary>Denial of Service</summary>
-
-  - [ ] Ground Control DeAuth - using Airodump
-  - [ ] Telnet Process Killing
-  - [ ] Mid-flight Drone Shutdown
-  - [ ] MAVLink Router Table Overflow 
-</details>
-
-<details>
-  <summary>Reverse Engineering</summary>
-
-  - [ ] Telemtry Analysis
-  - [ ] Decompling Firmware
-</details>
-
-<details>
-  <summary>Protocol Spoofing</summary>
-
-  - [ ] MAVLink Message Replaying
-  - [ ] GPS Spoofing
-  - [ ] Drone Telemtry Data Spoofing - Tricking the GCS
-</details>
-
-<details>
-  <summary>Command Injection & Hijacking</summary>
-
-  - [ ] MAVLink Message Command Injection
-  - [ ] Drone Hijacking via Ground Control Station Spoofing
-  - [ ] Ground Control Station Hijacking via Drone Laterl Movement
-</details>
-
-<details>
-  <summary>Firmware Attacks</summary>
-
-  - [ ] Malicious Firmware Upload
-  - [ ] Jailbreaking Parameter Tampering
-</details>
-
-<details>
-  <summary>Data Collection & Exfiltration</summary>
-
-  - [ ] AWS Secrets Extraction
-  - [ ] Drone Wifi Client Data Leakage
-  - [ ] Live Drone Video Camera Streaming
-</details>
-
-<details>
-  <summary>Miscellaneous</summary>
-</details>
+* **Reconnaissance**
+  * Drone Discovery
+  * Ground Station Discovery
+  * Network Fingerprinting
+* **Wireless Network Attacks**
+  * WEP Network Cracking - using Aircrack-ng
+  * Man-in-the-Middle Eavesdropping - using Wireshark
+* **Denial of Service**
+  * Ground Control DeAuth - using Airodump
+  * Drone Computer Process Killing
+  * Mid-flight Drone Shutdown
+  * MAVLink Router Table Overflow 
+**Reverse Engineering**
+  * Telemtry Analysis
+  * Decompling Firmware
+* **Protocol Spoofing**
+  * MAVLink Message Replaying
+  * GPS Spoofing
+  * Drone Telemtry Data Spoofing - Tricking the GCS
+* **Command Injection & Hijacking**
+  * MAVLink Message Command Injection
+  * Drone Hijacking via Ground Control Station Spoofing
+  * Ground Control Station Hijacking via Drone Laterl Movement
+* **Firmware Attacks**
+  * Malicious Firmware Upload
+  * Jailbreaking Parameter Tampering
+* **Data Collection & Exfiltration**
+  * Onboard SD Card Data Collection
+  * Flight Data Log Collection
+  * AWS Secrets Extraction
+  * Drone Wifi Client Data Leakage
+  * Live Drone Video Camera Streaming
 
 # License
 
