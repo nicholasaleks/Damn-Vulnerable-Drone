@@ -106,6 +106,23 @@ The list of attack scenarios below is organized by stages. Note that some attack
   * Drone Wifi Client Data Leakage
   * Live Drone Video Camera Streaming
 
+# Prerequisites
+
+**Fully Deployed Mode**
+In fully deployed mode (with Virtual Wifi), Damn Vulnerable Drone requires the following mimum requirements:
+* Ubuntu 22.04 VM (Simulator)
+  * 4-8 GB RAM
+  * 2-4 Processor Cores
+  * 20 GB Disk Storage
+  * Docker
+* Kali Linux VM (Attacker Machine)
+  * 4-8 GB RAM
+  * 2-4 Processor Cores
+  * 100 GB Disk Storage
+
+# Installation
+
+
 # License
 
 It is distributed under the MIT License. See LICENSE for more information.
