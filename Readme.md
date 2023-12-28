@@ -74,71 +74,69 @@ Damn Vulnerable Drone simulates various drone states for a realistic testing env
 The list of attack scenarios below is organized by stages and as includes which flight mode to execute the attack in brackets.
 
 <details>
-  <summary>**Reconnaissance**</summary>
+  <summary>Reconnaissance</summary>
 
-  - [ ] Drone Discovery (IDLE)
-  - [ ] Ground Station Discovery (IDLE)
-  - [ ] Network Fingerprinting (IDLE)
+  - [ ] Drone Discovery
+  - [ ] Ground Station Discovery
+  - [ ] Network Fingerprinting
 </details>
 
 <details>
-  <summary>**Wireless Network Attacks**</summary>
+  <summary>Wireless Network Attacks</summary>
 
-  - [ ] WEP Network Cracking (ACT) - using Aircrack-ng
-  - [ ] Man-in-the-Middle Eavesdropping (ACT) - using Wireshark
+  - [ ] WEP Network Cracking - using Aircrack-ng
+  - [ ] Man-in-the-Middle Eavesdropping - using Wireshark
 </details>
 
 <details>
-  <summary>**Denial of Service**</summary>
+  <summary>Denial of Service</summary>
 
-  - [ ] Ground Control DeAuth (ACT)
-  - [ ] Telnet Process Killing (ACT)
-  - [ ] Mid-flight Drone Shutdown (ACT)
+  - [ ] Ground Control DeAuth - using Airodump
+  - [ ] Telnet Process Killing
+  - [ ] Mid-flight Drone Shutdown
   - [ ] MAVLink Router Table Overflow 
 </details>
 
 <details>
-  <summary>**Reverse Engineering**</summary>
+  <summary>Reverse Engineering</summary>
 
-  - [ ] Telemtry Analysis (ACT)
-  - [ ] Decompling Firmware (POST)
+  - [ ] Telemtry Analysis
+  - [ ] Decompling Firmware
 </details>
 
 <details>
-  <summary>**Protocol Spoofing**</summary>
+  <summary>Protocol Spoofing</summary>
 
-  - [ ] MAVLink Message Replaying (ACT)
-  - [ ] GPS Spoofing (ACT)
-  - [ ] Drone Telemtry Data Spoofing (ACT) - Tricking the GCS
+  - [ ] MAVLink Message Replaying
+  - [ ] GPS Spoofing
+  - [ ] Drone Telemtry Data Spoofing - Tricking the GCS
 </details>
 
 <details>
-  <summary>**Command Injection & Hijacking**</summary>
+  <summary>Command Injection & Hijacking</summary>
 
-  - [ ] MAVLink Message Command Injection (ACT)
-  - [ ] Drone Hijacking via Ground Control Station Spoofing (INIT)
-  - [ ] Ground Control Station Hijacking via Drone Laterl Movement (ACT)
+  - [ ] MAVLink Message Command Injection
+  - [ ] Drone Hijacking via Ground Control Station Spoofing
+  - [ ] Ground Control Station Hijacking via Drone Laterl Movement
 </details>
 
 <details>
-  <summary>**Firmware Attacks**</summary>
+  <summary>Firmware Attacks</summary>
 
-  - [ ] Malicious Firmware Upload (INIT)
+  - [ ] Malicious Firmware Upload
   - [ ] Jailbreaking Parameter Tampering
 </details>
 
 <details>
-  <summary>**Data Collection & Exfiltration**</summary>
+  <summary>Data Collection & Exfiltration</summary>
 
-  - [ ] AWS Secrets Extraction (ACT)
-  - [ ] Drone Wifi Client Data Leakage (POST)
-  - [ ] Live Drone Video Camera Streaming (ACT)
+  - [ ] AWS Secrets Extraction
+  - [ ] Drone Wifi Client Data Leakage
+  - [ ] Live Drone Video Camera Streaming
 </details>
 
 <details>
-  <summary>**Miscellaneous**</summary>
-
-  - [ ] 
+  <summary>Miscellaneous</summary>
 </details>
 
 # License
