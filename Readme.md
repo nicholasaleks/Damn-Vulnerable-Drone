@@ -71,7 +71,7 @@ Damn Vulnerable Drone simulates various drone states for a realistic testing env
 
 # Attack Scenarios
 
-The list of attack scenarios below is organized by stages and as includes which flight mode to execute the attack in brackets.
+The list of attack scenarios below is organized by stages. Note that some attacks are only possible during certain flight states.
 
 * **Reconnaissance**
   * Drone Discovery
