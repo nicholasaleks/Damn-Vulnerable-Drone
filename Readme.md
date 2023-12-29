@@ -8,18 +8,16 @@ Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator bas
 
 # Table of Contents
 
-* [About Damn Vulnerable Drone](#about)
+* [About Damn Vulnerable Drone](#about-damn-vulnerable-drone)
   * [Features](#features)
   * [Architecture](#architecture)
   * [Flight States](#flight-states)
 * [Attack Scenarios](#attack-scenarios)
 * [Operating Modes](#operating-modes)
 * [Installation](#installation)
-  * [Full-Deploy Mode Installation](#full-deploy)
-  * [Half-Baked Mode Installation](#half-baked)
+  * [Full-Deploy Mode Installation](#full-deploy-mode-installation)
+  * [Half-Baked Mode Installation](#half-baked-mode-installation)
 * [Management Console](#management-console)
-  * [Beginner/Advanced Modes](#changing-modes)
-  * [Changing Flight States](#changing-flight-states)
 * [Screenshots](#screenshots)
 * [Maintainers](#maintainers)
 * [Contributors](#contributors)
@@ -165,19 +163,19 @@ Add docker permissions to user
 
 `git clone https://github.com/nicholasaleks/Damn-Vulnerable-Drone.git && cd Damn-Vulnerable-Drone`
 
-## Starting & Stopping the Damn Vulnerable Drone Simulator
+## Starting & Stopping Damn Vulnerable Drone
 
 Damn Vulnerable Drone (Full-Deploy Mode) includes three useful bash scripts which will help you manage the state of your simulator.
 
 #### Build & Start
 
-The start script is used to both build and start the Damn Vulnerable Drone simulator. This script will automatically create a dvd.log file in the project directory, which you can use to view the simulator logs.
+The start script is used to both build and start the Damn Vulnerable Drone simulator. This script will automatically create a `dvd.log` log file in the project directory, which you can use to view the simulator logs.
 
 `sudo ./start.sh`
 
 #### Stop
 
-The stop script is used to perform a full cleanup of the Damn Vulnerable Drone simulator and all of its virtual interface artifacts.
+The stop script is used to perform a full cleanup of the Damn Vulnerable Drone simulator and all of its virtual interface artifacts. Stop logs are also appended to the `dvd.log` log file.
 
 `sudo ./stop.sh`
 
@@ -200,7 +198,33 @@ If you ever want to check the status of your simulator you can run the status sc
 
 `docker compose up --build`
 
-# 
+# Management Console
+
+TBD
+
+# Screenshots
+
+TBD
+
+# Maintainers
+
+- [Nick Aleks](https://github.com/nicholasaleks)
+
+# Contributor Appreciation
+
+A big Thank You to the kind people who helped make Damn Vulnerable Drone better:
+
+- [David Ansart](https://github.com/Raizo62)
+
+# Mentions
+
+TBD
+
+# Disclaimer
+
+Damn Vulnerable Drone is highly insecure, and as such, should not be deployed on internet facing servers.
+It is intentionally flawed and vulnerable, as such, it comes with no warranties.
+By using Damn Vulnerable Drone, you take full responsibility for using it.
 
 # License
 
