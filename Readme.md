@@ -13,7 +13,7 @@ Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator bas
   * [Architecture](#architecture)
   * [Flight States](#flight-states)
 * [Attack Scenarios](#attack-scenarios)
-* [Prerequisites](#prerequisites)
+* [Prerequisites & Operating Modes](#prerequisites)
 * [Installation](#installation)
   * [Installation - Docker](#docker)
   * [Installation - Kali](#kali)
@@ -104,16 +104,26 @@ The list of attack scenarios below is organized by stages. Note that some attack
   * Drone Wifi Client Data Leakage
   * Live Drone Video Camera Streaming
 
-# Prerequisites
+# Prerequisites & Operating Modes
 
-**Fully Deployed Mode**
-Damn Vulnerable Drone requires a Kali VM with the following minimum requirements:
-* Kali Linux VM (Attacker Machine)
+**Full Deploy Mode**
+`Full Deploy Mode` allows for Damn Vulnerable Drone to use a virtually simulated wifi network as the drones data-link connection between its Ground Station and Companion Computer.
+The system requirements to run `Full Deploy Mode` a Kali VM with the following minimum requirements:
+* Kali Linux VM (Ubuntu 22.04 is also supported)
   * 8-16 GB RAM
   * 2-4 Processor Cores
   * 100 GB Disk Storage
   * Docker
   * Docker Compose
+
+To install the `full deploy mode` see installation details below.
+
+**Half-Baked Mode (Docker-Only)**
+`Half-Baked Mode` essentially only runs the Damn Vulnerable Drone docker containers.
+Unlike `Full Deploy Mode` you are not limited to only running half-baked mode within a Kali Linux VM.
+However, half-baked mode does not support wifi simulations and you will need to assume that you have an established foothold on the drones data-link connection.
+
+To install the `half-baked mode` see installation details below.
 
 # Installation
 
