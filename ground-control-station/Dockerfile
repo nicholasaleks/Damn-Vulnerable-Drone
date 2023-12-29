@@ -37,4 +37,6 @@ RUN make
 RUN make tools
 RUN make install
 
+WORKDIR /
+
 ENTRYPOINT /start.sh
