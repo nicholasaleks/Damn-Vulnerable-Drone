@@ -15,8 +15,8 @@ Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator bas
 * [Attack Scenarios](#attack-scenarios)
 * [Operating Modes](#operating-modes)
 * [Installation](#installation)
-  * [Installation - Docker](#docker)
-  * [Installation - Kali](#kali)
+  * [Full-Deploy Mode Installation](#full-deploy)
+  * [Half-Baked Mode Installation](#half-baked)
 * [Management Console](#management-console)
   * [Beginner/Advanced Modes](#changing-modes)
   * [Changing Flight States](#changing-flight-states)
@@ -106,10 +106,12 @@ The list of attack scenarios below is organized by stages. Note that some attack
 
 # Operating Modes
 
-**Full Deploy Mode**
+To support a wide variety of users and use cases Damn Vulnerable Drone can be deployed in two modes. 
 
-`Full Deploy Mode` allows for Damn Vulnerable Drone to use a virtually simulated wifi network as the drones data-link connection between its Ground Station and Companion Computer.
-The system requirements to run `Full Deploy Mode` a Kali VM with the following minimum requirements:
+**Full-Deploy Mode**
+
+"Full-Deploy Mode" allows for Damn Vulnerable Drone to use a virtually simulated wifi network as the drones data-link connection between its Ground Station and Companion Computer.
+The system requirements to run "Full-Deploy Mode" a Kali VM with the following minimum requirements:
 * Kali Linux VM (Ubuntu 22.04 is also supported)
   * 8-16 GB RAM
   * 2-4 Processor Cores
@@ -117,19 +119,70 @@ The system requirements to run `Full Deploy Mode` a Kali VM with the following m
   * Docker
   * Docker Compose
 
-To install the `full deploy mode` see installation details below.
+To install the "Full-Deploy Mode" see installation details below.
 
 **Half-Baked Mode (Docker-Only)**
 
-`Half-Baked Mode` essentially only runs the Damn Vulnerable Drone docker containers.
-Unlike `Full Deploy Mode` you are not limited to only running half-baked mode within a Kali Linux VM.
-However, half-baked mode does not support wifi simulations and you will need to assume that you have an established foothold on the drones data-link connection.
+"Half-Baked Mode" essentially only runs the Damn Vulnerable Drone docker containers.
+Unlike "Full-Deploy Mode" you are not limited to only running "Half-Baked Mode" within a Kali Linux VM.
+However, "Half-Baked Mode" does not support wifi simulations and you will need to assume that you have an established foothold on the drones data-link connection.
 
-To install the `half-baked mode` see installation details below.
+To install the "Half-Baked Mode" see installation details below.
 
 # Installation
 
+## Full-Deploy Mode Installation 
+
+*Note: Fully-Deploy Mode was only tested on Kali Linux*
+
+### Install Docker & Docker Compose
+
+Add the docker apt source
+
+`printf '%s\n' "deb https://download.docker.com/linux/debian bullseye stable" | sudo tee /etc/apt/sources.list.d/docker-ce.list`
+
+Import the GPG Key
+
+`curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/docker-ce-archive-keyring.gpg`
+
+Update the apt repository
+
+`sudo apt update -y`
+
+Install Docker and Docker Compose
+
+`sudo apt install docker-ce docker-ce-cli containerd.io -y`
+
+Start the Docker Service
+
+`sudo systemctl enable docker –-now`
+
+Add docker permissions to user
+
+`sudo usermod -aG docker $USER`
+
+### Clone the repository
+
+`git clone https://github.com/nicholasaleks/Damn-Vulnerable-Drone.git && cd Damn-Vulnerable-Drone`
+
+### Build and Start the Damn Vulnerable Drone simulator
+
 `sudo ./start.sh`
+
+## Half-Baked Mode Installation
+
+*Note: If you have already followed the "Full-Deploy Mode" installation instructions you can skip these steps.*
+*We assume you already have docker and docker compose on your system."
+
+### Clone the repository
+
+`git clone https://github.com/nicholasaleks/Damn-Vulnerable-Drone.git && cd Damn-Vulnerable-Drone`
+
+### Build and Start Docker Containers
+
+`docker compose up --build`
+
+# 
 
 # License
 
