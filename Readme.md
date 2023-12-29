@@ -13,7 +13,7 @@ Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator bas
   * [Architecture](#architecture)
   * [Flight States](#flight-states)
 * [Attack Scenarios](#attack-scenarios)
-* [Operating Modes & Prerequisites](#operating-mode-prerequisites)
+* [Operating Modes](#operating-modes)
 * [Installation](#installation)
   * [Installation - Docker](#docker)
   * [Installation - Kali](#kali)
@@ -104,7 +104,7 @@ The list of attack scenarios below is organized by stages. Note that some attack
   * Drone Wifi Client Data Leakage
   * Live Drone Video Camera Streaming
 
-# Operating Modes & Prerequisites
+# Operating Modes
 
 **Full Deploy Mode**
 
