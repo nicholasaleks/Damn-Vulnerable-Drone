@@ -8,7 +8,6 @@ services:
       dockerfile: ./companion-computer/Dockerfile
     volumes:
       - companion-computer:/companion-computer
-    network_mode: host
 
   ground-control-station:
     container_name: ground-control-station
@@ -17,7 +16,6 @@ services:
       dockerfile: ./ground-control-station/Dockerfile
     volumes:
       - ground-control-station:/ground-control-station
-    network_mode: host
     depends_on:
       - companion-computer
 

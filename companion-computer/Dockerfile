@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     kmod \
     nano \
     hostapd \
+    dnsmasq \
     isc-dhcp-server \
     wpasupplicant \
     git \
@@ -28,6 +29,7 @@ RUN apt-get update && apt-get install -y \
 
 
 COPY companion-computer/dhcpd.conf /etc/dhcp/dhcpd.conf
+COPY companion-computer/dnsmasq.conf /etc/dnsmasq.conf
 COPY companion-computer/hostapd.conf /etc/hostapd.conf
 COPY companion-computer/isc-dhcp-server /etc/default/isc-dhcp-server
 COPY companion-computer/start-server.sh /start-server.sh
@@ -41,4 +43,4 @@ RUN make install
 
 WORKDIR /
 
-ENTRYPOINT /start-server.sh
+CMD tail -f /dev/null

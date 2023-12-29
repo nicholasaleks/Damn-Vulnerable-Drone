@@ -24,7 +24,7 @@ fi
 
 # Run vwifi-client if not already running
 if ! pgrep -x "vwifi-client" > /dev/null; then
-    vwifi-client 127.0.0.1 & > /dev/null 2>&1
+    vwifi-client 172.17.0.1 & > /dev/null 2>&1
     echo "vwifi-client started."
 else
     echo "vwifi-client is already running."
@@ -34,3 +34,5 @@ fi
 ip a a 192.168.13.1/24 dev wlan0
 service isc-dhcp-server start
 hostapd /etc/hostapd.conf
+
+tail -f /dev/null
