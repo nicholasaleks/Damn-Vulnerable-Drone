@@ -108,7 +108,7 @@ To support a wide variety of users and use cases Damn Vulnerable Drone can be de
 
 ### Full-Deploy Mode
 
-"Full-Deploy Mode" allows for Damn Vulnerable Drone to use a virtually simulated wifi network as the drones data-link connection between its Ground Station and Companion Computer.
+"Full-Deploy Mode" allows for Damn Vulnerable Drone to use a virtually simulated wifi network as the data-link connection between the Ground Station and Drone Companion Computer.
 The system requirements to run "Full-Deploy Mode" a Kali VM with the following minimum requirements:
 * Kali Linux VM (Ubuntu 22.04 is also supported)
   * 8-16 GB RAM
@@ -123,7 +123,7 @@ To install the "Full-Deploy Mode" see installation details below.
 
 "Half-Baked Mode" essentially only runs the Damn Vulnerable Drone docker containers.
 Unlike "Full-Deploy Mode" you are not limited to only running "Half-Baked Mode" within a Kali Linux VM.
-However, "Half-Baked Mode" does not support wifi simulations and you will need to assume that you have an established foothold on the drones data-link connection.
+However, "Half-Baked Mode" does not support wifi simulations and you will need to assume that you have an established foothold on the drone data-link connection.
 
 To install the "Half-Baked Mode" see installation details below.
 
