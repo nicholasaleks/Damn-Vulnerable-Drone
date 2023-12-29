@@ -165,9 +165,27 @@ Add docker permissions to user
 
 `git clone https://github.com/nicholasaleks/Damn-Vulnerable-Drone.git && cd Damn-Vulnerable-Drone`
 
-### Build and Start the Damn Vulnerable Drone simulator
+### Starting & Stopping the Damn Vulnerable Drone Simulator
+
+Damn Vulnerable Drone (Full-Deploy Mode) includes three useful bash scripts which will help you manage the state of your simulator.
+
+#### Build & Start
+
+The start script is used to both build and start the Damn Vulnerable Drone simulator. This script will automatically create a dvd.log file in the project directory, which you can use to view the simulator logs.
 
 `sudo ./start.sh`
+
+#### Stop
+
+The stop script is used to perform a full cleanup of the Damn Vulnerable Drone simulator and all of its virtual interface artifacts.
+
+`sudo ./stop.sh`
+
+#### Status
+
+If you ever want to check the status of your simulator you can run the status script as shown below.
+
+`sudo ./status.sh`
 
 ## Half-Baked Mode Installation
 
