@@ -109,7 +109,7 @@ The list of attack scenarios below is organized by stages. Note that some attack
 # Prerequisites
 
 **Fully Deployed Mode**
-Damn Vulnerable Drone requires a Kali VM with following minimum requirements:
+Damn Vulnerable Drone requires a Kali VM with the following minimum requirements:
 * Kali Linux VM (Attacker Machine)
   * 8-16 GB RAM
   * 2-4 Processor Cores
