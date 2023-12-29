@@ -114,6 +114,8 @@ Damn Vulnerable Drone requires a Kali VM with the following minimum requirements
   * 8-16 GB RAM
   * 2-4 Processor Cores
   * 100 GB Disk Storage
+  * Docker
+  * Docker Compose
 
 # Installation
 
