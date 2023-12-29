@@ -54,8 +54,7 @@ Damn Vulnerable Drone uses a Docker environment to encapsulate several container
 - *Ground Control Stations (GCS)*: Acts as the command and control center for the drone.
 - *Simulator*: Uses Gazebo to provide a realistic drone flight simulator
 
-The above four containers make up the simulated drone-stack. This stack is intended to be built and run on a Ubuntu 22.04 virtual machine.
-As an "attacker" you are intended to only interact with the simulated environment from a separate Kali virtual machine.
+The above four containers make up the simulated drone-stack. This stack is intended to be built and run with docker on a Kali VM.
 You can manage the simulated environment by using the built-in DVD Management Console.
 
 ## Flight States
