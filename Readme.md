@@ -109,19 +109,15 @@ The list of attack scenarios below is organized by stages. Note that some attack
 # Prerequisites
 
 **Fully Deployed Mode**
-In fully deployed mode (with Virtual Wifi), Damn Vulnerable Drone requires the following minimum requirements:
-* Ubuntu 22.04 VM (Simulator)
-  * 4-8 GB RAM
-  * 2-4 Processor Cores
-  * 20 GB Disk Storage
-  * Docker
+Damn Vulnerable Drone requires a Kali VM with following minimum requirements:
 * Kali Linux VM (Attacker Machine)
-  * 4-8 GB RAM
+  * 8-16 GB RAM
   * 2-4 Processor Cores
   * 100 GB Disk Storage
 
 # Installation
 
+`sudo ./start.sh`
 
 # License
 
