@@ -28,11 +28,10 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 
-COPY companion-computer/dhcpd.conf /etc/dhcp/dhcpd.conf
-COPY companion-computer/dnsmasq.conf /etc/dnsmasq.conf
-COPY companion-computer/hostapd.conf /etc/hostapd.conf
-COPY companion-computer/isc-dhcp-server /etc/default/isc-dhcp-server
-COPY companion-computer/start-server.sh /start-server.sh
+COPY companion-computer/conf/dhcpd.conf /etc/dhcp/dhcpd.conf
+COPY companion-computer/conf/dnsmasq.conf /etc/dnsmasq.conf
+COPY companion-computer/conf/hostapd.conf /etc/hostapd.conf
+COPY companion-computer/conf/isc-dhcp-server /etc/default/isc-dhcp-server
 
 # Get vwifi
 RUN git clone https://github.com/Raizo62/vwifi.git
