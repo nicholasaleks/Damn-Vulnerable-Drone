@@ -15,7 +15,6 @@ Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator bas
 * [Attack Scenarios](#attack-scenarios)
 * [Prerequisites](#prerequisites)
 * [Installation](#installation)
-  * [Installation - Ubuntu](#ubuntu)
   * [Installation - Docker](#docker)
   * [Installation - Kali](#kali)
 * [Management Console](#management-console)
