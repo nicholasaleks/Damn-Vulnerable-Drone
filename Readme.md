@@ -108,7 +108,7 @@ The list of attack scenarios below is organized by stages. Note that some attack
 
 To support a wide variety of users and use cases Damn Vulnerable Drone can be deployed in two modes. 
 
-**Full-Deploy Mode**
+### Full-Deploy Mode
 
 "Full-Deploy Mode" allows for Damn Vulnerable Drone to use a virtually simulated wifi network as the drones data-link connection between its Ground Station and Companion Computer.
 The system requirements to run "Full-Deploy Mode" a Kali VM with the following minimum requirements:
@@ -121,7 +121,7 @@ The system requirements to run "Full-Deploy Mode" a Kali VM with the following m
 
 To install the "Full-Deploy Mode" see installation details below.
 
-**Half-Baked Mode (Docker-Only)**
+### Half-Baked Mode (Docker-Only)
 
 "Half-Baked Mode" essentially only runs the Damn Vulnerable Drone docker containers.
 Unlike "Full-Deploy Mode" you are not limited to only running "Half-Baked Mode" within a Kali Linux VM.
@@ -165,7 +165,7 @@ Add docker permissions to user
 
 `git clone https://github.com/nicholasaleks/Damn-Vulnerable-Drone.git && cd Damn-Vulnerable-Drone`
 
-### Starting & Stopping the Damn Vulnerable Drone Simulator
+## Starting & Stopping the Damn Vulnerable Drone Simulator
 
 Damn Vulnerable Drone (Full-Deploy Mode) includes three useful bash scripts which will help you manage the state of your simulator.
 
