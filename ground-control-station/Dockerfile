@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y \
     libnl-genl-3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-COPY ground-control-station/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
+COPY ground-control-station/conf/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
 COPY ground-control-station/start.sh /start.sh
 
 # Get vwifi

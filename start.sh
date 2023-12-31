@@ -43,6 +43,22 @@ LOG_FILE="dvd.log"
     echo "[+] Adding vwifi interfaces..."
     sudo vwifi-add-interfaces 3
 
+    # Set wlan0 to monitor mode
+    output=$(sudo airmon-ng start wlan0 2>&1)
+
+    # Look for lines with PIDs and extract them
+    # This regex looks for lines that start with space(s), followed by numbers (PID), and then space/tab and text (process name)
+    pids=$(echo "$output" | grep -oP '^\s*\K[0-9]+(?=\s+\S)')
+
+    # Kill the processes
+    for pid in $pids; do
+        echo "Killing process $pid"
+        sudo kill $pid
+    done
+
+    # Start airmon-ng again
+    sudo airmon-ng start wlan0
+
     # Start Docker Compose
     echo "[+] Starting Docker Compose..."
     docker compose up --build -d
@@ -155,7 +171,8 @@ LOG_FILE="dvd.log"
     vwifi-ctrl ls
 
     echo "[+] Damn Vulnerable Drone Lab Environment is running..."
-    echo "[+] you can Ctrl+C this and view logs with 'tail -f dvd.log'"
+    echo "[+] - Virtual wlan0 put into monitoring mode (wlan0mon)"
+    echo "[+] - Log File: dvd.log"
 
 } |& tee -a "$LOG_FILE"
 
