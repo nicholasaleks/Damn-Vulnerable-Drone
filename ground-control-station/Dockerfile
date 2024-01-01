@@ -1,4 +1,4 @@
-# GROUND CONTROL STATION
+# GROUND CONTROL STATION CONTAINER
 FROM ubuntu:22.04
 
 # Avoid prompts during package installations

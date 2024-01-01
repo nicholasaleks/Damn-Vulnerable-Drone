@@ -19,6 +19,17 @@ services:
     depends_on:
       - companion-computer
 
+  flight-controller:
+    container_name: flight-controller
+    privileged: true
+    build:
+      dockerfile: ./flight-controller/Dockerfile
+    volumes:
+      - flight-controller:/flight-controller
+    depends_on:
+      - companion-computer
+
 volumes:
   companion-computer:
   ground-control-station:
+  flight-controller:
