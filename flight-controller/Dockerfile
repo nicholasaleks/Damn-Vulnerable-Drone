@@ -60,7 +60,6 @@ ENV VEHICLE ArduCopter
 
 # Command to run socat and sim_vehicle.py
 CMD /bin/bash -c "\
-    socat pty,link=/dev/ttyACM0,raw,echo=0 tcp-listen:5000,bind=10.13.0.2,reuseaddr,fork & \
+    sudo socat pty,link=/dev/ttyACM0,raw,echo=0 tcp-listen:5000,bind=10.13.0.2,reuseaddr,fork & \
     sleep 2 && \
-    /ardupilot/Tools/autotest/sim_vehicle.py --vehicle $VEHICLE -I$INSTANCE --custom-location=$LAT,$LON,$ALT,$DIR -w --frame $MODEL --no-rebuild --no-mavproxy --speedup $SPEEDUP -A '--uartA=uart:/dev/ttyACM0' \
-    "
+    /ardupilot/Tools/autotest/sim_vehicle.py --vehicle $VEHICLE -I$INSTANCE --custom-location=$LAT,$LON,$ALT,$DIR -w --frame $MODEL --no-rebuild --no-mavproxy --speedup $SPEEDUP -A '--uartA=uart:/dev/ttyACM0:57600'"

@@ -26,8 +26,10 @@ RUN apt-get update && apt-get install -y \
     g++ \
     libnl-3-dev \
     libnl-genl-3-dev \
+    python3 \
+    python3-pip \
+    && pip3 install MAVProxy \
     && rm -rf /var/lib/apt/lists/*
-
 
 COPY companion-computer/conf/dhcpd.conf /etc/dhcp/dhcpd.conf
 COPY companion-computer/conf/dnsmasq.conf /etc/dnsmasq.conf
