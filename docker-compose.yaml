@@ -1,35 +1,42 @@
 version: '3'
 
 services:
+  flight-controller:
+    container_name: flight-controller
+    privileged: true
+    build:
+      dockerfile: ./flight-controller/Dockerfile
+    networks:
+      simulator:
+        ipv4_address: 10.13.0.2
+
   companion-computer:
     container_name: companion-computer
     privileged: true
     build:
       dockerfile: ./companion-computer/Dockerfile
-    volumes:
-      - companion-computer:/companion-computer
+    depends_on:
+      - flight-controller
+    networks:
+      simulator:
+        ipv4_address: 10.13.0.3
 
   ground-control-station:
     container_name: ground-control-station
     privileged: true
     build:
       dockerfile: ./ground-control-station/Dockerfile
-    volumes:
-      - ground-control-station:/ground-control-station
     depends_on:
       - companion-computer
+    networks:
+      simulator:
+        ipv4_address: 10.13.0.4
 
-  flight-controller:
-    container_name: flight-controller
-    privileged: true
-    build:
-      dockerfile: ./flight-controller/Dockerfile
-    volumes:
-      - flight-controller:/flight-controller
-    depends_on:
-      - companion-computer
-
-volumes:
-  companion-computer:
-  ground-control-station:
-  flight-controller:
+networks:
+  simulator:
+    internal: true
+    name: simulator
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "10.13.0.0/24"

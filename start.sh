@@ -68,8 +68,8 @@ LOG_FILE="dvd.log"
 
     # Wait for Docker containers to start up
     # Check for Docker containers readiness
-    MAX_RETRIES=60
-    RETRY_INTERVAL=6
+    MAX_RETRIES=100
+    RETRY_INTERVAL=10
     RETRY_COUNT=0
 
     while [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; do

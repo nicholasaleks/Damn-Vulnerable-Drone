@@ -16,7 +16,7 @@ RUN groupadd ${USER_NAME} --gid ${USER_GID}\
     && useradd -l -m ${USER_NAME} -u ${USER_UID} -g ${USER_GID} -s /bin/bash
 
 # Install prerequisites 
-RUN apt-get update && apt-get install -y sudo lsb-release tzdata git; git config --global url."https://github.com/".insteadOf git://github.com/
+RUN apt-get update && apt-get install -y sudo socat lsb-release tzdata git; git config --global url."https://github.com/".insteadOf git://github.com/
 
 # Clone ArduPilot from GitHub
 RUN git clone https://github.com/ArduPilot/ardupilot.git ardupilot
@@ -58,4 +58,9 @@ ENV MODEL +
 ENV SPEEDUP 1
 ENV VEHICLE ArduCopter
 
-ENTRYPOINT /ardupilot/Tools/autotest/sim_vehicle.py --vehicle ${VEHICLE} -I${INSTANCE} --custom-location=${LAT},${LON},${ALT},${DIR} -w --frame ${MODEL} --no-rebuild --no-mavproxy --speedup ${SPEEDUP}
+# Command to run socat and sim_vehicle.py
+CMD /bin/bash -c "\
+    socat pty,link=/dev/ttyACM0,raw,echo=0 tcp-listen:5000,bind=10.13.0.2,reuseaddr,fork & \
+    sleep 2 && \
+    /ardupilot/Tools/autotest/sim_vehicle.py --vehicle $VEHICLE -I$INSTANCE --custom-location=$LAT,$LON,$ALT,$DIR -w --frame $MODEL --no-rebuild --no-mavproxy --speedup $SPEEDUP -A '--uartA=uart:/dev/ttyACM0' \
+    "

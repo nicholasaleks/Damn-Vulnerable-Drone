@@ -27,6 +27,10 @@ LOG_FILE="dvd.log"
     echo "[+] Unloading kernel module mac80211_hwsim..."
     sudo modprobe -r mac80211_hwsim
 
+    # Reloading Network
+    sudo service networking start
+    sudo service NetworkManager start
+
     echo "[+] Damn Vulnerable Drone Lab Environment stopped."
 
 } |& tee -a "$LOG_FILE"

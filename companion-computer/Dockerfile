@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     iproute2 \
     kmod \
+    socat \
     nano \
     hostapd \
     dnsmasq \
