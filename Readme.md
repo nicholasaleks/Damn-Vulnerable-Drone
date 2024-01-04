@@ -27,7 +27,7 @@ Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator bas
 
 # About Damn Vulnerable Drone
 
-Damn Vulnerable Drone (DVD) was built to provide offensive security professionals with safe virtualized environment to practice a wide range of drone hacking techniques.
+Damn Vulnerable Drone (DVD) was built to provide offensive security professionals with a safe virtualized environment to practice a wide range of drone hacking techniques.
 
 The Damn Vulnerable Drone was designed to replicate a small UAV (Unmanned Aerial Vehicle) that has a low endurance and small Line-of-Sight (LOS) operating radius based on a WiFi data-link. The Drone uses [MAVLink](https://mavlink.io/en/) (a lightweight messaging protocol) to communicated with a simulated Ground Control Station (GCS) using [QGroundControl](http://qgroundcontrol.com/). The Drone also uses [ArduPilot](https://ardupilot.org/) (an open source autopilot system) to manage autonomous flight controls and Software-in-the-Loop (SITL) to emulate real-world drone behaviours by running actual flight code and telemtry, typically found in drone hardware, within [Gazebo](https://gazebosim.org/home) (a visual world physics simulator).
 
