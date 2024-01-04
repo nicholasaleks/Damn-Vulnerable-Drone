@@ -29,7 +29,7 @@ Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator bas
 
 Damn Vulnerable Drone (DVD) was built to provide offensive security professionals with a safe virtualized environment to practice a wide range of drone hacking techniques.
 
-The Damn Vulnerable Drone was designed to replicate a small UAV (Unmanned Aerial Vehicle) that has a low endurance and small Line-of-Sight (LOS) operating radius based on a WiFi data-link. The Drone uses [MAVLink](https://mavlink.io/en/) (a lightweight messaging protocol) to communicated with a simulated Ground Control Station (GCS) using [QGroundControl](http://qgroundcontrol.com/). The Drone also uses [ArduPilot](https://ardupilot.org/) (an open source autopilot system) to manage autonomous flight controls and Software-in-the-Loop (SITL) to emulate real-world drone behaviours by running actual flight code and telemtry, typically found in drone hardware, within [Gazebo](https://gazebosim.org/home) (a visual world physics simulator).
+DVD is engineered to mimic a compact Unmanned Aerial Vehicle (UAV) with limited endurance and a small operating range within Line-of-Sight (LOS), relying on a WiFi connection. It employs [MAVLink](https://mavlink.io/en/), a streamlined messaging protocol, for interactions with a virtual Conpanion Computer and Ground Control Station (GCS) using [QGroundControl](http://qgroundcontrol.com/). Additionally, the Drone utilizes [ArduPilot](https://ardupilot.org/), an open-source flight control software, for autonomous navigation and leverages Software-in-the-Loop (SITL) within [Gazebo](https://gazebosim.org/home), a dynamic physics simulator, to replicate authentic drone behaviors by executing real flight code and telemetry, typically embedded in drone systems
 
 While the Damn Vulnerable Drone setup doesn't mirror every drone architecture or configuration, the integrated tactics, techniques and scenarios are broadly applicable across various drone systems, models and communication protocols.
 
@@ -45,7 +45,7 @@ Damn Vulnerable Drone also contains a Simulatior Management Console (SMC), to he
 
 ## Architecture
 
-Damn Vulnerable Drone uses a Docker environment to encapsulate several containers which represent components that can be found in most drone-stacks.
+Damn Vulnerable Drone uses a Docker environment to encapsulate several containers which represent the common components found in most drone architectures.
 - *Drone Flight Control Unit (FCU)*: Controls the drone's flight mechanisms and autopilot.
 - *Drone Companion Computer*: Simulates the drone's onboard computer.
 - *Ground Control Stations (GCS)*: Acts as the command and control center for the drone.
