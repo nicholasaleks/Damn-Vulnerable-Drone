@@ -6,6 +6,8 @@ services:
     privileged: true
     build:
       dockerfile: ./flight-controller/Dockerfile
+    volumes:
+      - serial-uart-socket:/sockets
     networks:
       simulator:
         ipv4_address: 10.13.0.2
@@ -17,6 +19,8 @@ services:
       dockerfile: ./companion-computer/Dockerfile
     depends_on:
       - flight-controller
+    volumes:
+      - serial-uart-socket:/sockets
     networks:
       simulator:
         ipv4_address: 10.13.0.3
@@ -31,6 +35,9 @@ services:
     networks:
       simulator:
         ipv4_address: 10.13.0.4
+
+volumes:
+  serial-uart-socket:
 
 networks:
   simulator:

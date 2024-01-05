@@ -58,8 +58,7 @@ ENV MODEL +
 ENV SPEEDUP 1
 ENV VEHICLE ArduCopter
 
-# Command to run socat and sim_vehicle.py
-CMD /bin/bash -c "\
-    sudo socat pty,link=/dev/ttyACM0,raw,echo=0 tcp-listen:5000,bind=10.13.0.2,reuseaddr,fork & \
-    sleep 2 && \
-    /ardupilot/Tools/autotest/sim_vehicle.py --vehicle $VEHICLE -I$INSTANCE --custom-location=$LAT,$LON,$ALT,$DIR -w --frame $MODEL --no-rebuild --no-mavproxy --speedup $SPEEDUP -A '--uartA=uart:/dev/ttyACM0:57600'"
+COPY ./flight-controller/init.sh /ardupilot/mgmt/init.sh
+RUN sudo chmod +x /ardupilot/mgmt/init.sh
+
+ENTRYPOINT mgmt/init.sh

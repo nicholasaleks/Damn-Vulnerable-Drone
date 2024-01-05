@@ -45,4 +45,10 @@ RUN make install
 
 WORKDIR /
 
-CMD tail -f /dev/null
+# mavproxy.py --master=/dev/ttyUSB0 --baudrate 57600
+
+CMD /bin/bash -c "\
+    socat pty,link=/dev/ttyUSB0,raw,echo=0 unix-connect:/sockets/socket.sock & \
+    sleep 20 && \
+    echo 'Booting up companion computer...' && \
+    tail -f /dev/null"
