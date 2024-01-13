@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -y \
     libnl-genl-3-dev \
     python3 \
     python3-pip \
-    && pip3 install MAVProxy \
+    && pip3 install future pymavlink MAVProxy \
     && rm -rf /var/lib/apt/lists/*
 
 COPY companion-computer/conf/dhcpd.conf /etc/dhcp/dhcpd.conf
@@ -50,5 +50,5 @@ WORKDIR /
 CMD /bin/bash -c "\
     socat pty,link=/dev/ttyUSB0,raw,echo=0 unix-connect:/sockets/socket.sock & \
     sleep 20 && \
-    echo 'Booting up companion computer...' && \
+    echo 'Starting Companion Computer...' && \
     tail -f /dev/null"

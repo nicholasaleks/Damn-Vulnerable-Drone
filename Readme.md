@@ -131,7 +131,7 @@ To install the "Half-Baked Mode" see installation details below.
 
 ## Full-Deploy Mode Installation 
 
-*Note: Fully-Deploy Mode was only tested on Kali Linux*
+*Note: Fully-Deploy Mode was only tested on Kali Linux using Apple Silicon*
 
 ### Install Docker & Docker Compose
 

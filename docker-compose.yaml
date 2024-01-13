@@ -36,13 +36,26 @@ services:
       simulator:
         ipv4_address: 10.13.0.4
 
+  simulator:
+    container_name: simulator
+    privileged: true
+    build:
+      dockerfile: ./simulator/Dockerfile
+    depends_on:
+      - ground-control-station
+      - companion-computer
+      - flight-controller
+    networks:
+      simulator:
+        ipv4_address: 10.13.0.5
+
 volumes:
   serial-uart-socket:
 
 networks:
   simulator:
-    internal: true
     name: simulator
+    internal: false
     driver: bridge
     ipam:
       config:
