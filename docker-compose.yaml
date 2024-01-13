@@ -45,6 +45,8 @@ services:
       - ground-control-station
       - companion-computer
       - flight-controller
+    ports:
+      - "8080:8080"
     networks:
       simulator:
         ipv4_address: 10.13.0.5
