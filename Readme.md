@@ -17,7 +17,7 @@ Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator bas
 * [Installation](#installation)
   * [Full-Deploy Mode Installation](#full-deploy-mode-installation)
   * [Half-Baked Mode Installation](#half-baked-mode-installation)
-* [Management Console](#management-console)
+* [Simulator Management Web Console](#simulator-management-web-console)
 * [Screenshots](#screenshots)
 * [Maintainers](#maintainers)
 * [Contributors](#contributors)
@@ -40,7 +40,7 @@ Damn Vulnerable Drone also contains a Simulatior Management Console (SMC), to he
 - **Realistic Drone Simulation**: Utilizes the popular drone technologies and architectures to mimic real-world behaviors and vulnerabilities.
 - **Virtualized Environment**: Runs in a completely virtualized setup, making it accessible and safe for experimentation.
 - **Simulated Wireless Networking**: Simulated Wifi (802.11) interfaces to practice wireless drone attacks.
-- **Simulator Management Console**: Simple to use simulator management web console used to trigger scenarios and drone flight states.
+- **Simulator Management Web Console**: Simple to use simulator management web console used to trigger scenarios and drone flight states.
 - **Comprehensive Hacking Scenarios**: Ideal for practicing a wide range of drone hacking techniques, from basic reconnaissance to advanced exploitation.
 
 ## Architecture
@@ -55,11 +55,11 @@ Note that some of the components in the architecture are marked with a dashed li
 
 - **Drone Flight Controller** *(In-Scope)*: Controls the drone's flight mechanisms and autopilot.
 - **Drone Companion Computer** *(In-Scope)*: Simulates the drone's onboard computer.
-- **Operators Ground Control Station** *(In-Scope)*: Acts as the command and control center for the drone.
+- **Ground Control Station** *(In-Scope)*: Acts as the command and control center for the drone operator.
 - **Simulator** *(Out-of-Scope)*: Uses Gazebo to provide a realistic drone flight simulator as well as a management interface to control the simulated environment
 
 The above four containers make up the simulated drone-stack. This stack is intended to be built and run with docker on a Kali VM.
-You can manage the simulated environment by using the built-in DVD Management Console.
+You can manage the simulated environment by using the Simulator Management Web Console.
 
 ## Flight States
 
@@ -205,7 +205,7 @@ If you ever want to check the status of your simulator you can run the status sc
 
 `docker compose up --build`
 
-# Management Console
+# Simulator Management Web Console
 
 TBD
 
