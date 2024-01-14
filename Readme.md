@@ -3,7 +3,7 @@
 Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator based on the popular ArduPilot/MAVLink architecture, providing a realistic environment for hands-on drone hacking.
 
 <p align="center">
-  <img src="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/blob/master/simulator/static/images/Damn-Vulnerable-Drone-Banner.png?raw=true" alt="DVD"/>
+  <img src="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/blob/master/simulator/static/images/Damn-Vulnerable-Drone-Banner.png?raw=true" alt="Damn Vulnerable Drone Logo"/>
 </p>
 
 # Table of Contents
@@ -46,10 +46,17 @@ Damn Vulnerable Drone also contains a Simulatior Management Console (SMC), to he
 ## Architecture
 
 Damn Vulnerable Drone uses a Docker environment to encapsulate several containers which represent the common components found in most drone architectures.
-- *Drone Flight Control Unit (FCU)*: Controls the drone's flight mechanisms and autopilot.
-- *Drone Companion Computer*: Simulates the drone's onboard computer.
-- *Ground Control Stations (GCS)*: Acts as the command and control center for the drone.
-- *Simulator*: Uses Gazebo to provide a realistic drone flight simulator
+
+<p align="center">
+  <img src="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/blob/master/simulator/static/images/Damn-Vulnerable-Drone-Architecture.png?raw=true" alt="Damn Vulnerable Drone Architecture"/>
+</p>
+
+Note that some of the components in the architecture are marked with a dashed line ( - - - ), this represents that the components are part of the simulator and not the intended targets.
+
+- **Drone Flight Controller** *(In-Scope)*: Controls the drone's flight mechanisms and autopilot.
+- **Drone Companion Computer** *(In-Scope)*: Simulates the drone's onboard computer.
+- **Operators Ground Control Station** *(In-Scope)*: Acts as the command and control center for the drone.
+- **Simulator** *(Out-of-Scope)*: Uses Gazebo to provide a realistic drone flight simulator as well as a management interface to control the simulated environment
 
 The above four containers make up the simulated drone-stack. This stack is intended to be built and run with docker on a Kali VM.
 You can manage the simulated environment by using the built-in DVD Management Console.

@@ -32,14 +32,6 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | b
 ENV NVM_DIR /root/.nvm
 RUN . "$NVM_DIR/nvm.sh" && nvm install 8
 
-# Clone GzWeb and build it
-USER root
-WORKDIR /root
-RUN git clone https://github.com/osrf/gzweb
-WORKDIR /root/gzweb
-RUN git checkout gzweb_1.4.1
-RUN /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy --- -m"
-
 # Set up a user environment, replace '1000' with your user / group id
 RUN useradd -m gazebo -u 1000 && \
     echo "gazebo:gazebo" | chpasswd && \
@@ -54,10 +46,12 @@ RUN useradd -m gazebo -u 1000 && \
 USER gazebo
 WORKDIR /home/gazebo
 
-# Clone and build GzWeb
+# Clone and build GzWeb without downloading models
 RUN git clone https://github.com/osrf/gzweb && \
     cd gzweb && \
     git checkout gzweb_1.4.1 && \
-    /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy --- -m"
+    /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy"
+
+COPY simulator/hills.world /usr/share/gazebo-11/worlds/hills.world
 
 CMD ["/bin/bash", "-c", "cd /home/gazebo/gzweb && npm start"]
