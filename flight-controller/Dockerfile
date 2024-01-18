@@ -1,7 +1,7 @@
 # FLIGHT CONTROL UNIT CONTAINER
 FROM ubuntu:22.04
 
-EXPOSE 5760 9002 14550 14551
+EXPOSE 9002 14550 14551
 
 ARG COPTER_TAG=Copter-4.4
 ARG DEBIAN_FRONTEND=noninteractive
@@ -30,7 +30,7 @@ RUN groupadd ${USER_NAME} --gid ${USER_GID}\
 # Install prerequisites 
 RUN apt-get update && apt-get install -y sudo socat lsb-release python3-pip tzdata git; git config --global url."https://github.com/".insteadOf git://github.com/
 
-RUN pip3 install MAVProxy
+RUN pip3 install MAVProxy pymavlink
 
 # Clone ArduPilot from GitHub
 RUN git clone https://github.com/ArduPilot/ardupilot.git ardupilot

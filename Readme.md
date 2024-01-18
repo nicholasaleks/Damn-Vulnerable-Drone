@@ -53,10 +53,10 @@ Damn Vulnerable Drone uses a Docker environment to encapsulate several container
 
 Note that some of the components in the architecture are marked with a dashed line ( - - - ), this represents that the components are part of the simulator and not the intended targets.
 
-- **Drone Flight Controller** *(In-Scope)*: Controls the drone's flight mechanisms and autopilot.
-- **Drone Companion Computer** *(In-Scope)*: Simulates the drone's onboard computer.
-- **Ground Control Station** *(In-Scope)*: Acts as the command and control center for the drone operator.
-- **Simulator** *(Out-of-Scope)*: Uses Gazebo to provide a realistic drone flight simulator as well as a management interface to control the simulated environment
+- **Drone Flight Controller** *(Target)*: Controls the drone's flight mechanisms and autopilot.
+- **Drone Companion Computer** *(Target)*: Simulates the drone's onboard computer.
+- **Ground Control Station** *(Target)*: Acts as the command and control center for the drone operator.
+- **Simulator** *(Not a Target)*: Uses Gazebo to provide a realistic drone flight simulator as well as a management interface to control the simulated environment
 
 The above four containers make up the simulated drone-stack. This stack is intended to be built and run with docker on a Kali VM.
 You can manage the simulated environment by using the Simulator Management Web Console.

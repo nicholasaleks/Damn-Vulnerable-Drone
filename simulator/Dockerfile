@@ -28,6 +28,9 @@ RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pk
     libtinyxml-dev \
     python2.7
 
+# Create Symbolic link for python2.7
+RUN ln -s /usr/bin/python2.7 /usr/bin/python
+
 # Install ArduPilot Gazebo Plugin
 WORKDIR /Simulator
 RUN git clone https://github.com/khancyr/ardupilot_gazebo && \
@@ -52,18 +55,15 @@ RUN n 8.14.0
 # Ignore git warnings
 RUN git config --global advice.detachedHead false
 
-# # Clone and build GzWeb
+# Clone and build GzWeb
 RUN git clone https://github.com/osrf/gzweb && \
     cd gzweb && \
     git checkout gzweb_1.4.1 && \
-    /bin/bash -c "source /usr/share/gazebo-11/setup.sh && npm run deploy --- -m"
+    /bin/bash -c "source /usr/share/gazebo-11/setup.sh && npm run deploy --- -m local"
 
-# Setup a virtual frame buffer
-# RUN apt-get install -y xvfb
-# RUN Xvfb :1 -screen 0 1600x1200x16 &
-# ENV DISPLAY :1
+# Replace IP address in model.sdf
+RUN sed -i.bak 's/127.0.0.1/10.13.0.2/g' /Simulator/ardupilot_gazebo/models/iris_with_ardupilot/model.sdf
 
-# gzserver --verbose /Simulator/ardupilot_gazebo/worlds/iris_arducopter_runway.world
-# cd /Simulator/gzweb && npm start
-
-CMD tail -f /dev/null
+# Run the Gazebo Server and Web App
+CMD gzserver --verbose /Simulator/ardupilot_gazebo/worlds/iris_arducopter_runway.world & \
+    cd /Simulator/gzweb && sleep 25 && npm start
