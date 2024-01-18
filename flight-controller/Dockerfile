@@ -1,6 +1,8 @@
 # FLIGHT CONTROL UNIT CONTAINER
 FROM ubuntu:22.04
 
+EXPOSE 5760 9002 14550 14551
+
 ARG COPTER_TAG=Copter-4.4
 ARG DEBIAN_FRONTEND=noninteractive
 ARG USER_NAME=ardupilot
@@ -11,12 +13,24 @@ ARG SKIP_AP_GRAPHIC_ENV=1
 ARG SKIP_AP_COV_ENV=1
 ARG SKIP_AP_GIT_CHECK=1
 
+# Variables for simulator
+ENV INSTANCE 0
+ENV LAT 42.3898
+ENV LON -71.1476
+ENV ALT 14
+ENV DIR 270
+ENV MODEL +
+ENV SPEEDUP 1
+ENV VEHICLE ArduCopter
+
 # Create User & Group
 RUN groupadd ${USER_NAME} --gid ${USER_GID}\
     && useradd -l -m ${USER_NAME} -u ${USER_UID} -g ${USER_GID} -s /bin/bash
 
 # Install prerequisites 
-RUN apt-get update && apt-get install -y sudo socat lsb-release tzdata git; git config --global url."https://github.com/".insteadOf git://github.com/
+RUN apt-get update && apt-get install -y sudo socat lsb-release python3-pip tzdata git; git config --global url."https://github.com/".insteadOf git://github.com/
+
+RUN pip3 install MAVProxy
 
 # Clone ArduPilot from GitHub
 RUN git clone https://github.com/ArduPilot/ardupilot.git ardupilot
@@ -45,18 +59,6 @@ RUN Tools/environment_install/install-prereqs-ubuntu.sh -y
 RUN ./waf distclean
 RUN ./waf configure --board sitl
 RUN ./waf copter
-
-EXPOSE 5760/tcp
-
-# Variables for simulator
-ENV INSTANCE 0
-ENV LAT 42.3898
-ENV LON -71.1476
-ENV ALT 14
-ENV DIR 270
-ENV MODEL +
-ENV SPEEDUP 1
-ENV VEHICLE ArduCopter
 
 COPY ./flight-controller/init.sh /ardupilot/mgmt/init.sh
 RUN sudo chmod +x /ardupilot/mgmt/init.sh

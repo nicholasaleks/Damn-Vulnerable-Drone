@@ -41,10 +41,6 @@ services:
     privileged: true
     build:
       dockerfile: ./simulator/Dockerfile
-    depends_on:
-      - ground-control-station
-      - companion-computer
-      - flight-controller
     ports:
       - "8080:8080"
     networks:

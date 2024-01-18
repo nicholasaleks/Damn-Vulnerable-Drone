@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     isc-dhcp-server \
     wpasupplicant \
     git \
+    nmap \
     python3 \
     net-tools \
     iputils-ping \
