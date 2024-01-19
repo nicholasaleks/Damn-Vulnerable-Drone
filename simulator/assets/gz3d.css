@@ -1,0 +1,861 @@
+/* DAMN VULNERABLE DRONE STYLES */
+
+/* Remove Elements from the UI */
+#leftPanel {
+  display: none;
+}
+#mainMenuTab {
+  display: none;
+}
+#treeMenuTab {
+  display: none;
+}
+#insertMenuTab {
+  display: none;
+}
+#manipulatorModeFieldset {
+  display: none;
+}
+#simpleShapesFieldset {
+  display: none;
+}
+#lightsFieldset {
+  display: none;
+}
+
+#play-header-fieldset {
+  position: absolute;
+  left: 10px !important;
+  top: 0em;
+  z-index: 1000;
+}
+
+#clock-mouse {
+  position: absolute;
+  left: 63px !important;
+  top: 0.5em;
+  z-index: 100;
+  width: 11.5em;
+  height: 2.5em;
+  background-color: rgb(51, 51, 51);
+  padding: 3px;
+  border-radius: 5px;
+}
+
+/* general */
+body
+{
+  font-size-adjust: 0.5;
+}
+input:invalid
+{
+  box-shadow: none;
+}
+input[type=number]
+{
+  -moz-appearance:textfield;
+}
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button
+{
+  -webkit-appearance: none;
+  margin: 0;
+}
+.ui-content
+{
+  overflow: hidden;
+}
+#container
+{
+  padding: 0px;
+  position : absolute;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+}
+/* header */
+.header-button
+{
+  float: left;
+  height: 1.45em;
+  width: 1.45em;
+  padding: 0.65em;;
+}
+.header-button img
+{
+  height: 1.45em;
+  vertical-align: middle;
+}
+#clock-touch
+{
+  z-index: 100;
+}
+#clock-touch > p
+{
+  text-align: right;
+}
+#clock-mouse > p
+{
+  margin: 0;
+  margin-right: 0.25em;
+  font-size:0.95em;
+  text-align: right;
+}
+/* tabs */
+.tab
+{
+  width: 0;
+  height: 4em;
+  border-left: 2em solid;
+  border-top: 1em solid transparent;
+  border-bottom: 1em solid transparent;
+  z-index: 1001;
+  position: absolute;
+  left: 0em;
+}
+.tab img
+{
+  position: relative;
+  left: -1.7em;
+  top: 1.2em;
+  height: 1.45em;
+}
+.tab:nth-of-type(1)
+{
+  top: 1.8em;
+}
+.tab:nth-of-type(2)
+{
+  top: 7.8em;
+}
+.tab:nth-of-type(3)
+{
+  top: 13.8em;
+}
+/* panel */
+#leftPanel
+{
+  height: 100%;
+  position: absolute;
+  left: 0;
+  z-index: 1002;
+}
+.panelsGroup
+{
+  height: 100%;
+  position: absolute;
+  top: 0;
+}
+.leftPanels
+{
+  display: none;
+  background-color: #2a2a2a;
+  height: 100%;
+  width: 23em;
+}
+.panelContent
+{
+  height: calc(100% - 2.51em);
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-top: 0.01em;
+}
+.panelTitle
+{
+  width: 100%;
+  height: 2.5em;
+  line-height: 1.8em;
+  background-color: #1d1d1d;
+}
+.panelTitle:hover
+{
+  background-color: #212121;
+}
+.panelTitle h3
+{
+  margin: 0.3em;
+  float: left;
+  width: calc(100% - 1.5em);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.panelTitle img
+{
+  height: 1.2em;
+  margin: 0.3em;
+  position: absolute;
+  right: 0;
+  top: 0.3em;
+}
+.leftPanels ul
+{
+  list-style: none;
+  width: 21em;
+  padding: 0em;
+  padding-left: 1em;
+  margin: 0em;
+}
+.clickable:hover
+{
+  cursor: pointer;
+}
+/* main menu*/
+#mainMenu li
+{
+  left: -1em;
+  padding: 0;
+  margin: 0;
+  width: 23em;
+}
+.collapsible_header
+{
+  font-size: 1.2em;
+}
+.collapsible_item
+{
+  font-size: 0.9em;
+  color: #bdbdbd;
+}
+/* insert menu */
+.insertMenuItem
+{
+  width: 7em;
+  height: 6.5em;
+  margin-left: 1.3em;
+  float: left;
+}
+.insertMenuItem img
+{
+  height: 5em;
+  max-width: 6em;
+}
+.insertMenuItem h1
+{
+  font-size: 1em;
+  margin: 0em;
+  width: 100%;
+}
+.insertMenuItemLight img
+{
+  height: 4em;
+  margin-top: 0.6em;
+}
+.insertMenuCategoryItem
+{
+  width: calc(100% - 5em);
+}
+.insertMenuCategoryItem img
+{
+  vertical-align: middle;
+  margin-left: 1em;
+  height: 4em;
+  max-width: 4em;
+  padding-top: 1em;
+}
+.insertMenuCategoryItemLight > img:nth-child(5)
+{
+  display: none;
+}
+/* world tree */
+.expandableTree
+{
+  font-weight: bolder;
+  padding-left: 0.5em;
+  width: calc(100% - 0.5em);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: none;
+  font-size: 1.2em;
+  background-color: #333333;
+  border-top: 1px solid #222222;
+  border-bottom: 1px solid #222222;
+  line-height: 2em;
+}
+.expandableTree:hover,
+.expandableTree:active
+{
+  background-color: #373737;
+}
+.notExpandableTree
+{
+  padding-left: 1.6em;
+  width: calc(100% - 1.6em);
+}
+.treeItem
+{
+  font-size: 1em;
+  line-height: 2em;
+  padding: 0;
+  width: 23em;
+  clear: both;
+  margin-left: -1em;
+}
+.treeItemImg
+{
+  height: 2em;
+  width: 3.5em;
+  text-align: center;
+  float: left;
+}
+.treeItemImg img
+{
+  height: 1.2em;
+  vertical-align: middle;
+}
+.treeItemTitle
+{
+  height: 2em;
+  width: 10.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  float: left;
+}
+.unselectedTreeItem
+{
+  background-color: #2a2a2a;
+}
+.selectedTreeItem
+{
+  background-color: #aaaaaa;
+}
+/* property panel */
+.propertyPanelImg
+{
+  text-align: center;
+  clear: both;
+}
+.propertyPanelImg > img
+{
+  height: 5em;
+}
+.propertyPanelHeader
+{
+  text-align: center;
+  clear: both;
+}
+.propertyPanelHeader > h4
+{
+  background-color: #aaaaaa;
+  float: left;
+  margin: 0;
+}
+.propertyPanelHeader > h4:first-child
+{
+  width: 60%;
+}
+.propertyPanelHeader > h4:nth-child(2)
+{
+  width: 40%;
+}
+/* Property general */
+.property div
+{
+  float: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: relative;
+  text-shadow: none;
+  font-size: 0.9em;
+}
+.property > div:first-child
+{
+  font-weight:bolder;
+  padding-left: 1.7em;
+  width: calc(60% - 1.7em);
+}
+.property > div:nth-child(2)
+{
+  width: 40%;
+}
+.propertyToggle
+{
+  text-align: right;
+  padding-right: 0.3em;
+  width: calc(40% - 0.3em) !important;
+}
+.propertyToggle > div:nth-child(2)
+{
+  float: right;
+  width: 3em;
+  text-align: left;
+  padding-left: 0.2em;
+  font-size: 1em;
+}
+.propertyToggle img
+{
+  vertical-align: middle;
+  height: 0.8em;
+}
+.propertyNumber
+{
+  text-align: right;
+  padding-right: 2em;
+  width: calc(40% - 2em) !important;
+}
+.propertyNumber div:first-child
+{
+  text-align: right;
+  float:right;
+  line-height: inherit;
+}
+.propertyNumberEdit div
+{
+  margin: 0;
+}
+.propertyNumberEdit input
+{
+  margin: 0;
+  padding: 0;
+  border: 0;
+  width: 80%;
+  background-color: #2a2a2a;
+  color: #ffffff;
+  text-align: right;
+  float:right;
+  padding-right: 2em;
+}
+.propertyUnit
+{
+  position: absolute !important;
+  right: 1em;
+}
+.propertyUnit3
+{
+  font-size: 0.75em !important;
+  line-height: inherit !important;
+}
+.propertyUnit4
+{
+  font-size: 0.6em !important;
+  right: 0.3em;
+}
+.expandableProperty
+{
+  font-weight: bolder;
+  padding-left: 0.2em;
+  width: calc(100% - 0.2em);
+  float: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: none;
+  font-size: 0.9em;
+}
+.expandableProperty
+{
+  font-size: 1.2em;
+  line-height: 1.9em;
+}
+.expandableProperty:hover,
+.expandableProperty:active
+{
+  background-color: #2e2e2e;
+}
+.expandableProperty div
+{
+  position: relative;
+  float: left;
+  width: calc(60% - 0.2em);
+}
+.expandableProperty > div:nth-child(2)
+{
+  position: relative;
+  float: left;
+  width: 40%;
+}
+.expandableProperty img
+{
+  vertical-align: middle;
+  height: 1em;
+}
+.expandedContent
+{
+  display: none;
+}
+.colorDisplay
+{
+  display: inline-block;
+  height: 1em;
+  width: calc(40% - 2em) !important;
+  border: 1px solid white;
+}
+.propertyColorEdit
+{
+  height: 100%;
+}
+.propertyColorEdit div
+{
+  background-color: #aaaaaa !important;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  border: none;
+}
+.propertyColorEdit input
+{
+  padding: 0;
+  margin: 0;
+  min-height: 1em;
+  height: 1.2em;
+}
+.colorDisplay
+{
+  margin-top: 0.3em;
+}
+/* Level 1 */
+.propertyLevel1 div
+{
+  font-size: 1.2em;
+  line-height: 1.9em;
+}
+.propertyLevel1 > div:first-child
+{
+  padding-left: 1.3em;
+  width: calc(60% - 1.3em);
+}
+/* Level 2 */
+.propertyLevel2 div
+{
+  font-size: 0.8em;
+}
+.propertyLevel2 > div:first-child
+{
+  padding-left: 2.8em;
+  width: calc(60% - 2.8em);
+}
+.expandableLevel2
+{
+  padding-left: 1.7em;
+  width: calc(100% - 1.7em);
+  font-size: 0.8em;
+}
+.expandableLevel2 img
+{
+  height: 0.8em;
+}
+.propertyLevel2 div,
+.propertyLevel2 input
+{
+  font-size: 1.1em;
+  line-height: 1.8em;
+  height: 1.8em;
+}
+.propertyLevel2 > div:first-child
+{
+  padding-left: 2.3em;
+  width: calc(60% - 2.3em);
+}
+.expandableLevel2
+{
+  font-size: 1.1em;
+  line-height: 1.8em;
+  padding-left: 1.2em;
+  width: calc(100% - 1.2em);
+}
+/* Level 3 */
+.propertyLevel3 div
+{
+  font-size: 0.7em;
+}
+.propertyLevel3 > div:first-child
+{
+  padding-left: 4.5em;
+  width: calc(60% - 4.5em);
+}
+.expandableLevel3
+{
+  padding-left: 3.5em;
+  width: calc(100% - 3.5em);
+  font-size: 0.7em;
+}
+.expandableLevel3 img
+{
+  height: 0.7em;
+}
+.propertyLevel3 div,
+.propertyLevel3 input
+{
+  font-size: 1.0em;
+  line-height: 1.7em;
+  height: 1.7em;
+}
+.propertyLevel3 > div:first-child
+{
+  padding-left: 3.3em;
+  width: calc(60% - 3.3em);
+}
+.expandableLevel3
+{
+  font-size: 1.0em;
+  line-height: 1.7em;
+  padding-left: 2.4em;
+  width: calc(100% - 2.4em);
+}
+/* Level 4 */
+.propertyLevel4 div
+{
+  font-size: 0.65em;
+}
+.propertyLevel4 > div:first-child
+{
+  padding-left: 6.2em;
+  width: calc(60% - 6.2em);
+}
+.expandableLevel4
+{
+  padding-left: 5.2em;
+  width: calc(100% - 5.2em);
+  font-size: 0.65em;
+}
+.expandableLevel4 img
+{
+  height: 0.65em;
+}
+.propertyLevel4 div,
+.propertyLevel4 input
+{
+  font-size: 0.9em;
+  line-height: 1.6em;
+  height: 1.6em;
+}
+.propertyLevel4 > div:first-child
+{
+  padding-left: 4.3em;
+  width: calc(60% - 4.3em);
+}
+.expandableLevel4
+{
+  font-size: 1.0em;
+  line-height: 1.7em;
+  padding-left: 3.0em;
+  width: calc(100% - 3.0em);
+}
+/* Level 5 */
+.propertyLevel5 div
+{
+  font-size: 0.6em;
+}
+.propertyLevel5 > div:first-child
+{
+  padding-left: 7.9em;
+  width: calc(60% - 7.9em);
+}
+.propertyLevel5 div,
+.propertyLevel5 input
+{
+  font-size: 0.8em;
+  line-height: 1.5em;
+  height: 1.5em;
+}
+.propertyLevel5 > div:first-child
+{
+  padding-left: 5.6em;
+  width: calc(60% - 5.6em);
+}
+#real-time-update-rate
+{
+  font-size: 1.1em;
+  padding-left: 1.4em;
+  width: calc(60% - 1.4em);
+}
+/* Background colors */
+.redBg div
+{
+  background-color: #772a2a !important;
+}
+.greenBg div
+{
+  background-color: #2a772a !important;
+}
+.blueBg div
+{
+  background-color: #2a2a77 !important;
+}
+.lightBg div,
+.lightBg input
+{
+  background-color: #414141 !important;
+}
+/* model popup */
+#model-popup
+{
+  width: 12em;
+  height: 0em;
+  border: none;
+}
+/* narrow screens*/
+@media (max-width: 35em)
+{
+  /* panel */
+  .leftPanels
+  {
+    width: 10.5em;
+  }
+  .leftPanels ul
+  {
+    width: 8.5em;
+  }
+  /* main menu */
+  #mainMenu li
+  {
+    width: 10.5em;
+  }
+  /* insert menu */
+  .insertMenuItem
+  {
+    width: calc(100% - 3.2em);
+    height: 4.3em;
+    margin-left: 0.5em;
+  }
+  .insertMenuItem img
+  {
+    height: 3.3em;
+    max-width: 4em;
+  }
+  .insertMenuItem h1
+  {
+    font-size: 0.7em;
+  }
+  .insertMenuItemLight img
+  {
+    height: 2.7em;
+    margin-top: 0.4em;
+  }
+  .insertMenuCategoryItem img
+  {
+    margin-left: 0;
+    padding-top: 0;
+  }
+  .insertMenuCategoryItem > img:nth-child(2),
+  .insertMenuCategoryItem > img:nth-child(3),
+  .insertMenuCategoryItemLight > img:nth-child(4)
+  {
+    display: none;
+  }
+  .insertMenuCategoryItemLight > img:nth-child(5)
+  {
+    display: initial;
+  }
+  /* world tree */
+  .treeItem
+  {
+    width: 10.5em;
+  }
+  .treeItemTitle
+  {
+    width: 6.5em;
+  }
+}
+/* short screens*/
+@media (max-height: 35em)
+{
+  /* tabs */
+  .tab
+  {
+    height: 2em;
+  }
+  .tab img
+  {
+    left: -1.6em;
+    top: 0.4em;
+    height: 1.3em;
+  }
+  .tab:nth-of-type(1)
+  {
+    top: 1.8em;
+  }
+  .tab:nth-of-type(2)
+  {
+    top: 5.8em;
+  }
+  .tab:nth-of-type(3)
+  {
+    top: 9.8em;
+  }
+}
+
+#logplay-slider
+{
+  right: 0px;
+  width: 34em;
+  position: absolute;
+  bottom: 0px;
+  z-index: 1000;
+}
+
+#logplay-slider input
+{
+  display: none;
+}
+
+#logplay-clock-fieldset
+{
+  position: absolute;
+  bottom: 3em;
+  right: 0.6em;
+  width: 6.3em;
+  height: 2.5em;
+  background-color: #333333;
+  padding: 3px;
+  border-radius: 3px;
+  z-index: 1000;
+}
+
+#logplay-clock-fieldset > p
+{
+  margin: 0;
+  margin-right: 0.25em;
+  text-align: right;
+}
+
+#logplay-rewind-fieldset
+{
+  position: absolute;
+  right: 19.5em;
+  bottom: 2.5em;
+  z-index: 1000;
+}
+
+#logplay-stepback-fieldset
+{
+  position: absolute;
+  right: 16.5em;
+  bottom: 2.5em;
+  z-index: 1000;
+}
+
+#logplay-play-fieldset
+{
+  position: absolute;
+  right: 13.5em;
+  bottom: 2.5em;
+  z-index: 1000;
+}
+
+#logplay-stepforward-fieldset
+{
+  position: absolute;
+  right: 10.5em;
+  bottom: 2.5em;
+  z-index: 1000;
+}
+
+#logplay-forward-fieldset
+{
+  position: absolute;
+  right: 7.5em;
+  bottom: 2.5em;
+  z-index: 1000;
+}
+
+
+.logplay-fieldset img
+{
+  width: 13px;
+  height: 16px;
+}

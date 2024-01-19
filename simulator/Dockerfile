@@ -59,11 +59,17 @@ RUN n 8.14.0
 # Ignore git warnings
 RUN git config --global advice.detachedHead false
 
-# Clone and build GzWeb
-RUN git clone https://github.com/nicholasaleks/dvd-mgmt.git && \
+# Clone GzWeb
+RUN git clone https://github.com/osrf/gzweb && \
     cd gzweb && \
-    /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy --- -m local"
+    git checkout gzweb_1.4.1
+
+# Build GzWeb
+RUN cd /Simulator/gzweb && /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy --- -m local"
+
+# Modify GzWeb CSS
+COPY simulator/assets/gz3d.css /Simulator/gzweb/http/client/style/gz3d.css
 
 # Run the Gazebo Server and Web App
 CMD gzserver --verbose /Simulator/ardupilot_gazebo/worlds/iris_arducopter_runway.world & \
-    cd /Simulator/gzweb && sleep 25 && npm start
+    cd /Simulator/gzweb && sleep 40 && npm start
