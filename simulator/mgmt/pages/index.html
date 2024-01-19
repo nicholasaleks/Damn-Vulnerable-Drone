@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gzweb in iframe</title>
+    <script>
+        function hideElementInIframe(iframeId, elementId) {
+            var iframe = document.getElementById(iframeId);
+            if (iframe.contentWindow) {
+                // Wait for the content window of the iframe to load
+                iframe.contentWindow.addEventListener('load', function() {
+                    var element = iframe.contentWindow.document.getElementById(elementId);
+                    if (element) {
+                        element.style.display = 'none';
+                    } else {
+                        console.error('Element not found:', elementId);
+                    }
+                });
+            } else {
+                console.error('Iframe not found:', iframeId);
+            }
+        }
+
+        // Call this function when the window loads
+        window.onload = function() {
+            hideElementInIframe('gzwebIframe', 'mainMenuTab');
+        }
+    </script>
+</head>
+<body>
+    <h1>Gzweb Embedded in Iframe</h1>
+    <iframe id="gzwebIframe" src="http://localhost:8080" width="800" height="600"></iframe>
+</body>
+</html>

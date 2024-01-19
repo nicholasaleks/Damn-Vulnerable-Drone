@@ -60,9 +60,8 @@ RUN n 8.14.0
 RUN git config --global advice.detachedHead false
 
 # Clone and build GzWeb
-RUN git clone https://github.com/osrf/gzweb && \
+RUN git clone git@github.com:nicholasaleks/dvd-mgmt.git && \
     cd gzweb && \
-    git checkout gzweb_1.4.1 && \
     /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy --- -m local"
 
 # Run the Gazebo Server and Web App
