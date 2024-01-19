@@ -2,7 +2,7 @@
 # Use a lightweight base image like Ubuntu
 FROM ubuntu:20.04
 
-EXPOSE 8080 9003
+EXPOSE 8080 9002
 
 # Set environment variable to avoid prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
@@ -17,6 +17,7 @@ RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pk
     libgazebo11-dev \
     git \
     npm \
+    net-tools \
     nano \
     cmake \
     build-essential \
@@ -26,15 +27,19 @@ RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pk
     imagemagick \
     libboost-dev \
     libtinyxml-dev \
-    python2.7
+    python2.7 && \
+    rm -rf /var/lib/apt/lists/*
 
 # Create Symbolic link for python2.7
 RUN ln -s /usr/bin/python2.7 /usr/bin/python
 
 # Install ArduPilot Gazebo Plugin
 WORKDIR /Simulator
-RUN git clone https://github.com/khancyr/ardupilot_gazebo && \
-    cd ardupilot_gazebo && \
+
+RUN git clone https://github.com/khancyr/ardupilot_gazebo.git
+COPY simulator/assets/model.sdf /Simulator/ardupilot_gazebo/models/iris_with_ardupilot/model.sdf
+
+RUN cd ardupilot_gazebo && \
     mkdir build && cd build && \
     cmake .. && \
     make -j4
@@ -44,7 +49,6 @@ WORKDIR /Simulator
 ENV GAZEBO_MODEL_PATH /Simulator/ardupilot_gazebo/models:/usr/share/gazebo-11/models:${GAZEBO_MODEL_PATH}
 ENV GAZEBO_RESOURCE_PATH /Simulator/ardupilot_gazebo/worlds:/usr/share/gazebo-11:/usr/share/gazebo-11:${GAZEBO_RESOURCE_PATH}
 ENV GAZEBO_PLUGIN_PATH /Simulator/ardupilot_gazebo/build:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:${GAZEBO_PLUGIN_PATH}
-
 
 # Install Node.js using Node Version Manager (NVM)
 RUN apt-get update && apt-get install -y curl
@@ -59,10 +63,7 @@ RUN git config --global advice.detachedHead false
 RUN git clone https://github.com/osrf/gzweb && \
     cd gzweb && \
     git checkout gzweb_1.4.1 && \
-    /bin/bash -c "source /usr/share/gazebo-11/setup.sh && npm run deploy --- -m local"
-
-# Replace IP address in model.sdf
-RUN sed -i.bak 's/127.0.0.1/10.13.0.2/g' /Simulator/ardupilot_gazebo/models/iris_with_ardupilot/model.sdf
+    /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy --- -m local"
 
 # Run the Gazebo Server and Web App
 CMD gzserver --verbose /Simulator/ardupilot_gazebo/worlds/iris_arducopter_runway.world & \

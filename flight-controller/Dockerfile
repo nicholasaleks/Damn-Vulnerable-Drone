@@ -1,7 +1,7 @@
 # FLIGHT CONTROL UNIT CONTAINER
 FROM ubuntu:22.04
 
-EXPOSE 9002 14550 14551
+EXPOSE 5760 9003
 
 ARG COPTER_TAG=Copter-4.4
 ARG DEBIAN_FRONTEND=noninteractive
@@ -19,7 +19,7 @@ ENV LAT 42.3898
 ENV LON -71.1476
 ENV ALT 14
 ENV DIR 270
-ENV MODEL +
+ENV MODEL gazebo-iris
 ENV SPEEDUP 1
 ENV VEHICLE ArduCopter
 
@@ -28,7 +28,12 @@ RUN groupadd ${USER_NAME} --gid ${USER_GID}\
     && useradd -l -m ${USER_NAME} -u ${USER_UID} -g ${USER_GID} -s /bin/bash
 
 # Install prerequisites 
-RUN apt-get update && apt-get install -y sudo socat lsb-release python3-pip tzdata git; git config --global url."https://github.com/".insteadOf git://github.com/
+# Install prerequisites and clear cache
+RUN apt-get update && \
+    apt-get install -y sudo socat net-tools lsb-release python3-pip tzdata git && \
+    git config --global url."https://github.com/".insteadOf git://github.com/ && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install MAVProxy pymavlink
 
