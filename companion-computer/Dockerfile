@@ -46,10 +46,11 @@ RUN make install
 
 WORKDIR /
 
-# mavproxy.py --master=/dev/ttyUSB0 --baudrate 57600
-
 CMD /bin/bash -c "\
     socat pty,link=/dev/ttyUSB0,raw,echo=0 unix-connect:/sockets/socket.sock & \
     sleep 20 && \
     echo 'Starting Companion Computer...' && \
     tail -f /dev/null"
+
+# To connect to the drone via MAVProxy:
+# mavproxy.py --master=/dev/ttyUSB0 --baudrate 57600
