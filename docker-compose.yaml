@@ -42,7 +42,8 @@ services:
     build:
       dockerfile: ./simulator/Dockerfile
     ports:
-      - "8080:8080"
+      - "8080:8080" # gzweb
+      - "8000:8000" # simulator mgmt
     # volumes:
     #   - sim_files:/Simulator
     networks:
