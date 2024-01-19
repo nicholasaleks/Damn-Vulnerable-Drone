@@ -136,6 +136,8 @@ To install the "Half-Baked Mode" see installation details below.
 
 # Installation
 
+Note: Both installation modes require internet access.
+
 ## Full-Deploy Mode Installation 
 
 *Note: Fully-Deploy Mode was only tested on Kali Linux using Apple Silicon*

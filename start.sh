@@ -2,6 +2,7 @@
 
 # Start Damn Vulnerable Drone simulator
 
+# Make sure we are running as root
 if [ "$EUID" -ne 0 ]; then
     echo "This script must be run with sudo privileges."
     echo "Please run it again with 'sudo ./install-ubuntu.sh'"
