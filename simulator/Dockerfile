@@ -7,8 +7,7 @@ EXPOSE 8000 8080 9002
 # Set environment variable to avoid prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update -y
-RUN apt install lsb-release wget gnupg -y
+RUN apt update -y && apt install lsb-release wget gnupg -y
 
 RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null && \
