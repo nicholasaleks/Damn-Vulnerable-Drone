@@ -2,7 +2,7 @@
 # Use a lightweight base image like Ubuntu
 FROM ubuntu:20.04
 
-EXPOSE 8080 9002
+EXPOSE 8000 8080 9002
 
 # Set environment variable to avoid prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
@@ -27,7 +27,8 @@ RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pk
     imagemagick \
     libboost-dev \
     libtinyxml-dev \
-    python2.7 && \
+    python3 \
+    python3-pip && \
     rm -rf /var/lib/apt/lists/*
 
 # Create Symbolic link for python2.7
@@ -70,6 +71,11 @@ RUN cd /Simulator/gzweb && /bin/bash -c "source /usr/share/gazebo/setup.sh && np
 # Modify GzWeb CSS
 COPY simulator/assets/gz3d.css /Simulator/gzweb/http/client/style/gz3d.css
 
+# Install Damn Vulnerable Drone Sim Mgmt Web App
+RUN pip3 install flask
+COPY simulator/mgmt /Simulator/mgmt
+
 # Run the Gazebo Server and Web App
 CMD gzserver --verbose /Simulator/ardupilot_gazebo/worlds/iris_arducopter_runway.world & \
-    cd /Simulator/gzweb && sleep 40 && npm start
+    cd /Simulator/gzweb && sleep 40 && npm start & \
+    cd /Simulator/mgmt && python3 app.py

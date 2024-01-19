@@ -43,15 +43,15 @@ services:
       dockerfile: ./simulator/Dockerfile
     ports:
       - "8080:8080"
-    volumes:
-      - sim_files:/Simulator
+    # volumes:
+    #   - sim_files:/Simulator
     networks:
       simulator:
         ipv4_address: 10.13.0.5
 
 volumes:
   serial-uart-socket:
-  sim_files:
+  # sim_files:
   ardupilot:
 
 networks:
