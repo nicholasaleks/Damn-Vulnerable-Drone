@@ -77,4 +77,4 @@ COPY simulator/mgmt /Simulator/mgmt
 # Run the Gazebo Server and Web App
 CMD gzserver --verbose /Simulator/ardupilot_gazebo/worlds/iris_arducopter_runway.world & \
     cd /Simulator/gzweb && sleep 40 && npm start & \
-    cd /Simulator/mgmt && python3 app.py
+    cd /Simulator/mgmt && sleep 40 && python3 app.py
