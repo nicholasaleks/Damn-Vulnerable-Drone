@@ -13,7 +13,6 @@ Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator bas
   * [Architecture](#architecture)
   * [Flight States](#flight-states)
 * [Attack Scenarios](#attack-scenarios)
-* [Operating Modes](#operating-modes)
 * [Installation](#installation)
   * [Full-Deploy Mode Installation](#full-deploy-mode-installation)
   * [Half-Baked Mode Installation](#half-baked-mode-installation)
@@ -29,17 +28,17 @@ Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator bas
 
 Damn Vulnerable Drone (DVD) was built to provide offensive security professionals with a safe virtualized environment to practice a wide range of drone hacking techniques.
 
-DVD is engineered to mimic a compact Unmanned Aerial Vehicle (UAV) with limited endurance and a small operating range within Line-of-Sight (LOS), relying on a WiFi connection. It employs [MAVLink](https://mavlink.io/en/), a streamlined messaging protocol, for interactions with a virtual Conpanion Computer and Ground Control Station (GCS) using [QGroundControl](http://qgroundcontrol.com/). Additionally, the Drone utilizes [ArduPilot](https://ardupilot.org/), an open-source flight control software, for autonomous navigation and leverages Software-in-the-Loop (SITL) within [Gazebo](https://gazebosim.org/home), a dynamic physics simulator, to replicate authentic drone behaviors by executing real flight code and telemetry, typically embedded in drone systems
+Damn Vulnerable Drone is engineered to mimic a compact Unmanned Aerial Vehicle (UAV) with limited endurance and a small operating range within Line-of-Sight (LOS), relying on a WiFi connection. It employs [MAVLink](https://mavlink.io/en/), a streamlined messaging protocol, for interactions with a virtual Companion Computer and Ground Control Station (GCS) using [QGroundControl](http://qgroundcontrol.com/). Additionally, the Drone utilizes [ArduPilot](https://ardupilot.org/), an open-source flight control software, for autonomous navigation and leverages Software-in-the-Loop (SITL) within [Gazebo](https://gazebosim.org/home), a dynamic physics simulator, to replicate authentic drone behaviors by executing real flight code and telemetry, typically embedded in drone systems
 
 While the Damn Vulnerable Drone setup doesn't mirror every drone architecture or configuration, the integrated tactics, techniques and scenarios are broadly applicable across various drone systems, models and communication protocols.
 
-Damn Vulnerable Drone also contains a Simulatior Management Console (SMC), to help provide users with full control of the simulator and guide the their learning experience.
+Damn Vulnerable Drone also contains a Simulation Management Web Console, to help provide users with full control of the simulator and guide their learning experience.
 
 ## Features
 
 - **Realistic Drone Simulation**: Utilizes the popular drone technologies and architectures to mimic real-world behaviors and vulnerabilities.
 - **Virtualized Environment**: Runs in a completely virtualized setup, making it accessible and safe for experimentation.
-- **Simulated Wireless Networking**: Simulated Wifi (802.11) interfaces to practice wireless drone attacks.
+- **Simulated Wireless Networking**: Simulated Wifi (802.11) interfaces to practice wireless drone attacks.(SMC)
 - **Simulator Management Web Console**: Simple to use simulator management web console used to trigger scenarios and drone flight states.
 - **Comprehensive Hacking Scenarios**: Ideal for practicing a wide range of drone hacking techniques, from basic reconnaissance to advanced exploitation.
 
@@ -89,16 +88,16 @@ The list of attack scenarios below is organized by stages. Note that some attack
   * Mid-flight Drone Shutdown
   * MAVLink Router Table Overflow 
 **Reverse Engineering**
-  * Telemtry Analysis
+  * Telemetry Analysis
   * Decompling Firmware
 * **Protocol Spoofing**
-  * MAVLink Message Replaying
+  * MAVLink Message
   * GPS Spoofing
-  * Drone Telemtry Data Spoofing - Tricking the GCS
+  * Drone Telemetry Data Spoofing - Tricking the GCS
 * **Command Injection & Hijacking**
   * MAVLink Message Command Injection
   * Drone Hijacking via Ground Control Station Spoofing
-  * Ground Control Station Hijacking via Drone Laterl Movement
+  * Ground Control Station Hijacking via Drone Lateral Movement
 * **Firmware Attacks**
   * Malicious Firmware Upload
   * Jailbreaking Parameter Tampering
@@ -109,13 +108,16 @@ The list of attack scenarios below is organized by stages. Note that some attack
   * Drone Wifi Client Data Leakage
   * Live Drone Video Camera Streaming
 
-# Operating Modes
+# Installation
 
 To support a wide variety of users and use cases Damn Vulnerable Drone can be deployed in two modes. 
 
-### Full-Deploy Mode
+Note: Both installation modes require internet access.
 
-"Full-Deploy Mode" allows for Damn Vulnerable Drone to use a virtually simulated wifi network as the data-link connection between the Ground Station and Drone Companion Computer.
+## Full-Deploy Mode Installation 
+
+"Full-Deploy Mode" allows for the most realistic virtual drone hacking simulation. It deploys a virtually simulated wifi network that you can interact with. This virtual wifi network acts as the data-link connection between the Ground Station and Drone Companion Computer, allowing for interesting attack scenarios...
+
 The system requirements to run "Full-Deploy Mode" a Kali VM with the following minimum requirements:
 * Kali Linux VM (Ubuntu 22.04 is also supported)
   * 8-16 GB RAM
@@ -123,22 +125,6 @@ The system requirements to run "Full-Deploy Mode" a Kali VM with the following m
   * 100 GB Disk Storage
   * Docker
   * Docker Compose
-
-To install the "Full-Deploy Mode" see installation details below.
-
-### Half-Baked Mode (Docker-Only)
-
-"Half-Baked Mode" essentially only runs the Damn Vulnerable Drone docker containers.
-Unlike "Full-Deploy Mode" you are not limited to only running "Half-Baked Mode" within a Kali Linux VM.
-However, "Half-Baked Mode" does not support wifi simulations and you will need to assume that you have an established foothold on the drone data-link connection.
-
-To install the "Half-Baked Mode" see installation details below.
-
-# Installation
-
-Note: Both installation modes require internet access.
-
-## Full-Deploy Mode Installation 
 
 *Note: Fully-Deploy Mode was only tested on Kali Linux using Apple Silicon*
 
@@ -196,8 +182,12 @@ If you ever want to check the status of your simulator you can run the status sc
 
 ## Half-Baked Mode Installation
 
+"Half-Baked Mode" essentially only runs the Damn Vulnerable Drone docker containers.
+Unlike "Full-Deploy Mode" you are not limited to only running "Half-Baked Mode" within a Kali Linux VM.
+However, "Half-Baked Mode" does not support wifi simulations and you will need to assume that you have an established foothold on the drone data-link connection.
+
 *Note: If you have already followed the "Full-Deploy Mode" installation instructions you can skip these steps.*
-*We assume you already have docker and docker compose on your system."
+*We assume initial access connectivity to the drone network."
 
 ### Clone the repository
 
