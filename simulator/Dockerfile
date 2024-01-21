@@ -49,9 +49,7 @@ WORKDIR /Simulator
 ENV GAZEBO_MODEL_PATH /Simulator/ardupilot_gazebo/models:/usr/share/gazebo-11/models:${GAZEBO_MODEL_PATH}
 ENV GAZEBO_RESOURCE_PATH /Simulator/ardupilot_gazebo/worlds:/usr/share/gazebo-11:/usr/share/gazebo-11:${GAZEBO_RESOURCE_PATH}
 ENV GAZEBO_PLUGIN_PATH /Simulator/ardupilot_gazebo/build:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:${GAZEBO_PLUGIN_PATH}
-
-# Install Node.js using Node Version Manager (NVM)
-RUN apt-get update && apt-get install -y curl
+ENV GAZEBO_MODEL_DATABASE_URI ''
 
 RUN npm install -g n
 RUN n 8.14.0
@@ -76,5 +74,5 @@ COPY simulator/mgmt /Simulator/mgmt
 
 # Run the Gazebo Server and Web App
 CMD gzserver --verbose /Simulator/ardupilot_gazebo/worlds/iris_arducopter_runway.world & \
-    cd /Simulator/gzweb && sleep 40 && npm start & \
-    cd /Simulator/mgmt && sleep 40 && python3 app.py
+    cd /Simulator/gzweb && sleep 15 && npm start & \
+    cd /Simulator/mgmt && sleep 15 && python3 app.py

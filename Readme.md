@@ -3,7 +3,7 @@
 Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator based on the popular ArduPilot/MAVLink architecture, providing a realistic environment for hands-on drone hacking.
 
 <p align="center">
-  <img src="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/blob/master/simulator/static/images/Damn-Vulnerable-Drone-Banner.png?raw=true" alt="Damn Vulnerable Drone Logo"/>
+  <img src="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/blob/master/simulator/mgmt/static/images/Damn-Vulnerable-Drone-Banner.png?raw=true" alt="Damn Vulnerable Drone Logo"/>
 </p>
 
 # Table of Contents
@@ -47,7 +47,7 @@ Damn Vulnerable Drone also contains a Simulation Management Web Console, to help
 Damn Vulnerable Drone uses a Docker environment to encapsulate several containers which represent the common components found in most drone architectures.
 
 <p align="center">
-  <img src="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/blob/master/simulator/static/images/Damn-Vulnerable-Drone-Architecture.png?raw=true" alt="Damn Vulnerable Drone Architecture"/>
+  <img src="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/blob/master/simulator/mgmt/static/images/Damn-Vulnerable-Drone-Architecture.png?raw=true" alt="Damn Vulnerable Drone Architecture"/>
 </p>
 
 Note that some of the components in the architecture are marked with a dashed line ( - - - ), this represents that the components are part of the simulator and not the intended targets.
