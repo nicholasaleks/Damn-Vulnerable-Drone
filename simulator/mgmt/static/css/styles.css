@@ -14531,26 +14531,7 @@ body {
   min-width: 0;
 }
 
-#layoutDrawer {
-  display: flex;
-}
-#layoutDrawer #layoutDrawer_nav {
-  flex-basis: 279px;
-  flex-shrink: 0;
-  transition: transform 0.15s ease-in-out;
-  z-index: 1038;
-  transform: translateX(-279px);
-}
-#layoutDrawer #layoutDrawer_content {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-width: 0;
-  flex-grow: 1;
-  min-height: calc(100vh - 4.5rem);
-  margin-left: -279px;
-}
+
 
 .drawer-toggled #layoutDrawer #layoutDrawer_nav {
   transform: translateX(0);
@@ -14592,10 +14573,10 @@ body {
 .nav-fixed #layoutDrawer #layoutDrawer_nav {
   width: 279px;
   height: 100vh;
-  z-index: 1038;
+  z-index: 1060;
 }
 .nav-fixed #layoutDrawer #layoutDrawer_nav .drawer {
-  padding-top: 4.5rem;
+  padding-top: 1.5rem;
 }
 .nav-fixed #layoutDrawer #layoutDrawer_nav .drawer .drawer-menu {
   overflow-y: auto;

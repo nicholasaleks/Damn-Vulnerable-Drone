@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('pages/index.html')
+    return render_template('pages/simulator.html')
 
 @app.errorhandler(404)
 def page_not_found(e):

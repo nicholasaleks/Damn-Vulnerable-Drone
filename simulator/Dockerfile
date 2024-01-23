@@ -37,7 +37,14 @@ RUN ln -s /usr/bin/python2.7 /usr/bin/python
 WORKDIR /Simulator
 
 RUN git clone https://github.com/khancyr/ardupilot_gazebo.git
-COPY simulator/assets/model.sdf /Simulator/ardupilot_gazebo/models/iris_with_ardupilot/model.sdf
+
+
+# Move assets to the right place
+# 3D Models
+COPY simulator/assets/models/drone_model.sdf /Simulator/ardupilot_gazebo/models/iris_with_ardupilot/model.sdf
+
+# 3D World
+COPY simulator/assets/worlds/damn-vulnerable-drone.world /Simulator/ardupilot_gazebo/worlds/iris_arducopter_runway.world
 
 RUN cd ardupilot_gazebo && \
     mkdir build && cd build && \
