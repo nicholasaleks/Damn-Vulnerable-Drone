@@ -41,10 +41,10 @@ RUN git clone https://github.com/khancyr/ardupilot_gazebo.git
 
 # Move assets to the right place
 # 3D Models
-COPY simulator/assets/models/drone_model.sdf /Simulator/ardupilot_gazebo/models/iris_with_ardupilot/model.sdf
+COPY simulator/assets/models /Simulator/ardupilot_gazebo/models
 
 # 3D World
-COPY simulator/assets/worlds/damn-vulnerable-drone.world /Simulator/ardupilot_gazebo/worlds/iris_arducopter_runway.world
+COPY simulator/assets/worlds /Simulator/ardupilot_gazebo/worlds
 
 RUN cd ardupilot_gazebo && \
     mkdir build && cd build && \
@@ -80,6 +80,6 @@ RUN pip3 install flask
 COPY simulator/mgmt /Simulator/mgmt
 
 # Run the Gazebo Server and Web App
-CMD gzserver --verbose /Simulator/ardupilot_gazebo/worlds/iris_arducopter_runway.world & \
+CMD gzserver --verbose /Simulator/ardupilot_gazebo/worlds/damn-vulnerable-drone.world & \
     cd /Simulator/gzweb && sleep 15 && npm start & \
     cd /Simulator/mgmt && sleep 15 && python3 app.py

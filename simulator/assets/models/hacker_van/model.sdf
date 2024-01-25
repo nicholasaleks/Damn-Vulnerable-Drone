@@ -6,7 +6,7 @@
       <collision name="base_collision">
         <geometry>
           <mesh>
-            <scale>1 1 1</scale> <!-- Adjust scale if necessary -->
+            <scale>1 1 1</scale>
             <uri>model://hacker_van/meshes/van.dae</uri>
           </mesh>
         </geometry>
@@ -26,7 +26,7 @@
       <visual name="base_visual">
         <geometry>
           <mesh>
-            <scale>1 1 1</scale> <!-- Adjust scale if necessary -->
+            <scale>1 1 1</scale>
             <uri>model://hacker_van/meshes/van.dae</uri>
           </mesh>
         </geometry>

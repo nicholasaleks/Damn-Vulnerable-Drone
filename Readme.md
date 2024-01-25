@@ -78,7 +78,7 @@ The list of attack scenarios below is organized by stages. Note that some attack
 * **Reconnaissance**
   * Drone Discovery
   * Ground Station Discovery
-  * Network Fingerprinting
+  * MavLink Version Fingerprinting
 * **Wireless Network Attacks**
   * WEP Network Cracking - using Aircrack-ng
   * Man-in-the-Middle Eavesdropping - using Wireshark

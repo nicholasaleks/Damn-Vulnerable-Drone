@@ -164,19 +164,19 @@
   </library_effects>
   <library_images>
     <image id="phong5_Base_color_png" name="phong5_Base_color_png">
-      <init_from>../textures/phong5_Base_color.png</init_from>
+      <init_from>../materials/textures/phong5_Base_color.png</init_from>
     </image>
     <image id="phong6_Base_color_png" name="phong6_Base_color_png">
-      <init_from>../textures/phong6_Base_color.png</init_from>
+      <init_from>../materials/textures/phong6_Base_color.png</init_from>
     </image>
     <image id="phong7_Base_color_png" name="phong7_Base_color_png">
-      <init_from>../textures/phong7_Base_color.png</init_from>
+      <init_from>../materials/textures/phong7_Base_color.png</init_from>
     </image>
     <image id="phong8_Base_color_png" name="phong8_Base_color_png">
-      <init_from>../textures/phong8_Base_color.png</init_from>
+      <init_from>../materials/textures/phong8_Base_color.png</init_from>
     </image>
     <image id="phong9_Base_color_png" name="phong9_Base_color_png">
-      <init_from>../textures/phong9_Base_color.png</init_from>
+      <init_from>../materials/textures/phong9_Base_color.png</init_from>
     </image>
   </library_images>
   <library_materials>

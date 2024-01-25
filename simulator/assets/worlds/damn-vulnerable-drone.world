@@ -84,6 +84,36 @@
       </link>
     </model>
 
+    <include>
+      <uri>model://hacker_van</uri>
+      <pose>3 10 0.05 0 0 1</pose>
+    </include>
+
+    <include>
+      <uri>model://hacker_desk</uri>
+      <pose>4 11 0.05 0 0 1</pose>
+    </include>
+
+    <include>
+      <uri>model://gcs_table</uri>
+      <pose>-4 0 0 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://operator</uri>
+      <pose>-4.5 0 0 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://gcs_chair</uri>
+      <pose>-4.5 0 0 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://laptop</uri>
+      <pose>-4.5 2 0 0 0 0</pose>
+    </include>
+
     <model name="iris_demo">
       <include>
         <uri>model://iris_with_ardupilot</uri>
