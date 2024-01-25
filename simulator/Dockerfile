@@ -80,6 +80,6 @@ RUN pip3 install flask
 COPY simulator/mgmt /Simulator/mgmt
 
 # Run the Gazebo Server and Web App
-CMD gzserver --verbose /Simulator/ardupilot_gazebo/worlds/damn-vulnerable-drone.world & \
+CMD gzserver --verbose /Simulator/ardupilot_gazebo/worlds/dvd.world & \
     cd /Simulator/gzweb && sleep 15 && npm start & \
     cd /Simulator/mgmt && sleep 15 && python3 app.py
