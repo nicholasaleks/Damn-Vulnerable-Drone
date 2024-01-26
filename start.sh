@@ -5,8 +5,20 @@
 # Make sure we are running as root
 if [ "$EUID" -ne 0 ]; then
     echo "This script must be run with sudo privileges."
-    echo "Please run it again with 'sudo ./install-ubuntu.sh'"
+    echo "Please run it again with 'sudo ./start.sh'"
     exit 1
+fi
+
+# Read the ID line from /etc/os-release
+OS_ID=$(grep ^ID= /etc/os-release | cut -d= -f2)
+
+# Remove quotes if they exist
+OS_ID=${OS_ID//\"/}
+
+# Exit the script if the OS is not Kali Linux
+if [ "$OS_ID" != "kali" ]; then
+    echo "You must run this script in Kali Linux. To run Damn Vulnerable Drone in another OS, please use the Docker Compose method described in the README."
+    exit 1 
 fi
 
 apt install net-tools iw make g++ libnl-3-dev libnl-genl-3-dev -y
