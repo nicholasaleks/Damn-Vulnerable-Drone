@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <title>View SDF from URL</title>
+    <meta charset="utf-8">
+    <script src="../gz3d/build/gz3d.js"></script>
+    <style>
+      body {
+        padding: 2em;
+        font-family: helvetica;
+      }
+      #container {
+        padding: 2em;
+        height: 30em;
+        width: 80%;
+      }
+      button {
+        width: 8%;
+      }
+      input {
+        width: 85%;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <h2>
+      View SDF from URL
+    </h2>
+
+    <p>
+      This example shows how to visualize an SDF file on the browser by passing the URLs of its resources.
+    </p>
+    <p>
+      The SDF parsing happens completely on the browser, so there is no need for a GzWeb server to be runnning in the backend.
+    </p>
+
+    <p>
+      You can test it as follows:
+    </p>
+
+    <ol>
+      <li>Under "Resources URLs", type the URL to a resource needed by the model
+          (like meshes, textures, etc). If no resources are missing, skip to step 4.</li>
+      <li>Click "Add URL"</li>
+      <li>Go back to step 1</li>
+      <li>Under "SDF model URL", fill the full URL to the model's SDF file</li>
+      <li>Click "Load model!"</li>
+    </ol>
+
+    <div>
+      <div>
+        <h4>Resources URLs</h4>
+        <input type="text" id="resources-input"></input>
+        <button onclick="addURL()" id="add-button">Add URL</button>
+      </div>
+      <div id="resource-list">
+      </div>
+      <div>
+        <h4>SDF model URL</h4>
+        <input type="text" id="sdf-input"></input>
+        <button onclick="loadModel()" id="load-button">Load model!</button>
+      </div>
+      <div id="sdf-display">
+      </div>
+    </div>
+
+    <center>
+      <div id="container">
+      </div>
+    </center>
+
+    <script>
+      if (!Detector.webgl)
+        Detector.addGetWebGLMessage();
+
+      var scene;
+      var sdfparser;
+      var resourcesInput;
+      var sdfInput;
+      var resourceList;
+
+      init();
+      animate();
+
+      // Initialization
+      function init()
+      {
+        // Initialize objects
+        var shaders = new GZ3D.Shaders();
+        scene = new GZ3D.Scene(shaders);
+        sdfparser = new GZ3D.SdfParser(scene);
+        sdfparser.usingFilesUrls = true;
+
+        // Append to dom
+        var container = document.getElementById('container');
+        container.appendChild(scene.getDomElement());
+
+        // Handle window resize
+        window.addEventListener('resize', onWindowResize, false);
+        onWindowResize();
+
+        // Get DOM elements
+        resourcesInput = document.getElementById('resources-input');
+        sdfInput = document.getElementById('sdf-input');
+        resourceList = document.getElementById('resource-list');
+
+        animate();
+      }
+
+      // Callback when window is resized
+      function onWindowResize()
+      {
+        scene.setSize(container.clientWidth, container.clientHeight);
+      }
+
+      // Recursively called animation loop
+      function animate()
+      {
+        requestAnimationFrame(animate);
+        scene.render();
+      }
+
+      // Callback when Load Model is pressed
+      function loadModel()
+      {
+        var obj = sdfparser.loadSDF(sdfInput.value);
+        if (!obj)
+        {
+          alert('Failed to load model, check the URL and try again');
+          return;
+        }
+        scene.add(obj);
+
+        // Hide inputs
+        resourcesInput.style.display = 'none';
+        sdfInput.style.display = 'none';
+        document.getElementById('add-button').style.display = 'none';
+        document.getElementById('load-button').style.display = 'none';
+
+        sdfDisplay = document.getElementById('sdf-display');
+        sdfDisplay.innerHTML = sdfDisplay.innerHTML + "<br>" + sdfInput.value;
+      }
+
+      // Callback when Add URL is pressed
+      function addURL()
+      {
+        sdfparser.addUrl(resourcesInput.value);
+
+        resourceList.innerHTML = resourceList.innerHTML + "<br>" + resourcesInput.value;
+      }
+    </script>
+
+  </body>
+</html>

@@ -44,15 +44,14 @@ services:
     ports:
       - "8080:8080" # gzweb
       - "8000:8000" # simulator mgmt
-    # volumes:
-    #   - sim_files:/Simulator
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       simulator:
         ipv4_address: 10.13.0.5
 
 volumes:
   serial-uart-socket:
-  # sim_files:
   ardupilot:
 
 networks:

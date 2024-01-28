@@ -1,10 +1,18 @@
 from flask import Flask, render_template
+import docker
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "http://localhost:8080"}})
 
 @app.route('/')
 def index():
-    return render_template('pages/simulator.html')
+    client = docker.from_env()
+    container = client.containers.get('companion-computer')
+    exec_id = client.api.exec_create(container.id, 'ls')['Id']
+    output = client.api.exec_start(exec_id)
+    print(output.decode())
+    return render_template('pages/simulator.html', output=output.decode())
 
 @app.errorhandler(404)
 def page_not_found(e):

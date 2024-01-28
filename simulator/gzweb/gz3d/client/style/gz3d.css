@@ -23,6 +23,41 @@
   display: none;
 }
 
+.stage-item {
+  display: flex;
+  align-items: center;
+  margin-left: 5px;
+  margin-bottom: 5px !important;
+}
+
+.stage-item span {
+  margin-right: 10px; /* Spacing between number and button */
+}
+
+.active-stage-btn {
+  background: #4d9577 !important;
+  text-align: left !important;
+  font-size: 12px !important;
+}
+
+.flight-stage-btn {
+  font-size: 12px !important;
+  text-align: left !important;
+}
+
+.loading-stage-btn {
+  background: #aea62f !important;
+  font-size: 12px !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+
+.flight-stage-btn:hover:not(:disabled) {
+  background: #aea62f !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+
 #play-header-fieldset {
   position: absolute;
   left: 10px !important;
@@ -32,13 +67,24 @@
 
 #clock-mouse {
   position: absolute;
-  left: 63px !important;
+  left: 165px !important;
   top: 0.5em;
   z-index: 100;
   width: 11.5em;
   height: 2.5em;
   background-color: rgb(51, 51, 51);
   padding: 3px;
+  border-radius: 5px;
+}
+
+#flight-stage {
+  position: absolute;
+  right: 10px !important;
+  top: 0.5em;
+  z-index: 100;
+  width: 15em;
+  background-color: rgb(51, 51, 51);
+  padding: 5px;
   border-radius: 5px;
 }
 

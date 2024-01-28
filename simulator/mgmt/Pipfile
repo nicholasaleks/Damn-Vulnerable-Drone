@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 flask = "*"
+docker = "*"
+flask-cors = "*"
 
 [dev-packages]
 

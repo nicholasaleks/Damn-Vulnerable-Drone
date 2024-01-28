@@ -7,7 +7,7 @@ EXPOSE 8000 8080 9002
 # Set environment variable to avoid prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update -y && apt install lsb-release wget gnupg -y
+RUN apt update -y && apt install lsb-release wget gnupg docker.io -y
 
 RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null && \
@@ -65,21 +65,23 @@ RUN n 8.14.0
 RUN git config --global advice.detachedHead false
 
 # Clone GzWeb
-RUN git clone https://github.com/osrf/gzweb && \
-    cd gzweb && \
-    git checkout gzweb_1.4.1
+# RUN git clone https://github.com/osrf/gzweb && \
+#     cd gzweb && \
+#     git checkout gzweb_1.4.1
+
+COPY simulator/gzweb /Simulator/gzweb
 
 # Build GzWeb
 RUN cd /Simulator/gzweb && /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy --- -m local"
 
 # Modify GzWeb CSS
-COPY simulator/assets/gz3d.css /Simulator/gzweb/http/client/style/gz3d.css
+#COPY simulator/assets/gz3d.css /Simulator/gzweb/http/client/style/gz3d.css
 
 # Install Damn Vulnerable Drone Sim Mgmt Web App
-RUN pip3 install flask
+RUN pip3 install flask docker flask-cors
 COPY simulator/mgmt /Simulator/mgmt
 
 # Run the Gazebo Server and Web App
-CMD gzserver --verbose /Simulator/ardupilot_gazebo/worlds/dvd.world & \
+CMD gzserver --verbose /Simulator/ardupilot_gazebo/worlds/damn-vulnerable-drone.world & \
     cd /Simulator/gzweb && sleep 15 && npm start & \
     cd /Simulator/mgmt && sleep 15 && python3 app.py

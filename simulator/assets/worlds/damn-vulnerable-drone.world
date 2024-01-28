@@ -4,6 +4,8 @@
     <gui>
       <camera name="user_camera">
         <pose>-5 0 1 0 0.2 0</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
       </camera>
     </gui>
     <physics type="ode">
@@ -86,32 +88,32 @@
 
     <include>
       <uri>model://hacker_van</uri>
-      <pose>3 10 0.05 0 0 1</pose>
+      <pose>4.34581 -6.72978 0.05 0 -0 0.7586</pose>
     </include>
 
     <include>
       <uri>model://hacker_desk</uri>
-      <pose>4 11 0.05 0 0 1</pose>
+      <pose>3.73953 -3.3219 0.001958 0 0 -0.756161</pose>
     </include>
 
     <include>
       <uri>model://gcs_table</uri>
-      <pose>-4 0 0 0 0 0</pose>
+      <pose>-4 0 0 0 -0 0</pose>
     </include>
 
-    <include>
+    <include><projection_type>perspective</projection_type>
       <uri>model://operator</uri>
-      <pose>-4.5 0 0 0 0 0</pose>
+      <pose>-4.74585 -0.010506 -0.145856 0 -0 1.65382</pose>
     </include>
 
     <include>
       <uri>model://gcs_chair</uri>
-      <pose>-4.5 0 0 0 0 0</pose>
+      <pose>-4.41943 -0.415139 0 0 -0 1.68293</pose>
     </include>
 
     <include>
       <uri>model://laptop</uri>
-      <pose>-4.5 2 0 0 0 0</pose>
+      <pose>-4.04083 -0.118429 0.809145 0 0 -1.90525</pose>
     </include>
 
     <model name="iris_demo">

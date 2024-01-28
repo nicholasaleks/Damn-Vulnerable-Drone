@@ -97,6 +97,11 @@
   }
 }
 
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 body {
   margin: 0;
   font-family: var(--bs-body-font-family);
@@ -22048,7 +22053,7 @@ div.code-toolbar > .toolbar > .toolbar-item .top-app-bar.navbar-light .card .car
   height: 0px;
   border-top-style: solid;
   border-top-width: 1px;
-  margin-top: 2.5rem;
+  margin-top: 1rem;
   margin-bottom: 0;
 }
 .drawer .drawer-menu .nav .nav-link {

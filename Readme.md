@@ -63,13 +63,12 @@ You can manage the simulated environment by using the Simulator Management Web C
 ## Flight States
 
 Damn Vulnerable Drone simulates various drone states for a realistic testing environment. Users can manage the drone states in real-time by using the Management Console.
-1. Initial Boot & Configuration
-2. Idle Standby
-3. Active Flight
+1. Initial Boot
+2. Take-Off
+3. Operator Flight
 4. Autopilot Flight
-5. Emergency, Return-To-Home (RTH) Landing
+5. Emergency/Return-To-Home (RTH) Landing
 6. Post-Flight Data Processing
-7. Shutdown
 
 # Attack Scenarios
 

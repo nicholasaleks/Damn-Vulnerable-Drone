@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+  <head>
+    <title>Embedded GzWeb</title>
+    <meta charset="utf-8">
+    <script src="../gz3d/build/gz3d.js"></script>
+    <style>
+      body {
+        padding: 2em;
+        font-family: helvetica;
+      }
+      #container {
+        padding: 2em;
+        height: 50em;
+        width: 80%;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <h2>
+      Embedded GzWeb
+    </h2>
+
+    <p>
+      This example shows how to embed a GzWeb scene which is served from another URL into a page.
+    </p>
+
+    <p>
+      You can test it as follows:
+    </p>
+
+    <ol>
+      <li>Launch Gazebo's backend:<pre>gzserver</pre></li>
+      <li>Launch GzWeb's backend:<pre>npm start</pre></li>
+      <li>Fill in the URL box with the GzWeb backend URL and press Connect!</li>
+    </ol>
+
+    <div id="url-div">
+      <span>Server URL</span>
+      <input type="text" id="url-input" value="localhost:8080"></input>
+      <button onclick="init()">Connect!</button>
+    </div>
+
+    <center>
+      <div id="container">
+      </div>
+    </center>
+
+    <script>
+      if (!Detector.webgl)
+        Detector.addGetWebGLMessage();
+
+      var scene, container, playDiv;
+
+      // Initialization
+      function init()
+      {
+        // Get URL
+        var url = document.getElementById('url-input').value;
+
+        // Clear URL input div
+        var urlDiv = document.getElementById('url-div');
+        while (urlDiv.firstChild) {
+          urlDiv.removeChild(urlDiv.firstChild);
+        }
+
+        // Initialize objects
+        var shaders = new GZ3D.Shaders();
+        scene = new GZ3D.Scene(shaders);
+        var iface = new GZ3D.GZIface(scene, url);
+        var sdfparser = new GZ3D.SdfParser(scene, undefined, iface);
+
+        // Listen to simulation events using the emitter
+        scene.emitter.on('setPaused', serverPaused);
+
+        // Configure scene
+        scene.grid.visible = true;
+
+        // Append to dom
+        container = document.getElementById( 'container' );
+        container.appendChild(scene.getDomElement());
+
+        window.addEventListener('resize', onWindowResize, false);
+        onWindowResize();
+
+        // Add URL to page
+        var urlHeader = document.createElement("h3");
+        urlHeader.appendChild(document.createTextNode("Connected to " + url));
+        urlDiv.appendChild(urlHeader);
+
+        // This will hold a play/pause button according to info coming from the
+        // server
+        playDiv = document.createElement("div");
+        urlDiv.appendChild(playDiv);
+
+        animate();
+      }
+
+      // Callback when window is resized
+      function onWindowResize()
+      {
+        scene.setSize(container.clientWidth, container.clientHeight);
+      }
+
+      // Recursively called animation loop
+      function animate()
+      {
+        requestAnimationFrame(animate);
+        scene.render();
+      }
+
+      // Callback when server updates play/pause stats
+      function serverPaused(_paused)
+      {
+        if (_paused)
+          setButtonPlay();
+        else
+          setButtonPause();
+      }
+
+      // Callback when user requests to play simulation
+      function userPlay()
+      {
+        // Send commands by using the emitter
+        scene.emitter.emit('pause', false);
+        setButtonPause();
+      }
+
+      // Callback when user requests to pause simulation
+      function userPause()
+      {
+        scene.emitter.emit('pause', true);
+        setButtonPlay();
+      }
+
+      // Update the play/pause button so it says play
+      function setButtonPlay()
+      {
+        playDiv.innerHTML = "<button onclick='userPlay()'>Play!</button>";
+      }
+
+      // Update the play/pause button so it says pause
+      function setButtonPause()
+      {
+        playDiv.innerHTML = "<button onclick='userPause()'>Pause!</button>";
+      }
+    </script>
+
+  </body>
+</html>

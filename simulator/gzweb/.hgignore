@@ -1,0 +1,16 @@
+syntax: glob
+
+build
+gz3d/build
+build_*
+.DS_Store
+*.*~
+*~
+*.swp
+http/client/assets
+node_modules
+http/client
+coverage
+doc
+npm-debug.log
+test_results

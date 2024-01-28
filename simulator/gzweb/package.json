@@ -1,0 +1,51 @@
+{
+  "name": "gzweb",
+  "version": "1.4.0",
+  "description": "WebGL client for Gazebo",
+  "repository": {
+    "type": "mercurial",
+    "url": "https://github.com/osrf/gzweb"
+  },
+  "config": {
+    "port": ""
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/eslint gz3d/src/*.js gz3d/test/*.js gzbridge/server.js && ./node_modules/karma/bin/karma start --singleRun",
+    "update": "./node_modules/.bin/grunt build && cd build && cmake ..",
+    "start": "if [ $npm_config_port ]; then port=$npm_config_port; fi; cd gzbridge && ./server.js $port",
+    "deploy": "./deploy.sh",
+    "docs": "./node_modules/.bin/grunt doc",
+    "coverage": "codecov"
+  },
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "node-gyp": "6.1.0",
+    "path": "^0.12.7",
+    "websocket": "^1.0.25"
+  },
+  "devDependencies": {
+    "catharsis": "^0.8.9",
+    "codecov": "^2.3.0",
+    "eslint": "^4.8.0",
+    "grunt": "~0.4.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-uglify": "^3.1.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-jsdoc": "^2.1.1",
+    "istanbul": "^0.4.5",
+    "jasmine-core": "^2.8.0",
+    "jasmine-jquery": "^2.1.1",
+    "jsdoc": "^3.5.5",
+    "karma": "^1.7.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.1",
+    "karma-htmlfile-reporter": "^0.3.5",
+    "karma-jasmine": "^1.1.0",
+    "taffydb": "^2.7.3",
+    "underscore": "^1.8.3"
+  }
+}
