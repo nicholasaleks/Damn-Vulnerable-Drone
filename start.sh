@@ -66,7 +66,7 @@ if [ "$wifi_simulation" = "Y" ]; then
 
         # Look for lines with PIDs and extract them
         # This regex looks for lines that start with space(s), followed by numbers (PID), and then space/tab and text (process name)
-        pids=$(echo "$output" | grep -oP '^\s*\K[0-9]+(?=\s+\S)')
+	pids=($(echo "$output" | grep -oP '^\s*\K[0-9]+(?=\s+\S)'))
 
         # Kill the processes
         for pid in $pids; do
@@ -74,8 +74,8 @@ if [ "$wifi_simulation" = "Y" ]; then
             sudo kill $pid
         done
 
-        # Start airmon-ng again
-        sudo airmon-ng start wlan0
+        # Start airmon-ng again. wlan0 was renamed to wlan0mon
+        sudo airmon-ng start wlan0mon
 
         # Start Docker Compose
         echo "[+] Starting Docker Compose..."
