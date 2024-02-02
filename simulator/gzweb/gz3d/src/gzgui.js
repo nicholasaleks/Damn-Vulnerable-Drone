@@ -291,17 +291,75 @@ var modelList =
 ////////////////////////////////////////////////////////////////////////////////
 // Response from DVD FLASK
 ////////////////////////////////////////////////////////////////////////////////
-window.addEventListener("message", function(event) {
-  // Check the origin for security
-  if (event.origin !== "http://localhost:8000") {
-      return;
-  }
+function updateStageStatus(stageNum, status) {
+  const stageButton = $('#stage' + stageNum);
 
-  // RESET WORLD HANDLER
-  if (event.data === "resetWorldCallback") {
-    globalEmitter.emit('reset', 'world');
-    globalEmitter.emit('closeTabs', false);
+  // Reset classes and disable the button
+  stageButton.prop('disabled', true)
+             .removeClass('active-stage-btn loading-stage-btn flight-stage-btn');
+
+  // Add the appropriate class based on the status
+  switch (status) {
+      case 'disabled':
+          stageButton.addClass('flight-stage-btn');
+          break;
+      case 'enabled':
+          stageButton.addClass('flight-stage-btn');
+          stageButton.prop('disabled', false);
+          break;
+      case 'loading':
+          stageButton.addClass('loading-stage-btn');
+          stageButton.prop('disabled', false);
+          break;
+      case 'active':
+          stageButton.addClass('active-stage-btn');
+          stageButton.prop('disabled', false);
+          break;
   }
+}
+document.addEventListener("DOMContentLoaded", function() {
+  window.addEventListener("message", function(event) {
+    // Check the origin for security
+    if (event.origin !== "http://localhost:8000") {
+        return;
+    }
+
+    const match = event.data.match(/^set-stage(\d+)-(\w+)$/);
+      if (match) {
+          const stageNum = match[1];
+          const status = match[2];
+
+          // Update the stage status if it's between 1 and 6
+          if (stageNum >= 1 && stageNum <= 6) {
+              updateStageStatus(stageNum, status);
+          }
+      }
+
+    // RESET WORLD HANDLER
+    if (event.data === "resetWorldCallback") {
+      globalEmitter.emit('reset', 'world');
+      globalEmitter.emit('closeTabs', false);
+    }
+
+    // Stage 1 CALL BACK
+    if (event.data === "stage1Callback") {
+      // Wait for 8 seconds
+      setTimeout(function() {
+        // Set data attribute to indicate the button was clicked
+        $('#stage1').data('clicked', false);
+        $('#stage1').find('.loading-stage-img').remove();
+        $('#stage1').find('.hover-text').remove();
+        $('#stage1').text($('#stage1').text().replace('Starting', ''));
+        $('#stage1').text($('#stage1').text().replace('...', ''));
+        $('#stage1').removeClass('loading-stage-btn');
+        $('#stage1').addClass('active-stage-btn');
+        // $this.prop('disabled', true);
+        $('#stage2').prop('disabled', false);
+        
+        // wait for 5 seconds
+      }, 8000);
+    }
+  });
 });
 ////////////////////////////////////////////////////////////////////////////////
 $(function()
@@ -615,20 +673,7 @@ $(function()
       $this.append('...');
 
       window.parent.postMessage(this.id, "http://localhost:8000");
-  
-      // Optional: Reset clicked data attribute and remove loader after some time
-      setTimeout(function() {
-        $this.data('clicked', false);
-        $this.find('.loading-stage-img').remove();
-        $this.find('.hover-text').remove();
-        $this.text($this.text().replace('Starting', ''));
-        $this.text($this.text().replace('...', ''));
-        $this.removeClass('loading-stage-btn');
-        $this.addClass('active-stage-btn');
-        // $this.prop('disabled', true);
-        $('#stage2').prop('disabled', false);
-        // Re-add 'flight-stage-btn' class if needed
-      }, 3000); // Adjust time as needed
+
     }
   });
 

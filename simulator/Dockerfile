@@ -6,6 +6,7 @@ EXPOSE 8000 8080 9002
 
 # Set environment variable to avoid prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
 
 RUN apt update -y && apt install lsb-release wget gnupg docker.io -y
 
@@ -78,10 +79,12 @@ RUN cd /Simulator/gzweb && /bin/bash -c "source /usr/share/gazebo/setup.sh && np
 #COPY simulator/assets/gz3d.css /Simulator/gzweb/http/client/style/gz3d.css
 
 # Install Damn Vulnerable Drone Sim Mgmt Web App
-RUN pip3 install flask docker flask-cors
+RUN pip3 install flask docker flask-cors Flask-SQLAlchemy
 COPY simulator/mgmt /Simulator/mgmt
+
+RUN rm -rf /Simulator/mgmt/instance/stages.db
 
 # Run the Gazebo Server and Web App
 CMD gzserver --verbose /Simulator/ardupilot_gazebo/worlds/damn-vulnerable-drone.world & \
-    cd /Simulator/gzweb && sleep 15 && npm start & \
+    cd /Simulator/gzweb && sleep 15 && npm start > /dev/null 2>&1 & \
     cd /Simulator/mgmt && sleep 15 && python3 app.py
