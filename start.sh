@@ -163,7 +163,7 @@ if [ "$wifi_simulation" = "Y" ]; then
         sleep 5
 
         # Clean up previous dhcpd PID file if it exists
-        rm /var/run/dhcpd.pid
+        rm -f /var/run/dhcpd.pid
 
         service isc-dhcp-server start
         service dnsmasq start
