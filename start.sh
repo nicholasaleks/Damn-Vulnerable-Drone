@@ -37,7 +37,7 @@ if [ "$wifi_simulation" = "Y" ]; then
             cd ~
             git clone https://github.com/Raizo62/vwifi.git
             cd ~/vwifi
-            makemodprobe mac80211_hwsim radios=
+            make
             make tools
             make install
         fi
