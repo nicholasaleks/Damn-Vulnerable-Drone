@@ -180,8 +180,8 @@ if [ "$wifi_simulation" = "Y" ]; then
 
         # Execute commands in the ground-control-station container
         docker exec ground-control-station sh -c "
-            sudo wpa_supplicant -B -i wlan2 -c /etc/wpa_supplicant/wpa_supplicant.conf -D nl80211;
-            sudo dhclient wlan2 &
+            wpa_supplicant -B -i wlan2 -c /etc/wpa_supplicant/wpa_supplicant.conf -D nl80211;
+            dhclient wlan2 &
         "
 
         # Capture vwifi status
