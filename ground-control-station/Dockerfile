@@ -1,6 +1,8 @@
 # GROUND CONTROL STATION CONTAINER
 FROM ubuntu:22.04
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update && apt-get install -y \
     apt-utils \
     curl \
@@ -10,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     iputils-ping \
     python3 \
     python3-pip \
+    expect \
     && pip3 install future pymavlink MAVProxy mavsdk \
     && rm -rf /var/lib/apt/lists/*
 
