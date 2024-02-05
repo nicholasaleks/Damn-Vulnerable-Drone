@@ -38,6 +38,9 @@ master = mavutil.mavlink_connection(connection_string)
 master.wait_heartbeat()
 print("Heartbeat from system (system %u component %u)" % (master.target_system, master.target_component))
 
+master.waypoint_clear_all_send()
+print("Clearing waypoints...")
+
 # Wait for a good GPS fix before continuing
 wait_for_gps_fix(master)
 

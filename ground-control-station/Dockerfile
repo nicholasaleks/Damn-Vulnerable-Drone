@@ -16,6 +16,10 @@ RUN apt-get update && apt-get install -y \
     && pip3 install future pymavlink MAVProxy mavsdk \
     && rm -rf /var/lib/apt/lists/*
 
-CMD echo "Ground Control Online..." && tail -f /dev/null
+COPY ground-control-station/stages/arm-and-takeoff.py /arm-and-takeoff.py
+COPY ground-control-station/stages/autopilot-flight.py /autopilot-flight.py
+COPY ground-control-station/stages/return-to-land.py /return-to-land.py
+COPY ground-control-station/stages/post-flight-analysis.py /post-flight-analysis.py
+COPY ground-control-station/missions /missions
 
-# mavproxy.py --master=udp:10.13.0.4:14550
+CMD echo "Ground Control Online..." && tail -f /dev/null
