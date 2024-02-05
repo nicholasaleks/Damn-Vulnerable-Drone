@@ -37,7 +37,7 @@ if [ "$wifi_simulation" = "Y" ]; then
             cd ~
             git clone https://github.com/Raizo62/vwifi.git
             cd ~/vwifi
-            makemodprobe mac80211_hwsim radios=
+            make
             make tools
             make install
         fi
@@ -66,7 +66,7 @@ if [ "$wifi_simulation" = "Y" ]; then
 
         # Look for lines with PIDs and extract them
         # This regex looks for lines that start with space(s), followed by numbers (PID), and then space/tab and text (process name)
-        pids=$(echo "$output" | grep -oP '^\s*\K[0-9]+(?=\s+\S)')
+	pids=($(echo "$output" | grep -oP '^\s*\K[0-9]+(?=\s+\S)'))
 
         # Kill the processes
         for pid in $pids; do
@@ -74,8 +74,8 @@ if [ "$wifi_simulation" = "Y" ]; then
             sudo kill $pid
         done
 
-        # Start airmon-ng again
-        sudo airmon-ng start wlan0
+        # Start airmon-ng again. wlan0 was renamed to wlan0mon
+        sudo airmon-ng start wlan0mon
 
         # Start Docker Compose
         echo "[+] Starting Docker Compose..."
@@ -163,7 +163,7 @@ if [ "$wifi_simulation" = "Y" ]; then
         sleep 5
 
         # Clean up previous dhcpd PID file if it exists
-        rm /var/run/dhcpd.pid
+        rm -f /var/run/dhcpd.pid
 
         service isc-dhcp-server start
         service dnsmasq start
@@ -180,8 +180,8 @@ if [ "$wifi_simulation" = "Y" ]; then
 
         # Execute commands in the ground-control-station container
         docker exec ground-control-station sh -c "
-            sudo wpa_supplicant -B -i wlan2 -c /etc/wpa_supplicant/wpa_supplicant.conf -D nl80211;
-            sudo dhclient wlan2 &
+            wpa_supplicant -B -i wlan2 -c /etc/wpa_supplicant/wpa_supplicant.conf -D nl80211;
+            dhclient wlan2 &
         "
 
         # Capture vwifi status
