@@ -314,6 +314,12 @@ function updateStageStatus(stageNum, status) {
       case 'active':
           stageButton.addClass('active-stage-btn');
           stageButton.prop('disabled', false);
+          stageButton.data('clicked', false);
+          stageButton.find('.loading-stage-img').remove();
+          stageButton.find('.hover-text').remove();
+          stageButton.text(stageButton.text().replace('Starting', ''));
+          stageButton.text(stageButton.text().replace('...', ''));
+          stageButton.removeClass('loading-stage-btn');
           break;
   }
 }

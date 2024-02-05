@@ -1,0 +1,296 @@
+{% extends "pages/index.html" %}
+
+{% block content %}
+<main>
+    <div class="container-xl p-5">
+        <div class="alert alert-danger" role="alert"><b>Disclaimer:</b> The Damn Vulnerable Drone (DVD) platform is provided solely for educational and research purposes. Users are expected to adhere to ethical hacking principles, respecting privacy and laws, and must not use skills or knowledge acquired from Damn Vulnerable Drone for malicious activities. The creators and maintainers of Damn Vulnerable Drone are not liable for any misuse of the platform. By using Damn Vulnerable Drone, you agree to use it responsibly and within legal boundaries. Damn Vulnerable Drone is highly insecure, and as such, should not be deployed on drone hardware or internet facing servers. It is intentionally flawed and vulnerable, as such, it comes with no warranties.</div>
+
+        <!-- Knowledgebase content row-->
+        <div class="row gx-5">
+            <div class="col-lg-9">
+                <!-- Title section-->
+                <section class="mb-5" id="getting-started">
+                    <div class="d-flex align-items-center mb-3">
+                        <h2 class="mb-0">Getting Started</h2>
+                        <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                    </div>
+                    <p>Welcome to the Damn Vulnerable Drone (DVD) platform! Here you'll find everything you need to begin your drone hacking journey.</p>
+                </section>
+                <!-- Divider-->
+                <hr class="my-5" />
+                <!-- Segment-->
+                <div id="why-">
+
+                </div>
+                <div id="what-is-damn-vulnerable-drone">
+                    <section class="mb-2">
+                        <div class="d-flex align-items-center mb-3">
+                            <h3 class="mb-0">What is Damn Vulnerable Drone?</h3>
+                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                        </div>
+                        <p class="mb-4">Damn Vulnerable Drone is a virtually simulated environment designed for offensive security professionals to safely learn and practice drone hacking techniques. It simulates real-world <a target="_blank" href="https://ardupilot.org/">ArduPilot</a> & <a target="_blank" href="https://mavlink.io/en/">MavLink</a> drone architectures and vulnerabilities, offering a hands-on experience in exploring and exploiting drone systems. Damn Vulnerable Drone aims to enhance offensive security skills within a controlled, ethical framework, making it an invaluable tool for intermediate-level security professionals, pentesters, and hacking enthusiasts.</p>
+                        
+                    </section>
+                </div>
+                <div id="why-was-it-built">
+                    <section class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <h4 class="mb-0">Why was it built?</h4>
+                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                        </div>
+                        
+                        <p>Flight simulators have been used for decades in the aviation industry to train pilots on how to use and get familiar with complex aircraft systems. Recent advances in open-source flight controllers, ground control software and simulators have extended this capability to the world of autonomous drones and UAVs (unmanned aerial vehicles).</p>
+                        <p>Similar to how pilots utilize flight simulators for training, we will use the Damn Vulnerable Drone simulator to gain in-depth knowledge of real-world drone systems, understand their vulnerabilities, and learn effective methods to exploit them.</p>
+                        <p>The Damn Vulnerable Drone platform is <a target="_blank" href="https://github.com/nicholasaleks/Damn-Vulnerable-Drone">open-source</a> and available at no cost and was specifically designed to address the substantial expenses often linked with drone hardware, hacking tools, and maintenance. Its cost-free nature allows users to immerse themselves in drone hacking without financial concerns. This accessibility makes Damn Vulnerable Drone a crucial resource for those in the fields of information security and penetration testing, promoting the development of offensive cybersecurity skills in a safe and ethical environment.</p>
+                    </section>
+                </div>
+                <div id="how-does-it-work">
+                    <section class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <h4 class="mb-0">How does it work?</h4>
+                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                        </div>
+                        <p>The Damn Vulnerable Drone platform operates on the principle of <a target="_blank" href="https://ardupilot.org/dev/docs/sitl-simulator-software-in-the-loop.html">Software-in-the-Loop (SITL)</a>, a simulation technique that allows users to run drone software code as if it were executing on an actual drone, thereby replicating authentic drone behaviors and responses.</p>
+                        <p>ArduPilot's SITL allows for the execution of the drone's firmware within a virtual environment, mimicking the behavior of a real drone without the need for physical hardware. This simulation is further enhanced with <a target="_blank" href="https://gazebosim.org/home">Gazebo</a>, a dynamic 3D robotics simulator, which provides a realistic environment and physics engine for the drone to interact with. Together, ArduPilot's SITL and Gazebo lay the foundation for a sophisticated and authentic drone simulation experience.</p>
+                        <p>While the current Damn Vulnerable Drone setup doesn't mirror every drone architecture or configuration, the integrated tactics, techniques and scenarios are broadly applicable across various drone systems, models and communication protocols.</p>
+                    </section>
+                </div>
+                <div id="architecture-overview">
+                    <section class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <h4 class="mb-0">Architecture Overview</h4>
+                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                        </div>
+                        <p>The Damn Vulnerable Drone simulation and core drone architectural components are integrated within Docker containers, providing a stable, isolated environment for each component of the drone system. Docker facilitates easy setup, consistent performance across different systems, and simplifies the process of simulating complex drone architectures and scenarios.</p>
+                        <p>Below is a high-level overview of the Damn Vulnerable Drone architecture:</p>
+                        <img src="/static/images/Damn-Vulnerable-Drone-Architecture-getting-started.png" class="img-fluid rounded-3 mb-4" alt="Damn Vulnerable Drone Architecture" />
+                        <p>As shown in the diagram, the Damn Vulnerable Drone architecture consists of the following 4 core components:</p>
+                    </section>
+                </div>
+                <div id="flight-controller">
+                    <section class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <h5 class="mb-0">Flight Controller</h5>
+                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                        </div>
+                        <p>This is the brain of the drone, running the ArduPilot firmware to simulate a drone's flight controls. It interacts with the Gazebo simulator through a Gazebo driver, allowing it to process virtual sensor data and respond as if it were flying in the real world.</p>
+                    </section>
+                </div>
+                <div id="companion-computer">
+                    <section class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <h5 class="mb-0">Companion Computer</h5>
+                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                        </div>
+                        <p>The Companion Computer (attached to the drone) handles higher-level processing tasks that are too complex for the flight controller. It manages wireless networking, telemetry logs, facilitates camera streaming for surveillance or reconnaissance, and interfaces with guidance systems for autonomous operations.</p>
+                    </section>
+                </div>
+                <div id="ground-control-station">
+                    <section class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <h5 class="mb-0">Ground Control Station</h5>
+                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                        </div>
+                        <p>This component acts as the remote pilot's interface, providing mission planning capabilities, flight mapping, video streaming, and joystick control inputs. It communicates with the flight controller and companion computer over a simulated wireless MAVLink connection.</p>
+                    </section>
+                    
+                </div>
+                <div id="simulator">
+                    <section class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <h5 class="mb-0">Gazebo Simulator</h5>
+                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                        </div>
+                        <p>Gazebo provides a richly detailed 3D world where the physics of drone flight are accurately modeled. This allows for realistic simulations of how the drone would react to control inputs and environmental factors. It’s here that the rotors spin, and the virtual drone takes to the skies, all under the watchful control of the <a href="/">Simulator Management Web Console</a>.</p>
+                    </section>
+                    
+                </div>
+                <div id="flight-states">
+                    <section class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <h4 class="mb-0">Flight States</h4>
+                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                        </div>
+                        <p>Damn Vulnerable Drone encompasses a range of flight states that are essential for simulating real-world drone operations, crucial for constructing a variety of drone hacking scenarios. These states include:</p>
+                        <p class="small">
+                            <span class="fw-500 text-expanded">1. Initial Boot:</span>
+                            <br />
+                            This simulates the drone's startup sequence, where all systems are initialized. It's a critical phase for security checks and ensuring communication protocols are secure before flight.
+                        </p>
+                        <p class="small">
+                            <span class="fw-500 text-expanded">2. Arm & Takeoff</span>
+                            <br />
+                            The phase where the drone transitions from a stationary state to airborne, testing the responsiveness of flight controls and the integrity of take-off protocols. <i>Note: This may take some time to complete as the drone requires <a target="_blank" href="https://ardupilot.org/copter/docs/common-positioning-landing-page.html">GPS</a> & <a target="_blank" href="https://ardupilot.org/copter/docs/common-apm-navigation-extended-kalman-filter-overview.html">EKF3</a> to be ready)</i>
+                        </p>
+                        <p class="small">
+                            <span class="fw-500 text-expanded">3. Autopilot Flight</span>
+                            <br />
+                            Represents the drone's ability to navigate autonomously based on predefined waypoints or dynamic commands, a vital state for exploring vulnerabilities in navigation and control systems.
+                        </p>
+                        <p class="small">
+                            <span class="fw-500 text-expanded">4. Emergency / Return-To-Land</span>
+                            <br />
+                            Simulates the drone's emergency protocols, automatically returning to a home location upon triggering fail-safes or loss of control signals, which can be a target for exploitation in hacking scenarios.
+                        </p>
+                        <p class="small">
+                            <span class="fw-500 text-expanded">5. Post-Flight Data Processing</span>
+                            <br />
+                            This state involves the handling of all data collected during the flight, including telemetry and logs, making it an important phase for understanding data exfiltration and integrity attacks.
+                        </p>
+                    </section>
+                    <!-- Divider-->
+                    <hr class="my-5" />
+                </div>
+                <div id="how-to-use-damn-vulnerable-drone">
+                    <section class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <h3 class="mb-0">How can I use Damn Vulnerable Drone?</h3>
+                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                        </div>
+                        <p class="mb-4">Here is some example text of a longer version of a first step. This format is great when you need to explain things more, not just using a ordered list.</p>
+                        <p class="small">
+                            <span class="fw-500 text-expanded">1. The first step</span>
+                            <br />
+                            Here is some text describing the first step.
+                        </p>
+                        <p class="small">
+                            <span class="fw-500 text-expanded">2. The next step</span>
+                            <br />
+                            Here is some text describing the next step after the first step.
+                        </p>
+                        <p class="small">
+                            <span class="fw-500 text-expanded">3. The final step</span>
+                            <br />
+                            This is just an example of a list to show how content will be presented.
+                        </p>
+                    </section>
+                    <!-- Divider-->
+                    <hr class="my-5" />
+                </div>
+                <div id="how-not-to-use-damn-vulnerable-drone">
+                    <section class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <h3 class="mb-0">How <u>not</u> to use Damn Vulnerable Drone</h3>
+                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                        </div>
+                        <p class="mb-4">Here is some example text of a longer version of a first step. This format is great when you need to explain things more, not just using a ordered list.</p>
+                        <p class="small">
+                            <span class="fw-500 text-expanded">1. Don't upload Damn Vulnerable Drone firmware to any drone hardware.</span>
+                            <br />
+                            Here is some text describing the first step.
+                        </p>
+                        <p class="small">
+                            <span class="fw-500 text-expanded">2. Don't target the simulation infrastructure (10.13.0.4/24), including the simulator web applications.</span>
+                            <br />
+                            Here is some text describing the next step after the first step.
+                        </p>
+                        <p class="small">
+                            <span class="fw-500 text-expanded">3. Don't limit yourself to the attack scenarios.</span>
+                            <br />
+                            This is just an example of a list to show how content will be presented.
+                        </p>
+                    </section>
+                    <!-- Divider-->
+                    <hr class="my-5" />
+                </div>
+                <div id="community-support">
+                    <section class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <h3 class="mb-0">Community Support</h3>
+                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                        </div>
+                        <p>Here is some exam</p>
+                    </section>
+                    <!-- Divider-->
+                    <hr class="my-5" />
+                </div>
+                <div id="feedback-contributions">
+                    <section class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <h3 class="mb-0">Feedback & Contributions</h3>
+                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                        </div>
+                        <p>Here is some exam</p>
+                    </section>
+                    <!-- Divider-->
+                    <hr class="my-5" />
+                </div>
+                <!-- Related Articles-->
+                <h3 class="overline">Additional Documentation</h3>
+                <div class="row">
+                    <div class="col-3 col-sm-6 mb-4">
+                        <div class="card card-raised ripple-gray">
+                            <div class="card-body">
+                                <div class="card-title"><h6>Simulator User Interface Guide</h6></div>
+                                <p class="card-text">Understanding how to navigate, control and troubleshoot the simulator</p>
+                            </div>
+                            <div class="card-actions">
+                                <a class="card-link text-muted text-decoration-none stretched-link" href="/guide"></a>
+                                <i class="material-icons text-muted rotate-45">arrow_upward</i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 col-sm-6 mb-4">
+                        <div class="card card-raised ripple-gray">
+                            <div class="card-body">
+                                <div class="card-title"><h6>Learning Resources</h6></div>
+                                <p class="card-text">Review external documentation on drone systems & hacking utilities</p>
+                            </div>
+                            <div class="card-actions">
+                                <a class="card-link text-muted text-decoration-none stretched-link" href="/guide"></a>
+                                <i class="material-icons text-muted rotate-45">arrow_upward</i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 col-sm-6 mb-4">
+                        <div class="card card-raised ripple-gray">
+                            <div class="card-body">
+                                <div class="card-title"><h6>Attack Scenarios</h6></div>
+                                <p class="card-text">Review external documentation on drone systems & hacking utilities</p>
+                            </div>
+                            <div class="card-actions">
+                                <a class="card-link text-muted text-decoration-none stretched-link" href="/guide"></a>
+                                <i class="material-icons text-muted rotate-45">arrow_upward</i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 col-sm-6 mb-4">
+                        <div class="card card-raised ripple-gray">
+                            <div class="card-body">
+                                <div class="card-title"><h6>Solutions (Spoiler Alert)</h6></div>
+                                <p class="card-text">Review external documentation on drone systems & hacking utilities</p>
+                            </div>
+                            <div class="card-actions">
+                                <a class="card-link text-muted text-decoration-none stretched-link" href="/guide"></a>
+                                <i class="material-icons text-muted rotate-45">arrow_upward</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 mb-5 mb-lg-0">
+                <!-- Side column sticky navigation stick-->
+                <div class="sticky-top nav-stick">
+                    <div class="nav-heading">Contents</div>
+                    <ul class="nav flex-column" id="navStick">
+                        <li class="nav-item"><a class="nav-link" href="#getting-started">Getting Started</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#what-is-damn-vulnerable-drone">What is Damn Vulnerable Drone?</a>
+                            <ul class="nav flex-column mt-0 ms-3">
+                                <li class="nav-item"><a class="nav-link border-0" href="#why-was-it-built">Why was it built?</a></li>
+                                <li class="nav-item"><a class="nav-link border-0" href="#how-does-it-work">How does it work?</a></li>
+                                <li class="nav-item"><a class="nav-link border-0" href="#architecture-overview">Architecture Overview</a></li>
+                                <li class="nav-item"><a class="nav-link border-0" href="#flight-states">Flight States</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="#how-to-use-damn-vulnerable-drone">How can I use Damn Vulnerable Drone?</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#how-not-to-use-damn-vulnerable-drone">How <u>not</u> to use Damn Vulnerable Drone</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#community-support">Community Support</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#feedback-contributions">Feedback & Contributions</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

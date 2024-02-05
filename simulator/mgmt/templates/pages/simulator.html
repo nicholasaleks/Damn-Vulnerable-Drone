@@ -20,24 +20,97 @@ window.addEventListener("message", (event) => {
         });
         var iframeWindow = document.getElementById("sim-iframe").contentWindow;
         iframeWindow.postMessage("stage1Callback", "http://localhost:8080");
-        
-        // async function triggerStage1AndUpdateUI() {
-        //     try {
-        //         // Send a POST request to http://localhost:8000/stage1
-        //         // This will trigger the stage1() function in simulator/mgmt/routes.py
-        //         await fetch("/stage1", {
-        //             method: "POST"
-        //         });
+    }
 
-        //         // After the fetch is complete, send iframe a message to update the UI
-        //         var iframeWindow = document.getElementById("sim-iframe").contentWindow;
-        //         iframeWindow.postMessage("stage1Callback", "http://localhost:8080");
-        //     } catch (error) {
-        //         console.error('Error:', error);
-        //         // Handle errors here
-        //     }
-        // }
-        // triggerStage1AndUpdateUI()
+    if (event.data === "stage2") {
+        function triggerStage2AndUpdateUI() {
+            fetch("/stage2", {
+                method: "POST"
+            })
+            .then(response => {
+                // Check if the response is successful
+                if (response.ok) {
+                    var iframeWindow = document.getElementById("sim-iframe").contentWindow;
+                    iframeWindow.postMessage("set-stage2-active", "http://localhost:8080");
+                    iframeWindow.postMessage("set-stage3-enabled", "http://localhost:8080");
+                } else {
+                    throw new Error('Server responded with a non-OK status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        triggerStage2AndUpdateUI();
+    }
+
+    if (event.data === "stage3") {
+        function triggerStage3AndUpdateUI() {
+            fetch("/stage3", {
+                method: "POST"
+            })
+            .then(response => {
+                // Check if the response is successful
+                if (response.ok) {
+                    var iframeWindow = document.getElementById("sim-iframe").contentWindow;
+                    iframeWindow.postMessage("set-stage3-active", "http://localhost:8080");
+                    iframeWindow.postMessage("set-stage4-enabled", "http://localhost:8080");
+                } else {
+                    throw new Error('Server responded with a non-OK status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        triggerStage3AndUpdateUI();
+    }
+
+    if (event.data === "stage4") {
+        function triggerStage4AndUpdateUI() {
+            fetch("/stage4", {
+                method: "POST"
+            })
+            .then(response => {
+                // Check if the response is successful
+                if (response.ok) {
+                    var iframeWindow = document.getElementById("sim-iframe").contentWindow;
+                    iframeWindow.postMessage("set-stage4-active", "http://localhost:8080");
+                    iframeWindow.postMessage("set-stage5-enabled", "http://localhost:8080");
+                } else {
+                    throw new Error('Server responded with a non-OK status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        triggerStage4AndUpdateUI();
+    }
+
+    if (event.data === "stage5") {
+        function triggerStage5AndUpdateUI() {
+            fetch("/stage5", {
+                method: "POST"
+            })
+            .then(response => {
+                // Check if the response is successful
+                if (response.ok) {
+                    var iframeWindow = document.getElementById("sim-iframe").contentWindow;
+                    iframeWindow.postMessage("set-stage5-active", "http://localhost:8080");
+                } else {
+                    throw new Error('Server responded with a non-OK status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        triggerStage5AndUpdateUI();
     }
 
     if (event.data === "resetWorldClicked") {
@@ -70,11 +143,6 @@ window.addEventListener("message", (event) => {
     }
 });
 </script>
-
-<!-- Stage Stage Management on page reload -->
-{% for stage in stages %}
-    {{stage.name}} - {{stage.status}} <br>
-{% endfor %}
 
 <script>
     // wait for 1 second before sending the message to the iframe

@@ -18,29 +18,29 @@
             <div class="nav">
                 <div class="drawer-menu-divider"></div>
                 <!-- Drawer link (Dashboards)-->
-                <a class="nav-link active" href="/simulator">
+                <a class="nav-link {% if current_page == 'home' %}active{% endif %}" href="/">
                     <div class="nav-link-icon"><i class="material-icons">play_arrow</i></div>
                     Simulator
                 </a>
                 <!-- Drawer link (Components)-->
-                <a class="nav-link" href="/simulator">
+                <a class="nav-link {% if current_page == 'getting-started' %}active{% endif %}" href="/getting-started">
                     <div class="nav-link-icon"><i class="material-icons">flag</i></div>
                     Getting Started
                 </a>
                 <!-- Drawer link (Forms)-->
-                <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapseSimulatorGuide" aria-expanded="false" aria-controls="collapseForms">
+                <a class="nav-link {% if section != 'guide' %}collapsed{% endif %}" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapseSimulatorGuide" aria-expanded="false" aria-controls="collapseForms">
                     <div class="nav-link-icon"><i class="material-icons">help_center</i></div>
                     Simulator User Guide
                     <div class="drawer-collapse-arrow"><i class="material-icons">expand_more</i></div>
                 </a>
                 <!-- Nested drawer nav (Forms)-->
-                <div class="collapse" id="collapseSimulatorGuide" aria-labelledby="headingOne" data-bs-parent="#drawerAccordion">
+                <div class="collapse {% if section == 'guide' %}show{% endif %}" id="collapseSimulatorGuide" aria-labelledby="headingOne" data-bs-parent="#drawerAccordion">
                     <nav class="drawer-menu-nested nav">
-                        <a class="nav-link" href="forms-inputs.html">User Interface</a>
-                        <a class="nav-link" href="forms-checks-and-radios.html">System Health Check</a>
-                        <a class="nav-link" href="forms-input-groups.html">Basic Operations</a>
-                        <a class="nav-link" href="forms-range.html">Manual Testing Containers</a>
-                        <a class="nav-link" href="forms-select.html">Troubleshooting</a>
+                        <a class="nav-link {% if current_page == 'user-interface' %}active{% endif %}" href="/guide/user-interface">User Interface</a>
+                        <a class="nav-link" href="/guide/system-health-check">System Health Check</a>
+                        <a class="nav-link" href="/guide/basic-operations">Basic Operations</a>
+                        <a class="nav-link" href="/guide/manual-testing">Manual Testing Containers</a>
+                        <a class="nav-link" href="/guide/troubleshooting">Troubleshooting</a>
                     </nav>
                 </div>
                 <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapseLearning" aria-expanded="false" aria-controls="collapseLearning">
@@ -51,16 +51,18 @@
                 <!-- Nested drawer nav (Forms)-->
                 <div class="collapse" id="collapseLearning" aria-labelledby="headingOne" data-bs-parent="#drawerAccordion">
                     <nav class="drawer-menu-nested nav">
-                        <a class="nav-link" href="forms-inputs.html">Aircrack-ng</a>
-                        <a class="nav-link" href="forms-checks-and-radios.html">Wireshark</a>
-                        <a class="nav-link" href="forms-input-groups.html">MAVLink</a>
-                        <a class="nav-link" href="forms-range.html">MAVProxy</a>
-                        <a class="nav-link" href="https://ardupilot.org/copter/index.html">ArduPilot Copter</a>
-                        <a class="nav-link" href="forms-select.html">Gazebo</a>
-                        <a class="nav-link" href="forms-select.html">SwarmSec</a>
+                        <a class="nav-link" href="/learning/aircrack-ng">Aircrack-ng</a>
+                        <a class="nav-link" href="/learning/wireshark">Wireshark</a>
+                        <a class="nav-link" href="/learning/mavlink">MAVLink</a>
+                        <a class="nav-link" href="/learning/mavproxy">MAVProxy</a>
+                        <a class="nav-link" href="/learning/ardupilot">ArduPilot</a>
+                        <a class="nav-link" href="/learning/arducopter">ArduCopter</a>
+                        <a class="nav-link" href="/learning/sitl">SITL Simulation</a>
+                        <a class="nav-link" href="/learning/gazebo">Gazebo</a>
+                        <a class="nav-link" href="/learning/swarmsec">SwarmSec</a>
                     </nav>
                 </div>
-                <a class="nav-link" href="/simulator">
+                <a class="nav-link" href="/attack-scenarios">
                     <div class="nav-link-icon"><i class="material-icons">warning</i></div>
                     Attack Scenarios
                 </a>
@@ -72,11 +74,102 @@
                 <!-- Nested drawer nav (Forms)-->
                 <div class="collapse" id="collapseSolutions" aria-labelledby="headingOne" data-bs-parent="#drawerAccordion">
                     <nav class="drawer-menu-nested nav">
-                        <a class="nav-link" href="forms-inputs.html">User Interface</a>
-                        <a class="nav-link" href="forms-checks-and-radios.html">System Health Check</a>
-                        <a class="nav-link" href="forms-input-groups.html">Basic Operations</a>
-                        <a class="nav-link" href="forms-range.html">Manual Testing Containers</a>
-                        <a class="nav-link" href="forms-select.html">Troubleshooting</a>
+                        <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#solutionsRecon" aria-expanded="false" aria-controls="pagesCollapseError">
+                            Reconnaissance
+                            <div class="drawer-collapse-arrow"><i class="material-icons">expand_more</i></div>
+                        </a>
+                        <!-- Nested drawer nav (Pages -> Error)-->
+                        <div class="collapse" id="solutionsRecon" aria-labelledby="headingOne" data-bs-parent="#drawerAccordionPages">
+                            <nav class="drawer-menu-nested nav">
+                                <a class="nav-link" href="app-error-400.html">400 Error Page</a>
+                                <a class="nav-link" href="app-error-401.html">401 Error Page</a>
+                                <a class="nav-link" href="app-error-403.html">403 Error Page</a>
+                            </nav>
+                        </div>
+                        <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#solutionsWireless" aria-expanded="false" aria-controls="pagesCollapseError">
+                            Wireless Attacks
+                            <div class="drawer-collapse-arrow"><i class="material-icons">expand_more</i></div>
+                        </a>
+                        <!-- Nested drawer nav (Pages -> Error)-->
+                        <div class="collapse" id="solutionsWireless" aria-labelledby="headingOne" data-bs-parent="#drawerAccordionPages">
+                            <nav class="drawer-menu-nested nav">
+                                <a class="nav-link" href="app-error-400.html">400 Error Page</a>
+                                <a class="nav-link" href="app-error-401.html">401 Error Page</a>
+                                <a class="nav-link" href="app-error-403.html">403 Error Page</a>
+                            </nav>
+                        </div>
+                        <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#solutionsDos" aria-expanded="false" aria-controls="pagesCollapseError">
+                            Denial of Service
+                            <div class="drawer-collapse-arrow"><i class="material-icons">expand_more</i></div>
+                        </a>
+                        <!-- Nested drawer nav (Pages -> Error)-->
+                        <div class="collapse" id="solutionsDos" aria-labelledby="headingOne" data-bs-parent="#drawerAccordionPages">
+                            <nav class="drawer-menu-nested nav">
+                                <a class="nav-link" href="app-error-400.html">400 Error Page</a>
+                                <a class="nav-link" href="app-error-401.html">401 Error Page</a>
+                                <a class="nav-link" href="app-error-403.html">403 Error Page</a>
+                            </nav>
+                        </div>
+                        <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#solutionsReversing" aria-expanded="false" aria-controls="pagesCollapseError">
+                            Reverse Engineering
+                            <div class="drawer-collapse-arrow"><i class="material-icons">expand_more</i></div>
+                        </a>
+                        <!-- Nested drawer nav (Pages -> Error)-->
+                        <div class="collapse" id="solutionsReversing" aria-labelledby="headingOne" data-bs-parent="#drawerAccordionPages">
+                            <nav class="drawer-menu-nested nav">
+                                <a class="nav-link" href="app-error-400.html">400 Error Page</a>
+                                <a class="nav-link" href="app-error-401.html">401 Error Page</a>
+                                <a class="nav-link" href="app-error-403.html">403 Error Page</a>
+                            </nav>
+                        </div>
+                        <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#solutionsSpoofing" aria-expanded="false" aria-controls="pagesCollapseError">
+                            Protocol Spoofing
+                            <div class="drawer-collapse-arrow"><i class="material-icons">expand_more</i></div>
+                        </a>
+                        <!-- Nested drawer nav (Pages -> Error)-->
+                        <div class="collapse" id="solutionsSpoofing" aria-labelledby="headingOne" data-bs-parent="#drawerAccordionPages">
+                            <nav class="drawer-menu-nested nav">
+                                <a class="nav-link" href="app-error-400.html">400 Error Page</a>
+                                <a class="nav-link" href="app-error-401.html">401 Error Page</a>
+                                <a class="nav-link" href="app-error-403.html">403 Error Page</a>
+                            </nav>
+                        </div>
+                        <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#solutionsInjection" aria-expanded="false" aria-controls="pagesCollapseError">
+                            Injection & Hijacking
+                            <div class="drawer-collapse-arrow"><i class="material-icons">expand_more</i></div>
+                        </a>
+                        <!-- Nested drawer nav (Pages -> Error)-->
+                        <div class="collapse" id="solutionsInjection" aria-labelledby="headingOne" data-bs-parent="#drawerAccordionPages">
+                            <nav class="drawer-menu-nested nav">
+                                <a class="nav-link" href="app-error-400.html">400 Error Page</a>
+                                <a class="nav-link" href="app-error-401.html">401 Error Page</a>
+                                <a class="nav-link" href="app-error-403.html">403 Error Page</a>
+                            </nav>
+                        </div>
+                        <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#solutionsFirmware" aria-expanded="false" aria-controls="pagesCollapseError">
+                            Firmware Attacks
+                            <div class="drawer-collapse-arrow"><i class="material-icons">expand_more</i></div>
+                        </a>
+                        <!-- Nested drawer nav (Pages -> Error)-->
+                        <div class="collapse" id="solutionsFirmware" aria-labelledby="headingOne" data-bs-parent="#drawerAccordionPages">
+                            <nav class="drawer-menu-nested nav">
+                                <a class="nav-link" href="app-error-400.html">400 Error Page</a>
+                                <a class="nav-link" href="app-error-401.html">401 Error Page</a>
+                                <a class="nav-link" href="app-error-403.html">403 Error Page</a>
+                            </nav>
+                        </div>
+                        <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#solutionsData" aria-expanded="false" aria-controls="pagesCollapseError">
+                            Data Exfiltration
+                            <div class="drawer-collapse-arrow"><i class="material-icons">expand_more</i></div>
+                        </a>
+                        <!-- Nested drawer nav (Pages -> Error)-->
+                        <div class="collapse" id="solutionsData" aria-labelledby="headingOne" data-bs-parent="#drawerAccordionPages">
+                            <nav class="drawer-menu-nested nav">
+                                <a class="nav-link" href="app-error-400.html">400 Error Page</a>
+                                <a class="nav-link" href="app-error-401.html">401 Error Page</a>
+                                <a class="nav-link" href="app-error-403.html">403 Error Page</a>
+                            </nav>
+                        </div>
                     </nav>
                 </div>
             </div>

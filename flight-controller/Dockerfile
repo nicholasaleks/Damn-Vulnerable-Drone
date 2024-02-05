@@ -61,6 +61,7 @@ RUN ./waf distclean
 RUN ./waf configure --board sitl
 RUN ./waf copter
 
+COPY ./flight-controller/drone.parm /ardupilot/drone.parm
 COPY ./flight-controller/init.sh /ardupilot/mgmt/init.sh
 RUN sudo chmod +x /ardupilot/mgmt/init.sh
 
