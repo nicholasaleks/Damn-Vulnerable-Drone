@@ -147,7 +147,7 @@ Install Docker and Docker Compose
 
 Start the Docker Service
 
-`sudo systemctl enable docker –-now`
+`sudo systemctl enable docker --now`
 
 Add docker permissions to user
 

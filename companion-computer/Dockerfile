@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
     net-tools \
     iputils-ping \
     gnupg \
+    expect \
     lsb-release \
     sudo \
     wget \
@@ -46,11 +47,14 @@ RUN make install
 
 WORKDIR /
 
+COPY companion-computer/init /init
+RUN chmod +x /init
+
 CMD /bin/bash -c "\
     socat pty,link=/dev/ttyUSB0,raw,echo=0 unix-connect:/sockets/socket.sock & \
     sleep 20 && \
     echo 'Starting Companion Computer...' && \
-    tail -f /dev/null"
+    /usr/bin/expect /init"
 
 # To connect to the drone via MAVProxy:
-# mavproxy.py --master=/dev/ttyUSB0 --baudrate 57600
+# mavproxy.py --master=/dev/ttyUSB0 --baudrate 57600 --out=udp:10.13.0.4:14550

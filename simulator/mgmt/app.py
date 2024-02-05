@@ -1,23 +1,34 @@
-from flask import Flask, render_template
-import docker
+from flask import Flask
 from flask_cors import CORS
+from extensions import db
+from models import create_initial_stages
+from routes import main
+import logging
 
-app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:8080"}})
+def create_app():
+    app = Flask(__name__)
+    CORS(app, resources={r"/*": {"origins": "http://localhost:8080"}})
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///stages.db'
 
-@app.route('/')
-def index():
-    client = docker.from_env()
-    container = client.containers.get('companion-computer')
-    exec_id = client.api.exec_create(container.id, 'ls')['Id']
-    output = client.api.exec_start(exec_id)
-    print(output.decode())
-    return render_template('pages/simulator.html', output=output.decode())
+    db.init_app(app)
 
-@app.errorhandler(404)
-def page_not_found(e):
-    # Note that we set the 404 status explicitly
-    return render_template('pages/404.html'), 404
+    with app.app_context():
+        db.create_all()
+        create_initial_stages()
+
+    # Configure Flask to send logs to the console
+    app.logger.setLevel(logging.INFO)
+    stream_handler = logging.StreamHandler()
+    stream_handler.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    stream_handler.setFormatter(formatter)
+    app.logger.addHandler(stream_handler)
+
+    app.register_blueprint(main)
+
+    return app
+
+app = create_app()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
