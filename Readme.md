@@ -19,7 +19,7 @@ Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator bas
 * [Simulator Management Web Console](#simulator-management-web-console)
 * [Screenshots](#screenshots)
 * [Maintainers](#maintainers)
-* [Contributors](#contributors)
+* [Credits](#Credits)
 * [Mentions](#mentions)
 * [Disclaimer](#disclaimer)
 * [License](#license)
@@ -201,17 +201,20 @@ TBD
 
 # Screenshots
 
-TBD
+Simulator Management Web Console
 
-# Maintainers
 
-- [Nick Aleks](https://github.com/nicholasaleks)
+# Credits
 
-# Contributor Appreciation
+Thanks to all the amazing [community contributors for sending PRs](https://github.com/nicholasaleks/Damn-Vulnerable-Drone/graphs/contributors) and keeping this project updated. :heart:
 
-A big Thank You to the kind people who helped make Damn Vulnerable Drone better:
+If you have an idea or some kind of improvement, you are welcome to contribute and participate in the project, feel free to send your PR.
 
-- [David Ansart](https://github.com/Raizo62)
+<p align="center">
+  <a href="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=nicholasaleks/Damn-Vulnerable-Drone" />
+  </a>
+</p>
 
 # Mentions
 
