@@ -98,7 +98,7 @@
                 <div id="simulator">
                     <section class="mb-5">
                         <div class="d-flex align-items-center mb-3">
-                            <h5 class="mb-0">Gazebo Simulator</h5>
+                            <h5 class="mb-0">Simulator</h5>
                             <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
                         </div>
                         <p>Gazebo provides a richly detailed 3D world where the physics of drone flight are accurately modeled. This allows for realistic simulations of how the drone would react to control inputs and environmental factors. It’s here that the rotors spin, and the virtual drone takes to the skies, all under the watchful control of the <a href="/">Simulator Management Web Console</a>.</p>
@@ -111,7 +111,9 @@
                             <h4 class="mb-0">Flight States</h4>
                             <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
                         </div>
-                        <p>Damn Vulnerable Drone encompasses a range of flight states that are essential for simulating real-world drone operations, crucial for constructing a variety of drone hacking scenarios. These states include:</p>
+                        <p>Damn Vulnerable Drone encompasses a range of flight states that are essential for simulating real-world drone operations, crucial for constructing a variety of drone hacking scenarios.</p>
+                        <p>The ability to simulate these various flight states is fundamental in DVD, as it allows users to test and exploit different aspects of drone operations. By understanding how a drone behaves in each state, offensive security professionals can better strategize their attack vectors, identify weaknesses in the system, and develop measures to mitigate potential security threats in real-world drone systems.</p>  
+                        <p>These states include:</p>
                         <p class="small">
                             <span class="fw-500 text-expanded">1. Initial Boot:</span>
                             <br />
@@ -141,28 +143,56 @@
                     <!-- Divider-->
                     <hr class="my-5" />
                 </div>
-                <div id="how-to-use-damn-vulnerable-drone">
+                <div id="how-should-i-use-damn-vulnerable-drone">
                     <section class="mb-5">
                         <div class="d-flex align-items-center mb-3">
-                            <h3 class="mb-0">How can I use Damn Vulnerable Drone?</h3>
+                            <h3 class="mb-0">How should I use Damn Vulnerable Drone?</h3>
                             <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
                         </div>
-                        <p class="mb-4">Here is some example text of a longer version of a first step. This format is great when you need to explain things more, not just using a ordered list.</p>
-                        <p class="small">
-                            <span class="fw-500 text-expanded">1. The first step</span>
-                            <br />
-                            Here is some text describing the first step.
-                        </p>
-                        <p class="small">
-                            <span class="fw-500 text-expanded">2. The next step</span>
-                            <br />
-                            Here is some text describing the next step after the first step.
-                        </p>
-                        <p class="small">
-                            <span class="fw-500 text-expanded">3. The final step</span>
-                            <br />
-                            This is just an example of a list to show how content will be presented.
-                        </p>
+                        <h6><u>Step 1: Learning about Drone Fundamental</u></h6>
+                        <p>For those new to drone technology or the specifics of ArduPilot and MAVLink, the first step in utilizing Damn Vulnerable Drone is to engage with the provided <a href="/learning">Learning Resources</a>. This foundational knowledge is crucial for understanding the operational aspects and potential vulnerabilities of drone systems. Once you're comfortable with the basics, or if you already have a grounding in these areas, proceed to step two.</p>
+                        
+                        <h6><u>Step 2: Review the Simulator Guide</u></h6>
+                        <p>Moving forward, your second step is to delve into the <a href="/guide/simulator">Simulator User Guide</a>. This will be your interface to navigating the environment, as well as the tool you'll use to initially interact with the drone by engaging it's flight states. (<i>Within the simulator, we assume flight states are triggered by the ground control station "operator", and not you, the drone hacker</i>)</p>
+                    
+                        <h6><u>Step 3: Execute a Simulation Health Check</u></h6>
+                        <p>After getting familiar with the Simulator, you'll want to run a <a href="/guide/health-check">Simulator Health Check</a>. This will ensure that all of the Damn Vulnerable Drone systems have been installed properly and are ready for testing.</p>
+                    
+                        <h6><u>Step 4: Start the Attack Scenarios</u></h6>
+                        <p>Next, actively engage with the <a href="/attack-scenarios">Attack Scenario</a> presented by DVD. Start with reconnaissance to understand the simulated environment you're working in, then methodically progress through the scenarios from wireless attacks to data exfiltration. For users who have set up DVD with virtual wifi, you can explore the Wireless Network Attack scenarios to deepen your understanding of network vulnerabilities. If you didn't install the virtual wifi component, it's assumed you have network access, and you can skip directly to focusing on other vulnerabilities within the drone's network.</p>
+                        
+                    </section>
+                </div>
+                <div id="tips-for-success">
+                    <section class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <h4 class="mb-0">Tips for Success</h4>
+                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <div class="alert alert-dark mb-0" role="alert">
+                                    <span class="fw-500 text-expanded">Tip 1: Embrace the Learning Journey</span><br>
+                                    No prior drone knowledge is required to start. Use the platform as a learning tool to understand drone protocols and systems from an offensive security perspective. Start by exploring the drone's architecture, firmware, and communication protocols through the provided <a href="/learning">Learning Resources</a>.</div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="alert alert-dark mb-0" role="alert">
+                                    <span class="fw-500 text-expanded">Tip 2: Master the Simulator</span><br>
+                                    Gain proficiency with the simulator. <a href=/guide/basic-operations">Basic operations</a> like "Reset View" and "Reset Simulator" are crucial for effective navigation and troubleshooting. For more complex issues, refer to the <a href="/guide/troubleshooting">Troubleshooting</a> section for guidance on Docker container rebuilding.</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <div class="alert alert-dark mb-0" role="alert">
+                                    <span class="fw-500 text-expanded">Tip 3: Challenge Yourself with Attack Scenarios</span><br>
+                                    Before referring to the <a href="/solutions">Solutions Guide</a>, try to exploit built-in vulnerabilities. This hands-on approach will enhance your problem-solving skills and deepen your technical understanding.</div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="alert alert-dark mb-0" role="alert">
+                                    <span class="fw-500 text-expanded">Tip 4: Set Strategic Goals</span><br>
+                                    Get comfortable with high-level hacking techniques against flight controllers, companion computers and ground control systems.</div>
+                            </div>
+                        </div>
                     </section>
                     <!-- Divider-->
                     <hr class="my-5" />
@@ -170,24 +200,21 @@
                 <div id="how-not-to-use-damn-vulnerable-drone">
                     <section class="mb-5">
                         <div class="d-flex align-items-center mb-3">
-                            <h3 class="mb-0">How <u>not</u> to use Damn Vulnerable Drone</h3>
+                            <h3 class="mb-0">How should I <u>not</u> use Damn Vulnerable Drone?</h3>
                             <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
                         </div>
-                        <p class="mb-4">Here is some example text of a longer version of a first step. This format is great when you need to explain things more, not just using a ordered list.</p>
+                        <p>Damn Vulnerable Drone is an educational platform designed for offensive security learning and enhancing cybersecurity practices, and should not be used as a means to engage in unauthorized probing or attacks on real-world drone systems. It is imperactive that users do not leverage the tools, techniques, and/or knowledge gained from Damn Vulnerable Drone to compromise the security of live drone and/or aircraft systems without explicit permission.</p>
+                        <p>Misuse of the Damn Vulnerable Drone platform may lead to legal consequences. Always use Damn Vulnerable Drone responsibily, with the intention of improving security and sharing knowledge within the bounds of local laws.</p>
+                        
+                        <p>Below are some additional ways Damn Vulnerable Drone should not be use:</p>
                         <p class="small">
                             <span class="fw-500 text-expanded">1. Don't upload Damn Vulnerable Drone firmware to any drone hardware.</span>
-                            <br />
-                            Here is some text describing the first step.
                         </p>
                         <p class="small">
-                            <span class="fw-500 text-expanded">2. Don't target the simulation infrastructure (10.13.0.4/24), including the simulator web applications.</span>
-                            <br />
-                            Here is some text describing the next step after the first step.
+                            <span class="fw-500 text-expanded">2. Don't target the simulation infrastructure as this may break Damn Vulnerable Drone.</span>
                         </p>
                         <p class="small">
                             <span class="fw-500 text-expanded">3. Don't limit yourself to the attack scenarios.</span>
-                            <br />
-                            This is just an example of a list to show how content will be presented.
                         </p>
                     </section>
                     <!-- Divider-->
@@ -199,7 +226,8 @@
                             <h3 class="mb-0">Community Support</h3>
                             <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
                         </div>
-                        <p>Here is some exam</p>
+                        <p>The Damn Vulnerable Drone platform thrives on the active participation and collaboration of its user community. This community is a collective of like-minded individuals ranging from cybersecurity enthusiasts to professional ethical hackers, all focused on sharing knowledge and advancing skills in drone security. Whether you're encountering technical issues, seeking advice on tackling scenarios, or looking to discuss the latest trends in drone vulnerabilities, the DVD community is a valuable resource.</p>
+                        <p>Community forums and chat groups are available for users to connect, share experiences, and provide mutual support. Users are encouraged to participate actively, ask questions, and offer help to others. Experienced members of the community often mentor newcomers, fostering a culture of continuous learning and improvement. Remember, every question you ask and every answer you provide helps the entire community grow stronger.</p>
                     </section>
                     <!-- Divider-->
                     <hr class="my-5" />
@@ -210,7 +238,9 @@
                             <h3 class="mb-0">Feedback & Contributions</h3>
                             <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
                         </div>
-                        <p>Here is some exam</p>
+                        <p>Feedback is the cornerstone of growth for the Damn Vulnerable Drone platform. Users are encouraged to provide their insights on their experience with DVD, including any challenges faced and suggestions for enhancements. This feedback is invaluable for the ongoing development and refinement of the platform.</p>
+                        <p>Contributions from the user base are not only welcomed but also essential. If you have developed a new attack scenario, discovered a way to improve the simulation, or created educational content that could benefit others, sharing it with the DVD community can have a significant impact. Contributions can take various forms, from code patches and feature suggestions to writing documentation and creating tutorial videos.</p>
+                        <p>The platform maintains an open source repository where users can submit their contributions. These contributions are reviewed by the maintainers and, if aligned with the project's goals, are integrated into the platform. By contributing, you help ensure that the DVD remains a cutting-edge tool for learning and practicing drone hacking techniques in a safe and ethical manner.</p>
                     </section>
                     <!-- Divider-->
                     <hr class="my-5" />
@@ -283,7 +313,12 @@
                                 <li class="nav-item"><a class="nav-link border-0" href="#flight-states">Flight States</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="#how-to-use-damn-vulnerable-drone">How can I use Damn Vulnerable Drone?</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#how-should-i-use-damn-vulnerable-drone">How should I use Damn Vulnerable Drone?</a>
+                            <ul class="nav flex-column mt-0 ms-3">
+                                <li class="nav-item"><a class="nav-link border-0" href="#tips-for-success">Tips for Success</a></li>
+                            </ul>
+                        </li>
                         <li class="nav-item"><a class="nav-link" href="#how-not-to-use-damn-vulnerable-drone">How <u>not</u> to use Damn Vulnerable Drone</a></li>
                         <li class="nav-item"><a class="nav-link" href="#community-support">Community Support</a></li>
                         <li class="nav-item"><a class="nav-link" href="#feedback-contributions">Feedback & Contributions</a></li>
