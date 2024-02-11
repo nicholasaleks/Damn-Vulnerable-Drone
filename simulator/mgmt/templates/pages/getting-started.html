@@ -3,25 +3,24 @@
 {% block content %}
 <main>
     <div class="container-xl p-5">
-        <div class="alert alert-danger" role="alert"><b>Disclaimer:</b> The Damn Vulnerable Drone (DVD) platform is provided solely for educational and research purposes. Users are expected to adhere to ethical hacking principles, respecting privacy and laws, and must not use skills or knowledge acquired from Damn Vulnerable Drone for malicious activities. The creators and maintainers of Damn Vulnerable Drone are not liable for any misuse of the platform. By using Damn Vulnerable Drone, you agree to use it responsibly and within legal boundaries. Damn Vulnerable Drone is highly insecure, and as such, should not be deployed on drone hardware or internet facing servers. It is intentionally flawed and vulnerable, as such, it comes with no warranties.</div>
+        <section class="mb-5" id="getting-started">
+            <div class="d-flex align-items-center mb-3">
+                <h2 class="mb-0">Getting Started</h2>
+                <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+            </div>
+            <p>Welcome to the Damn Vulnerable Drone (DVD) platform! Here you'll find everything you need to begin your drone hacking journey.</p>
+            <div class="alert alert-danger" role="alert"><b>Disclaimer:</b> The Damn Vulnerable Drone (DVD) platform is provided solely for educational and research purposes. Users are expected to adhere to ethical hacking principles, respecting privacy and laws, and must not use skills or knowledge acquired from Damn Vulnerable Drone for malicious activities. The creators and maintainers of Damn Vulnerable Drone are not liable for any misuse of the platform. By using Damn Vulnerable Drone, you agree to use it responsibly and within legal boundaries. Damn Vulnerable Drone is highly insecure, and as such, should not be deployed on drone hardware or internet facing servers. It is intentionally flawed and vulnerable, as such, it comes with no warranties.</div>
 
+        </section>
+        <hr class="my-5" />
         <!-- Knowledgebase content row-->
         <div class="row gx-5">
             <div class="col-lg-9">
                 <!-- Title section-->
-                <section class="mb-5" id="getting-started">
-                    <div class="d-flex align-items-center mb-3">
-                        <h2 class="mb-0">Getting Started</h2>
-                        <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
-                    </div>
-                    <p>Welcome to the Damn Vulnerable Drone (DVD) platform! Here you'll find everything you need to begin your drone hacking journey.</p>
-                </section>
+                
                 <!-- Divider-->
-                <hr class="my-5" />
+                
                 <!-- Segment-->
-                <div id="why-">
-
-                </div>
                 <div id="what-is-damn-vulnerable-drone">
                     <section class="mb-2">
                         <div class="d-flex align-items-center mb-3">
@@ -159,7 +158,7 @@
                         <p>After getting familiar with the Simulator, you'll want to run a <a href="/guide/health-check">Simulator Health Check</a>. This will ensure that all of the Damn Vulnerable Drone systems have been installed properly and are ready for testing.</p>
                     
                         <h6><u>Step 4: Start the Attack Scenarios</u></h6>
-                        <p>Next, actively engage with the <a href="/attack-scenarios">Attack Scenario</a> presented by DVD. Start with reconnaissance to understand the simulated environment you're working in, then methodically progress through the scenarios from wireless attacks to data exfiltration. For users who have set up DVD with virtual wifi, you can explore the Wireless Network Attack scenarios to deepen your understanding of network vulnerabilities. If you didn't install the virtual wifi component, it's assumed you have network access, and you can skip directly to focusing on other vulnerabilities within the drone's network.</p>
+                        <p>Next, actively engage with the <a href="/attacks">Attack Scenario</a> presented by DVD. Start with reconnaissance to understand the simulated environment you're working in, then methodically progress through the scenarios from wireless attacks to data exfiltration. For users who have set up DVD with virtual wifi, you can explore the Wireless Network Attack scenarios to deepen your understanding of network vulnerabilities. If you didn't install the virtual wifi component, it's assumed you have network access, and you can skip directly to focusing on other vulnerabilities within the drone's network.</p>
                         
                     </section>
                 </div>
@@ -227,7 +226,7 @@
                             <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
                         </div>
                         <p>The Damn Vulnerable Drone platform thrives on the active participation and collaboration of its user community. This community is a collective of like-minded individuals ranging from cybersecurity enthusiasts to professional ethical hackers, all focused on sharing knowledge and advancing skills in drone security. Whether you're encountering technical issues, seeking advice on tackling scenarios, or looking to discuss the latest trends in drone vulnerabilities, the DVD community is a valuable resource.</p>
-                        <p>Community forums and chat groups are available for users to connect, share experiences, and provide mutual support. Users are encouraged to participate actively, ask questions, and offer help to others. Experienced members of the community often mentor newcomers, fostering a culture of continuous learning and improvement. Remember, every question you ask and every answer you provide helps the entire community grow stronger.</p>
+                        <p>The community <a href="https://join.slack.com/t/slack-ghk2217/shared_invite/zt-2celpe33m-cvMB50w_BVsViXnbrLtLHA">Slack Channel</a> is available for users to connect, share experiences, and provide mutual support. Users are encouraged to participate actively, ask questions, and offer help to others. Experienced members of the community often mentor newcomers, fostering a culture of continuous learning and improvement. Remember, every question you ask and every answer you provide helps the entire community grow stronger.</p>
                     </section>
                     <!-- Divider-->
                     <hr class="my-5" />
@@ -238,9 +237,9 @@
                             <h3 class="mb-0">Feedback & Contributions</h3>
                             <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
                         </div>
-                        <p>Feedback is the cornerstone of growth for the Damn Vulnerable Drone platform. Users are encouraged to provide their insights on their experience with DVD, including any challenges faced and suggestions for enhancements. This feedback is invaluable for the ongoing development and refinement of the platform.</p>
-                        <p>Contributions from the user base are not only welcomed but also essential. If you have developed a new attack scenario, discovered a way to improve the simulation, or created educational content that could benefit others, sharing it with the DVD community can have a significant impact. Contributions can take various forms, from code patches and feature suggestions to writing documentation and creating tutorial videos.</p>
-                        <p>The platform maintains an open source repository where users can submit their contributions. These contributions are reviewed by the maintainers and, if aligned with the project's goals, are integrated into the platform. By contributing, you help ensure that the DVD remains a cutting-edge tool for learning and practicing drone hacking techniques in a safe and ethical manner.</p>
+                        <p>The platform maintains a <a href="https://github.com/nicholasaleks/Damn-Vulnerable-Drone">GitHub open source repository</a> where users can submit their contributions. These contributions are reviewed by the maintainers and, if aligned with the project's goals, are integrated into the platform. By contributing, you help ensure that the DVD remains a cutting-edge tool for learning and practicing drone hacking techniques in a safe and ethical manner.</p>
+                        <p>If you have developed a new attack scenario, discovered a way to improve the simulation, or created educational content that could benefit others, create a <a href="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/pulls">GitHub Pull Request</a>. Contributions can take various forms, from code patches and feature suggestions to writing documentation and creating tutorial videos.</p>
+                        <p>Feedback is the cornerstone of growth for the Damn Vulnerable Drone platform. Users are encouraged to provide their insights by creating a <a href="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/issues">GitHub Issue</a>. Do your best to including any challenges faced and suggestions for enhancements. This feedback is invaluable for the ongoing development and refinement of the platform.</p>
                     </section>
                     <!-- Divider-->
                     <hr class="my-5" />

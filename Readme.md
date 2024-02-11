@@ -75,36 +75,45 @@ The list of attack scenarios below is organized by stages. Note that some attack
 
 * **Reconnaissance**
   * Drone Discovery
-  * Ground Station Discovery
-  * MavLink Version Fingerprinting
-* **Wireless Network Attacks**
-  * WEP Network Cracking - using Aircrack-ng
-  * Man-in-the-Middle Eavesdropping - using Wireshark
-* **Denial of Service**
-  * Ground Control DeAuth - using Airodump
-  * Drone Computer Process Killing
-  * Mid-flight Drone Shutdown
-  * MAVLink Router Table Overflow 
-**Reverse Engineering**
-  * Telemetry Analysis
-  * Decompling Firmware
-* **Protocol Spoofing**
-  * MAVLink Message
+  * Companion Computer Discovery
+  * Ground Control Station Discovery
+  * MAVLink Packet Sniffing
+  * MAVLink Version Fingerprinting
+* **Wireless Attacks**
+  * Wifi Authentication Cracking
+  * Evil Twin Drone (Rouge AP)
+  * Wireless Deauthentication
+  * Wireless Client Data Leakage
+* **Protocol Tampering**
+  * Telemetry Spoofing
+  * Flight Mode Spoofing
+  * Drone State Spoofing
   * GPS Spoofing
-  * Drone Telemetry Data Spoofing - Tricking the GCS
+* **Denial of Service**
+  * Battery Drain Attack
+  * Communication Link Flooding
+  * Denial-of-Takeoff
+  * Geo-Squeezing
+  * Altitude Limiting
+  * Camera Feed Disruption
+  * GPS Jamming
 * **Command Injection & Hijacking**
-  * MAVLink Message Command Injection
-  * Drone Hijacking via Ground Control Station Spoofing
-  * Ground Control Station Hijacking via Drone Lateral Movement
+  * MAVLink Command Injection
+  * Camera Gimbal Takeover
+  * Waypoint Injection
+  * Sensor Data Injection
+  * Flight Mode Injection
+  * Ground Control Station Hijacking
+  * Companion Computer Exploitation
+* **Data Exfiltration**
+  * Flight Log Extraction
+  * Mission Plan Extraction
+  * Ardupilot Parameter Collection
+  * FTP Eavsdropping
+  * Camera Feed Eavsdropping
 * **Firmware Attacks**
-  * Malicious Firmware Upload
-  * Jailbreaking Parameter Tampering
-* **Data Collection & Exfiltration**
-  * Onboard SD Card Data Collection
-  * Flight Data Log Collection
-  * AWS Secrets Extraction
-  * Drone Wifi Client Data Leakage
-  * Live Drone Video Camera Streaming
+  * Firmware Decompile
+  * Firmware Modding
 
 # Installation
 

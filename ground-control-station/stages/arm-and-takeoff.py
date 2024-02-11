@@ -31,7 +31,7 @@ def wait_for_ekf_status(master):
         time.sleep(0.5)
 
 # Create a connection to the drone
-connection_string = "udp:10.13.0.4:14550"
+connection_string = "udp:0.0.0.0:14550"
 master = mavutil.mavlink_connection(connection_string)
 
 # Wait for the first heartbeat

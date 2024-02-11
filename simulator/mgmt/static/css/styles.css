@@ -22061,11 +22061,11 @@ div.code-toolbar > .toolbar > .toolbar-item .top-app-bar.navbar-light .card .car
   align-items: center;
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
-  padding-left: 1.5rem;
+  padding-left: 13px;
   padding-right: 1.5rem;
   position: relative;
   font-size: 0.875rem;
-  line-height: 1;
+  line-height: 22px;
   min-height: 2.75rem;
 }
 .drawer .drawer-menu .nav .nav-link .nav-link-icon {
@@ -22093,11 +22093,11 @@ div.code-toolbar > .toolbar > .toolbar-item .top-app-bar.navbar-light .card .car
   flex-direction: column;
 }
 .drawer .drawer-menu .nav .drawer-menu-nested .nav-link {
-  padding-left: 3.75rem;
+  padding-left: 48px;
 }
 .drawer .drawer-menu .nav .drawer-menu-nested > .collapsing > .drawer-menu-nested .nav-link,
 .drawer .drawer-menu .nav .drawer-menu-nested > .collapse.show > .drawer-menu-nested .nav-link {
-  padding-left: 5.25rem;
+  padding-left: 60px;
 }
 .drawer .drawer-footer {
   padding-top: 1rem;

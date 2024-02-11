@@ -1,0 +1,88 @@
+{% extends "pages/index.html" %}
+
+{% block content %}
+<main>
+    <div class="container-xl p-5">
+        <section class="mb-4">
+            <div class="d-flex align-items-center mb-0">
+                <h2 class="mb-0">Drone State Spoofing</h2>
+                <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+            </div>
+            <div class="caption mb-3">
+                Falsifying the state of a drone, such as critical conditions or alerts.
+            </div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/attacks">Attack Scenarios</a></li>
+                <li class="breadcrumb-item"><a href="/attacks/tampering">Protocol Tampering</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Drone State Spoofing</li>
+                </ol>
+            </nav>
+        </section>
+        <hr class="mb-3" />
+        <!-- Knowledgebase content row-->
+        <div class="row gx-5">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-6">
+                        <div id="description">
+                            <section class="mb-2">
+                                <div class="d-flex align-items-center mb-3">
+                                    <h4 class="mb-0">Description</h4>
+                                    <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                                </div>
+                                <p class="mb-4">
+                                    Drone State Spoofing is a technique where an attacker injects fabricated information into a drone's communication system to misrepresent the drone's actual state to the Ground Control Station (GCS). For instance, an attacker might trick the GCS into believing the drone has entered an emergency mode, even when it's operating normally.
+                                </p>
+                                <p class="mb-4">
+                                    This kind of spoofing can cause the GCS to initiate inappropriate responses, such as emergency landing protocols or return-to-home procedures. A bad actor might use this method to disrupt operations, divert a drone from its intended path, or to ground it prematurely. The impacts can range from operational disruption to potential safety hazards.
+                                </p>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div id="solution">
+                            <section class="mb-2">
+                                <div class="d-flex align-items-center mb-3">
+                                    <h4 class="mb-0">Prerequisites</h4>
+                                    <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                                </div>
+                                <ul>
+                                    <li>Understand <a href="/learning/mavlink">MAVLink</a></li>
+                                    <li>Read <a href="https://mavlink.io/en/services/traffic_management.html">Traffic Managment and Avoidance (UTM/ADSB)</a></li>
+                                    <li>Flight State: <a href="/getting-started#flight-states">Autopilot Flight</a></li>
+                                </ul>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div id="solution">
+                            <section class="mb-2">
+                                <div class="d-flex align-items-center mb-3">
+                                    <h4 class="mb-0">Solution Guide</h4>
+                                    <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                                </div>
+                                <p>
+                                    <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseSolution" role="button" aria-expanded="false" aria-controls="collapseSolution">
+                                    Reveal Solution (Spoiler Alert)
+                                    </a>
+                                </p>
+                                <div class="collapse" id="collapseSolution">
+                                    <div class="card card-body">
+                                        <h5 class="mb-3">Step 1</h5>
+                                        <p>
+                                            Insert Solution Here
+                                        </p>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

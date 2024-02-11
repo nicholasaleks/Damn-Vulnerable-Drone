@@ -1,0 +1,240 @@
+{% extends "pages/index.html" %}
+
+{% block content %}
+<main>
+    <div class="container-xl p-5">
+        <section class="mb-5">
+            <div class="d-flex align-items-center mb-3">
+                <h2 class="mb-0">Attack Scenarios</h2>
+                <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+            </div>
+            <p>Below is the full listing of all attack scenarios grouped by tactic.</p>
+        </section>
+        <hr class="my-5" />
+        <div class="row gx-5">
+            <div class="col-lg-9">
+
+                <div id="reconnaissance">
+                    <section class="mb-5">
+                        <div class="card card-raised mb-5">
+                            <div class="card-body p-5">
+                                <div class="card-title"><a href="/attacks/recon">Reconnaissance</a></div>
+                                <div class="card-subtitle mb-4">The process of gathering information about target systems to identify vulnerabilities and plan further attacks.</div>
+                                
+                                <div class="h6 mb-1"><a href="/attacks/recon/drone-discovery">Drone Discovery</a></div>
+                                <p class="small">Identifying the presence and type of drones in an area using signal detection or visual spotting.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/recon/companion-computer-discovery">Companion Computer Discovery</a></div>
+                                <p class="small">Finding companion computers attached to UAVs that provide additional processing capabilities.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/recon/ground-control-station-discovery">Ground Control Station Discovery</a></div>
+                                <p class="small">Locating ground control stations by detecting communication signals or network presence.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/recon/mavlink-packet-sniffing">MAVLink Packet Sniffing</a></div>
+                                <p class="small">Capturing MAVLink packets transmitted over the air to analyze drone communications.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/recon/mavlink-version-fingerprinting">MAVLink Version Fingerprinting</a></div>
+                                <p class="small">Determining the MAVLink protocol version to exploit specific vulnerabilities.</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div id="wireless-attacks">
+                    <section class="mb-5">
+                        <div class="card card-raised mb-5">
+                            <div class="card-body p-5">
+                                <div class="card-title"><a href="/attacks/wireless">Wireless Attacks</a></div>
+                                <div class="card-subtitle mb-4">Exploiting vulnerabilities in wireless communication to intercept, disrupt, or manipulate drone operations.</div>
+                                <div class="alert alert-warning" role="alert"><b>Note:</b> Wireless attack scenarios are only supported when virtual wi-fi mode is simulated (during <code>start.sh</code>).</div>
+
+                                <div class="h6 mb-1"><a href="/attacks/wireless/wifi-authentication-cracking">Wifi Authentication Cracking</a></div>
+                                <p class="small">Breaking WiFi security to gain unauthorized access to the drone network.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/wireless/evil-twin-drone">Evil Twin Drone (Rouge AP)</a></div>
+                                <p class="small">Creating a malicious access point to impersonate the drone network.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/wireless/wirless-deauthentication">Wireless Deauthentication</a></div>
+                                <p class="small">Forcibly disconnecting devices from a wireless network to disrupt operations.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/wireless/wireless-client-data-leak">Wireless Client Data Leak</a></div>
+                                <p class="small">Capturing data from the access point to extract wireless client information.</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div id="protocol-tampering">
+                    <section class="mb-5">
+                        <div class="card card-raised mb-5">
+                            <div class="card-body p-5">
+                                <div class="card-title"><a href="/attacks/tampering">Protocol Tampering</a></div>
+                                <div class="card-subtitle mb-4">Manipulating communication protocols to alter drone behavior or intercept sensitive data.</div>
+
+                                <div class="h6 mb-1"><a href="/attacks/tampering/drone-discovery">Telemetry Spoofing</a></div>
+                                <p class="small">Faking drone telemetry data to mislead operators or automated systems.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/tampering/companion-computer-discovery">Flight Mode Spoofing</a></div>
+                                <p class="small">Altering the reported flight mode to disguise unauthorized activities or trigger erroneous responses.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/tampering/drone-state-spoofing">Drone State Spoofing</a></div>
+                                <p class="small">Falsifying the state of a drone, such as critical conditions or alerts.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/tampering/mavlink-packet-sniffing">GPS Spoofing</a></div>
+                                <p class="small">Sending false GPS signals to mislead a drone's navigation system.</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div id="denial-of-service">
+                    <section class="mb-5">
+                        <div class="card card-raised mb-5">
+                            <div class="card-body p-5">
+                                <div class="card-title"><a href="/attacks/dos">Denial of Service</a></div>
+                                <div class="card-subtitle mb-4">Manipulating communication protocols to alter drone behavior or flight characteristics.</div>
+
+                                <div class="h6 mb-1"><a href="/attacks/dos/battery-drain-attack">Battery Drain Attack</a></div>
+                                <p class="small">Forcing the drone to expend battery at an accelerated rate.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/dos/communication-link-flooding">Communication Link Flooding</a></div>
+                                <p class="small">Overwhelming the communication link with excessive data.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/dos/denial-of-takeoff">Denial-of-Takeoff</a></div>
+                                <p class="small">Preventing a drone from taking off through interference or command spoofing.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/dos/geo-squeezing">Geo-Squeezing</a></div>
+                                <p class="small">Restricting a drone's operational space through GPS manipulation.</p>
+
+                                <div class="h6 mb-1"><a href="/attacks/dos/altitude-limiting">Altitude Limiting</a></div>
+                                <p class="small">Forcing a drone to stay below a certain altitude.</p>
+
+                                <div class="h6 mb-1"><a href="/attacks/dos/camera-feed-disruption">Camera Feed Disruption</a></div>
+                                <p class="small">Interrupting or degrading the quality of the video feed from the drone's camera.</p>
+
+                                <div class="h6 mb-1"><a href="/attacks/dos/gps-jamming">GPS Jamming</a></div>
+                                <p class="small">Blocking GPS signals to disrupt navigation.</p>
+                                
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div id="command-injection">
+                    <section class="mb-5">
+                        <div class="card card-raised mb-5">
+                            <div class="card-body p-5">
+                                <div class="card-title"><a href="/attacks/injection">Command Injection & Hijacking</a></div>
+                                <div class="card-subtitle mb-4">Injecting malicious MAVLink commands into the drone's communication system.</div>
+
+                                <div class="h6 mb-1"><a href="/attacks/injection/mavlink-command-injection">MAVLink Command Injection</a></div>
+                                <p class="small">Manipulating camera gimbal settings or orientation through unauthorized commands.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/injection/camera-gimbal-takeover">Camera Gimbal Takeover</a></div>
+                                <p class="small">Overwhelming the communication link with excessive data.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/injection/waypoint-injection">Waypoint Injection</a></div>
+                                <p class="small">Inserting unauthorized waypoints into a drone's mission plan.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/injection/sensor-data-injection">Sensor Data Injection</a></div>
+                                <p class="small">Feeding false sensor data to the drone to trigger incorrect responses.</p>
+
+                                <div class="h6 mb-1"><a href="/attacks/injection/flight-mode-injection">Flight Mode Injection</a></div>
+                                <p class="small">Changing the drone's flight mode without authorization.</p>
+
+                                <div class="h6 mb-1"><a href="/attacks/injection/ground-control-station-hijacking">Ground Control Station Hijacking</a></div>
+                                <p class="small">Taking control of the GCS to issue unauthorized commands or disrupt operations.</p>
+
+                                <div class="h6 mb-1"><a href="/attacks/injection/companion-computer-exploitation">Companion Computer Exploitation</a></div>
+                                <p class="small">Exploiting vulnerabilities in the companion computer to gain control or access data.</p>
+                                
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div id="data-exfiltration">
+                    <section class="mb-5">
+                        <div class="card card-raised mb-5">
+                            <div class="card-body p-5">
+                                <div class="card-title"><a href="/attacks/exfiltration">Data Exfiltration</a></div>
+                                <div class="card-subtitle mb-4">Extracting sensitive information from a drone or its associated systems.</div>
+
+                                <div class="h6 mb-1"><a href="/attacks/exfiltration/mavlink-command-injection">Flight Log Extraction</a></div>
+                                <p class="small">Obtaining flight logs to analyze past operations and identify sensitive information.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/exfiltration/camera-gimbal-takeover">Mission Plan Extraction</a></div>
+                                <p class="small">Stealing mission plans to gain insight into current or future operations.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/exfiltration/waypoint-injection">Ardupilot Parameter Collection</a></div>
+                                <p class="small">Collecting configuration parameters from Ardupilot-based systems for analysis or exploitation.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/exfiltration/sensor-data-injection">FTP Eavsdropping</a></div>
+                                <p class="small">Intercepting file transfers to or from the drone to access sensitive data.</p>
+
+                                <div class="h6 mb-1"><a href="/attacks/exfiltration/flight-mode-injection">Camera Feed Eavsdropping</a></div>
+                                <p class="small">Capturing the video feed from a drone's camera to surveil its operations.</p>
+
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div id="firmware-attacks">
+                    <section class="mb-5">
+                        <div class="card card-raised mb-5">
+                            <div class="card-body p-5">
+                                <div class="card-title"><a href="/attacks/firmware">Firmware Attacks</a></div>
+                                <div class="card-subtitle mb-4">Extracting sensitive information from a drone or its associated systems.</div>
+
+                                <div class="h6 mb-1"><a href="/attacks/firmware/firmware-decompiling">Firmware Decompiling</a></div>
+                                <p class="small">Breaking down the firmware to analyze its code and identify potential vulnerabilities.</p>
+                                <hr class="my-3">
+
+                                <div class="h6 mb-1"><a href="/attacks/firmware/firmware-modding">Firmware Modding</a></div>
+                                <p class="small">Modifying the drone's firmware to unlock restricted features, improve performance, or introduce custom functionalities.</p>
+                                <hr class="my-3">
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+            </div>
+            <div class="col-lg-3 mb-5 mb-lg-0">
+                <!-- Side column sticky navigation stick-->
+                <div class="sticky-top nav-stick">
+                    <div class="nav-heading">Contents</div>
+                    <ul class="nav flex-column" id="navStick">
+                        <li class="nav-item"><a class="nav-link" href="#reconnaissance">Reconnaissance</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#wireless-attacks">Wireless Attacks</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#protocol-tampering">Protocol Tampering</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#denial-of-service">Denial of Service</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#command-injection">Command Injection & Hijacking</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#data-exfiltration">Data Exfiltration</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#firmware-attacks">Firmware Attacks</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
