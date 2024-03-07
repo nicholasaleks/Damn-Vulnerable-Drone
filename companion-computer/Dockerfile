@@ -3,6 +3,8 @@ FROM ubuntu:22.04
 # Avoid prompts during package installations
 ENV DEBIAN_FRONTEND=noninteractive
 
+EXPOSE 3000
+
 RUN apt-get update && apt-get install -y \
     apt-utils \
     curl \
@@ -12,10 +14,12 @@ RUN apt-get update && apt-get install -y \
     nano \
     hostapd \
     dnsmasq \
+    npm \
     isc-dhcp-server \
     wpasupplicant \
     git \
     nmap \
+    systemd \
     python3 \
     net-tools \
     iputils-ping \
@@ -46,6 +50,24 @@ RUN make tools
 RUN make install
 
 WORKDIR /
+
+RUN git clone https://github.com/stephendade/Rpanion-server.git
+
+RUN sed -i 's|sudo hostnamectl set-hostname rpanion --static|# &|' /Rpanion-server/deploy/RasPi-ubuntu22-deploy.sh
+RUN sed -i 's|sudo systemctl stop unattended-upgrades.service|# &|' /Rpanion-server/deploy/RasPi-ubuntu22-deploy.sh
+RUN sed -i 's|sudo apt -y remove needrestart|# &|' /Rpanion-server/deploy/RasPi-ubuntu22-deploy.sh
+
+RUN chmod +x /Rpanion-server/deploy/RasPi-ubuntu22-deploy.sh
+
+WORKDIR /Rpanion-server/deploy
+
+RUN npm install react-scripts --save
+
+RUN npm run build
+
+RUN PORT=3000
+
+RUN npm run server &
 
 COPY companion-computer/init /init
 RUN chmod +x /init

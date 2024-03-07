@@ -297,7 +297,7 @@ def learning_swarmsec():
 @main.route('/attacks/all')
 @main.route('/attacks')
 def attacks_index():
-    return render_template('pages/attacks/index.html', section='attacks', sub_section='', current_page='all')
+    return render_template('pages/attacks/list.html', section='attacks', sub_section='', current_page='attacks')
 
 # RECON
 

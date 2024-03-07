@@ -3,13 +3,23 @@
 {% block content %}
 <main>
     <div class="container-xl p-5">
-        <section class="mb-5">
-            <div class="d-flex align-items-center mb-3">
-                <h2 class="mb-0">Attack Scenarios | Reconnaissance</h2>
+        <section class="mb-4">
+            <div class="d-flex align-items-center mb-0">
+                <h2 class="mb-0">Reconnaissance</h2>
                 <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
             </div>
+            <div class="caption mb-3">
+                The process of gathering information about target systems to identify vulnerabilities and plan further attacks.
+            </div>
+            <div class="alert bg-light show pb-0" role="alert">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/attacks" class="link">Attack Scenarios</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Reconnaissance</li>
+                    </ol>
+                </nav>
+            </div>
         </section>
-        <hr class="my-5" />
     </div>
 </main>
 {% endblock %}

@@ -1,0 +1,229 @@
+{% extends "pages/index.html" %}
+
+{% block content %}
+<main>
+    <div class="p-5">
+        <section class="mb-5">
+            <div class="d-flex align-items-center mb-3">
+                <h2 class="mb-0">Attack Scenarios</h2>
+                <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+            </div>
+            <p>Below is the full listing of all attack scenarios grouped by tactic.</p>
+        </section>
+
+        <div class="table-responsive-lg">
+            <table class="table table-bordered" style="border-bottom: #FFF;">
+                <tr>
+                    <th class="table-light"><a class="link" href="/attacks/recon">Reconnaissance</a></th>
+                    <th class="table-light"><a class="link" href="/attacks/wireless">Wireless Attack</a></th>
+                    <th class="table-light"><a class="link" href="/attacks/tampering">Protocol Tampering</a></th>
+                    <th class="table-light"><a class="link" href="/attacks/dos">Denial of Service</a></th>
+                    <th class="table-light"><a class="link" href="/attacks/injection">Injection</a></th>
+                    <th class="table-light"><a class="link" href="/attacks/exfiltration">Exfiltration</a></th>
+                    <th class="table-light"><a class="link" href="/attacks/firmware">Firmware Attacks</a></th>
+                </tr>
+                <tr>
+                    <td style="border: none; padding: 0px;">
+                        <table class="table table-bordered table-sm">
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/recon/drone-discovery">Drone Discovery</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/recon/ground-control-station-discovery">Ground Control Station Discovery</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/recon/companion-computer-discovery">Companion Computer Discovery</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/recon/mavlink-packet-sniffing">Mavlink Packet Sniffing</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/recon/mavlink-version-fingerprinting">Mavlink Version Fingerprinting</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="border: none; padding: 0px;">
+                        <table class="table table-bordered table-sm">
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/wireless/wireless-authentication-cracking">Wifi Authentication Cracking</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/wireless/evil-twin-drone">Evil Twin Drone</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/wireless/wireless-deauthentication">Wireless Deauthentication</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/wireless/wireless-client-data-leak">Wireless Client Data Leak</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="border: none; padding: 0px;">
+                        <table class="table table-bordered table-sm">
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/tampering/telemetry-spoofing">Telemetry Spoofing</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/tampering/flight-mode-spoofing">Flight Mode Spoofing</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/tampering/drone-state-spoofing">Drone State Spoofing</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/tampering/gps-spoofing">GPS Spoofing</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="border: none; padding: 0px;">
+                        <table class="table table-bordered table-sm">
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/dos/battery-drain-attack">Battery Drain Attack</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/dos/communication-link-flooding">Communication Link Flooding</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/dos/denial-of-takeoff">Denial-of-Takeoff</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/dos/geo-squeezing">Geo-Squeezing</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/dos/altitude-limiting">Altitude Limiting</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/dos/camera-feed-disruption">Camera Feed Disruption</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/dos/gps-jamming">GPS Jamming</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="border: none; padding: 0px;">
+                        <table class="table table-bordered table-sm">
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/injection/mavlink-command-injection">MAVLink Command Injection</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/injection/camera-gimbal-takeover">Camera Gimbal Takeover</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/injection/waypoint-injection">Waypoint Injection</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/injection/sensor-data-injection">Sensor Data Injection</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/injection/flight-mode-injection">Flight Mode Injection</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/injection/ground-control-station-takeover">Ground Control Station Takeover</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/injection/companion-computer-takeover">Companion Computer Takeover</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="border: none; padding: 0px;">
+                        <table class="table table-bordered table-sm">
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/exfiltration/flight-log-extraction">Flight Log Extraction</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/exfiltration/paramter-extraction">Parameter Extraction</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/exfiltration/mission-extraction">Mission Extraction</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/exfiltration/ftp-eavsdropping">FTP Eavsdropping</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/exfiltration/camera-feed-eavsdropping">Camera Feed Eavsdropping</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="border: none; padding: 0px;">
+                        <table class="table table-bordered table-sm">
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/firmware/firmware-decompile">Firmware Decompile</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/firmware/firmware-modding">Firmware Modding</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</main>
+{% endblock %}
