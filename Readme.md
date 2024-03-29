@@ -29,15 +29,19 @@ The Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator
 
 # About the Damn Vulnerable Drone
 
-<img src="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/blob/master/simulator/mgmt/static/images/a43dbcd7-10b0-4f7a-b920-5925bac59642.gif?raw=true" alt="Damn Vulnerable Drone Demo"/>
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=EHTQv6IfnwI"><img src="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/blob/master/simulator/mgmt/static/images/demo.png?raw=true" alt="Damn Vulnerable Drone Demo"/></a>
+</p>
 
 ## What is the Damn Vulnerable Drone?
 
-The Damn Vulnerable Drone is a virtually simulated environment designed for offensive security professionals to safely learn and practice drone hacking techniques. It simulates real-world [ArduPilot](https://ardupilot.org/) & [MAVLink](https://mavlink.io/en/) drone architectures and vulnerabilities, offering a hands-on experience in exploring and exploiting drone systems. The Damn Vulnerable Drone aims to enhance offensive security skills within a controlled, ethical framework, making it an invaluable tool for intermediate-level security professionals, pentesters, and hacking enthusiasts.
+The Damn Vulnerable Drone is a virtually simulated environment designed for offensive security professionals to safely learn and practice drone hacking techniques. It simulates real-world [ArduPilot](https://ardupilot.org/) & [MAVLink](https://mavlink.io/en/) drone architectures and vulnerabilities, offering a hands-on experience in exploring and exploiting drone systems. 
 
 ## Why was it built?
 
-Similar to how pilots utilize flight simulators for training, we will use the Damn Vulnerable Drone simulator to gain in-depth knowledge of real-world drone systems, understand their vulnerabilities, and learn effective methods to exploit them.
+The Damn Vulnerable Drone aims to enhance offensive security skills within a controlled, ethical framework, making it an invaluable tool for intermediate-level security professionals, pentesters, and hacking enthusiasts.
+
+Similar to how pilots utilize flight simulators for training, we can use the Damn Vulnerable Drone simulator to gain in-depth knowledge of real-world drone systems, understand their vulnerabilities, and learn effective methods to exploit them.
 
 The Damn Vulnerable Drone platform is open-source and available at no cost and was specifically designed to address the substantial expenses often linked with drone hardware, hacking tools, and maintenance. Its cost-free nature allows users to immerse themselves in drone hacking without financial concerns. This accessibility makes the Damn Vulnerable Drone a crucial resource for those in the fields of information security and penetration testing, promoting the development of offensive cybersecurity skills in a safe and ethical environment.
 
@@ -222,6 +226,10 @@ However, "Half-Baked Mode" does not support wifi simulations and you will need t
 # Screenshots
 
 <p align="center">
+  <img src="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/blob/master/simulator/mgmt/static/images/a43dbcd7-10b0-4f7a-b920-5925bac59642.gif?raw=true" alt="Damn Vulnerable Drone Demo"/>
+</p>
+
+<p>
   <img src="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/blob/master/simulator/mgmt/static/images/Damn-Vulnerable-Drone-Interface.png?raw=true" alt="Damn Vulnerable Drone Interface"/>
 </p>
 
@@ -234,7 +242,7 @@ However, "Half-Baked Mode" does not support wifi simulations and you will need t
 </p>
 
 <p align="center">
-  <img src="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/blob/master/simulator/mgmt/static/images/Drone-Hacker-Can.png?raw=true" alt="Drone Hacker Van"/>
+  <img src="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/blob/master/simulator/mgmt/static/images/Drone-Hacker-Van.png?raw=true" alt="Drone Hacker Van"/>
 </p>
 
 <p align="center">
