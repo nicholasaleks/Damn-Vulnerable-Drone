@@ -35,15 +35,15 @@ The Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator
 
 ## What is the Damn Vulnerable Drone?
 
-The Damn Vulnerable Drone is a virtually simulated environment designed for offensive security professionals to safely learn and practice drone hacking techniques. It simulates real-world [ArduPilot](https://ardupilot.org/) & [MAVLink](https://mavlink.io/en/) drone architectures and vulnerabilities, offering a hands-on experience in exploring and exploiting drone systems. 
+The Damn Vulnerable Drone is a virtually simulated environment designed for offensive security professionals to safely learn and practice drone hacking techniques. It simulates real-world [ArduPilot](https://ardupilot.org/) & [MAVLink](https://mavlink.io/en/) drone architectures and vulnerabilities, offering a hands-on experience in exploiting drone systems. 
 
 ## Why was it built?
 
-The Damn Vulnerable Drone aims to enhance offensive security skills within a controlled, ethical framework, making it an invaluable tool for intermediate-level security professionals, pentesters, and hacking enthusiasts.
+The Damn Vulnerable Drone aims to enhance offensive security skills within a controlled environment, making it an invaluable tool for intermediate-level security professionals, pentesters, and hacking enthusiasts.
 
 Similar to how pilots utilize flight simulators for training, we can use the Damn Vulnerable Drone simulator to gain in-depth knowledge of real-world drone systems, understand their vulnerabilities, and learn effective methods to exploit them.
 
-The Damn Vulnerable Drone platform is open-source and available at no cost and was specifically designed to address the substantial expenses often linked with drone hardware, hacking tools, and maintenance. Its cost-free nature allows users to immerse themselves in drone hacking without financial concerns. This accessibility makes the Damn Vulnerable Drone a crucial resource for those in the fields of information security and penetration testing, promoting the development of offensive cybersecurity skills in a safe and ethical environment.
+The Damn Vulnerable Drone platform is open-source and available at no cost and was specifically designed to address the substantial expenses often linked with drone hardware, hacking tools, and maintenance. Its cost-free nature allows users to immerse themselves in drone hacking without financial concerns. This accessibility makes the Damn Vulnerable Drone a crucial resource for those in the fields of information security and penetration testing, promoting the development of offensive cybersecurity skills in a safe environment.
 
 ## How does it work?
 
@@ -81,16 +81,14 @@ Below is a high-level overview of the Damn Vulnerable Drone architecture:
 
 ## Initializing flight states
 
-The Damn Vulnerable Drone encompasses a range of flight states. Each flight state can be trigger by clicking on their buttons in the UI (http://localhost:8000)
+The Damn Vulnerable Drone has a range of flight states. Each flight state can be trigger by clicking on their buttons in the UI (http://localhost:8000). The ability to simulate these various flight states allows users to test and exploit different aspects of the drones operations. By clicking these states, you are essentially triggering the GCS to issue commands to the drone.
 
 <p align="center">
   <img src="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/blob/master/simulator/mgmt/static/images/flight-states.png?raw=true" alt="Damn Vulnerable Drone Flight States"/>
 </p>
 
-The ability to simulate these various flight states is fundamental in the Damn Vulnerable Drone, as it allows users to test and exploit different aspects of drone operations. By understanding how a drone behaves in each state, offensive security professionals can better strategize their attack vectors, identify weaknesses in the system, and develop measures to mitigate potential security threats in real-world drone systems.
-
 **1. Initial Boot:**
-This simulates the drone's startup sequence, where all systems are initialized. Clicking this initial boot will simulate you "pressing" the power on button on the drone flight controller, allowing for the companion computer to establish a connection to it. This phase is critical for security/safety checks, calibration and ensuring communication protocols are setup before flight.
+This simulates the drone's startup sequence, where all systems are initialized. Clicking this will simulate you "pressing" the power on button on the drone flight controller, allowing for the companion computer to establish a connection to it. This phase is critical for security/safety checks, calibration and ensuring communication protocols are setup before flight.
 
 **2. Arm & Takeoff**
 The phase where the drone transitions from a stationary state to airborne, testing the responsiveness of flight controls and the integrity of take-off protocols. Note: This may take some time to complete as the drone requires GPS & EKF3 to be ready)
@@ -110,7 +108,7 @@ The list of attack scenarios below is organized by stages. Note that some attack
 
 | Reconnaissance              | Protocol Tampering   | Denial of Service            | Injection                      | Exfiltration           | Firmware Attacks      |
 |-----------------------------|----------------------|------------------------------|--------------------------------|------------------------|-----------------------|
-| Wifi Authentication Cracking | Telemetry Spoofing   | Battery Drain Attack         | MAVLink Command Injection     | Flight Log Extraction  | Firmware Decompile    |
+| Wifi Analysis & Cracking    | Telemetry Spoofing   | Battery Drain Attack         | MAVLink Command Injection      | Flight Log Extraction  | Firmware Decompile    |
 | Drone Signal Discovery      | Flight Mode Spoofing | Communication Link Flooding  | Camera Gimbal Takeover         | Parameter Extraction   | Firmware Modding      |
 | Packet Sniffing             | Drone State Spoofing | Denial-of-Takeoff            | Waypoint Injection             | Mission Extraction     |                       |
 | Protocol Fingerprinting     | GPS Spoofing         | Geo-Squeezing                | Sensor Data Injection          | FTP Eavesdropping      |                       |
@@ -119,6 +117,13 @@ The list of attack scenarios below is organized by stages. Note that some attack
 | Ground Control Station Discovery |                 | GPS Jamming                  | Companion Computer Takeover    |                        |                       |
 | Companion Computer Discovery |                     | Wireless Deauthentication    |                                |                        |                       |
 
+## Example Attack Scenario Walkthrough
+
+Each of the attack scenarios has documentation which outlines what the attack scenario is, as well as a **Spoiler** step-by-step walkthrough for users to follow in order to execute the attack. These spoiler walkthroughs are hidden been a button, which when clicked will reveal the instructions.
+
+<p align="center">
+  <img src="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/blob/master/simulator/mgmt/static/images/Walkthrough.png?raw=true" alt="Damn Vulnerable Drone Walkthrough"/>
+</p>
 
 # Installation
 
@@ -128,7 +133,7 @@ Note: Both installation modes require internet access.
 
 ## Full-Deploy Mode Installation 
 
-"Full-Deploy Mode" allows for the most realistic virtual drone hacking simulation. It deploys a virtually simulated wifi network that you can interact with. This virtual wifi network acts as the data-link connection between the Ground Station and Drone Companion Computer, allowing for interesting attack scenarios...
+"Full-Deploy Mode" allows for the most realistic virtual drone hacking simulation. It deploys a virtually simulated wifi network that you can interact with. This virtual wifi network acts as the data-link connection between the Ground Station and Drone Companion Computer, allowing for interesting attack scenarios. When you deploy the Damn Vulnerable Drone using Full-Deploy Mode you will have access to the "Drone_Wifi" SSID and 192.168.13.0/24 network. The 10.13.0.0/24 network is used as the sore simulator infrastructure network (and shouldn't be targetted.)
 
 The system requirements to run "Full-Deploy Mode" a Kali VM with the following minimum requirements:
 * Kali Linux VM (Ubuntu 22.04 is also supported)
@@ -138,31 +143,31 @@ The system requirements to run "Full-Deploy Mode" a Kali VM with the following m
   * Docker
   * Docker Compose
 
-*Note: Fully-Deploy Mode was only tested on Kali Linux using Apple Silicon*
+*Note: Fully-Deploy Mode was only tested on Kali Linux*
 
 ### Install Docker & Docker Compose
 
-Add the docker apt source
+**Step 1.** Add the docker apt source
 
 `printf '%s\n' "deb https://download.docker.com/linux/debian bullseye stable" | sudo tee /etc/apt/sources.list.d/docker-ce.list`
 
-Import the GPG Key
+**Step 2.** Import the GPG Key
 
 `curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/docker-ce-archive-keyring.gpg`
 
-Update the apt repository
+**Step 3.** Update the apt repository
 
 `sudo apt update -y`
 
-Install Docker and Docker Compose
+**Step 4.** Install Docker and Docker Compose
 
 `sudo apt install docker-ce docker-ce-cli containerd.io -y`
 
-Start the Docker Service
+**Step 5.** Start the Docker Service
 
 `sudo systemctl enable docker --now`
 
-Add docker permissions to user
+**Step 6.** Add docker permissions to user
 
 `sudo usermod -aG docker $USER`
 
@@ -172,7 +177,7 @@ Add docker permissions to user
 
 ## Starting & Stopping Damn Vulnerable Drone
 
-Damn Vulnerable Drone (Full-Deploy Mode) includes three useful bash scripts which will help you manage the state of your simulator.
+The Damn Vulnerable Drone's *Full-Deploy Mode* includes three useful bash scripts which will help you manage the state of your simulator.
 
 #### Build & Start
 
@@ -210,10 +215,10 @@ If you ever want to check the status of your simulator you can run the status sc
 
 "Half-Baked Mode" essentially only runs the Damn Vulnerable Drone docker containers.
 Unlike "Full-Deploy Mode" you are not limited to only running "Half-Baked Mode" within a Kali Linux VM.
-However, "Half-Baked Mode" does not support wifi simulations and you will need to assume that you have an established foothold on the drone data-link connection.
+However, "Half-Baked Mode" does not support wifi simulations and you will need to assume that you have an established foothold on the drone data-link connection (via the 10.13.0.0/24 network)
 
 *Note: If you have already followed the "Full-Deploy Mode" installation instructions you can skip these steps.*
-*We assume initial access connectivity to the drone network."
+*We assume initial access connectivity to the drone network (10.13.0.0/24)."
 
 ### Clone the repository
 

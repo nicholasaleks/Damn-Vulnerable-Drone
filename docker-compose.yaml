@@ -50,6 +50,8 @@ services:
       - "8000:8000" # simulator mgmt
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WIFI_ENABLED
     networks:
       simulator:
         ipv4_address: 10.13.0.5

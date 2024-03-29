@@ -115,6 +115,15 @@ body {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+.code {
+  background-color: #565555;
+    border-radius: 8px;
+    padding-left: 12px;
+    color: ghostwhite;
+    display: block;
+    word-wrap: break-word;
+}
+
 hr {
   margin: 1rem 0;
   color: inherit;

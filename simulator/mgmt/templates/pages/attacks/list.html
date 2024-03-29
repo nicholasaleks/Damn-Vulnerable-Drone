@@ -8,14 +8,13 @@
                 <h2 class="mb-0">Attack Scenarios</h2>
                 <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
             </div>
-            <p>Below is the full listing of all attack scenarios grouped by tactic.</p>
+            <p>Below is the full listing of all attack scenarios grouped by tactic. <span style="color: red">Note: Cells in red are only supported on Wifi-Mode (Full-Deploy)</span></p>
         </section>
 
         <div class="table-responsive-lg">
             <table class="table table-bordered" style="border-bottom: #FFF;">
                 <tr>
                     <th class="table-light"><a class="link" href="/attacks/recon">Reconnaissance</a></th>
-                    <th class="table-light"><a class="link" href="/attacks/wireless">Wireless Attack</a></th>
                     <th class="table-light"><a class="link" href="/attacks/tampering">Protocol Tampering</a></th>
                     <th class="table-light"><a class="link" href="/attacks/dos">Denial of Service</a></th>
                     <th class="table-light"><a class="link" href="/attacks/injection">Injection</a></th>
@@ -26,8 +25,13 @@
                     <td style="border: none; padding: 0px;">
                         <table class="table table-bordered table-sm">
                             <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/recon/wifi-analysis-cracking">Wifi Analysis & Cracking</a>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td class="ripple-gray">
-                                    <a class="link" href="/attacks/recon/drone-discovery">Drone Signal Discovery</a>
+                                    <a class="link" href="/attacks/recon/drone-discovery">Drone Host Discovery</a>
                                 </td>
                             </tr>
                             <tr>
@@ -58,30 +62,6 @@
                             <tr>
                                 <td class="ripple-gray">
                                     <a class="link" href="/attacks/recon/companion-computer-discovery">Companion Computer Discovery</a>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td style="border: none; padding: 0px;">
-                        <table class="table table-bordered table-sm">
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/wireless/wireless-authentication-cracking">Wifi Authentication Cracking</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/wireless/evil-twin-drone">Evil Twin Drone</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/wireless/wireless-deauthentication">Wireless Deauthentication</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/wireless/wireless-client-data-leak">Wireless Client Data Leak</a>
                                 </td>
                             </tr>
                         </table>
@@ -145,6 +125,11 @@
                             <tr>
                                 <td class="ripple-gray">
                                     <a class="link" href="/attacks/dos/gps-jamming">GPS Jamming</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/dos/wifi-deauthentication">Wifi Deauthentication</a>
                                 </td>
                             </tr>
                         </table>
@@ -213,6 +198,11 @@
                             <tr>
                                 <td class="ripple-gray">
                                     <a class="link" href="/attacks/exfiltration/camera-feed-eavsdropping">Camera Feed Eavsdropping</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ripple-gray bg-danger-light">
+                                    <a class="link" href="/attacks/dos/wifi-client-data-leak">Wifi Client Data Leak</a>
                                 </td>
                             </tr>
                         </table>

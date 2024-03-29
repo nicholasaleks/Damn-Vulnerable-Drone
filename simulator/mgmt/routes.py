@@ -294,6 +294,10 @@ def attacks_index():
 def attacks_recon():
     return render_template('pages/attacks/recon/index.html', section='attacks', sub_section='recon')
 
+@main.route('/attacks/recon/wifi-analysis-cracking')
+def attacks_recon_wifi_analysis_cracking():
+    return render_template('pages/attacks/recon/wifi-analysis-cracking.html', section='attacks', sub_section='recon', current_page='wifi-analysis-cracking')
+
 @main.route('/attacks/recon/drone-discovery')
 def attacks_recon_drone_discovery():
     return render_template('pages/attacks/recon/drone-discovery.html', section='attacks', sub_section='recon', current_page='drone-discovery')
@@ -318,28 +322,6 @@ def attacks_recon_companion_computer_discovery():
 def attacks_recon_ground_control_station_discovery():
     return render_template('pages/attacks/recon/ground-control-station-discovery.html', section='attacks', sub_section='recon', current_page='ground-control-station-discovery')
 
-
-# WIRELESS
-
-@main.route('/attacks/wireless')
-def attacks_wireless():
-    return render_template('pages/attacks/wireless/index.html', section='attacks', sub_section='wireless')
-
-@main.route('/attacks/wireless/wifi-authentication-cracking')
-def attacks_wireless_wifi_authentication_cracking():
-    return render_template('pages/attacks/wireless/wifi-authentication-cracking.html', section='attacks', sub_section='wireless', current_page='wifi-authentication-cracking')
-
-@main.route('/attacks/wireless/evil-twin-drone')
-def attacks_wireless_evil_twin_drone():
-    return render_template('pages/attacks/wireless/evil-twin-drone.html', section='attacks', sub_section='wireless', current_page='evil-twin-drone')
-
-@main.route('/attacks/wireless/wireless-deauthentication')
-def attacks_wireless_wireless_deauthentication():
-    return render_template('pages/attacks/wireless/wireless-deauthentication.html', section='attacks', sub_section='wireless', current_page='wireless-deauthentication')
-
-@main.route('/attacks/wireless/wireless-client-data-leakage')
-def attacks_wireless_wireless_client_data_leakage():
-    return render_template('pages/attacks/wireless/wireless-client-data-leakage.html', section='attacks', sub_section='wireless', current_page='wireless-client-data-leakage')
 
 # PROTOCOL TAMPERING
 
@@ -397,6 +379,11 @@ def attacks_dos_camera_feed_disruption():
 @main.route('/attacks/dos/gps-jamming')
 def attacks_dos_gps_jamming():
     return render_template('pages/attacks/dos/gps-jamming.html', section='attacks', sub_section='dos', current_page='gps-jamming')
+
+@main.route('/attacks/wireless/wireless-deauthentication')
+def attacks_dos_wireless_deauthentication():
+    return render_template('pages/attacks/dos/wireless-deauthentication.html', section='attacks', sub_section='dos', current_page='wireless-deauthentication')
+
 
 
 # INJECTION & HIJACKING
@@ -459,6 +446,11 @@ def attacks_exfiltration_sensor_data_injection():
 @main.route('/attacks/exfiltration/camera-feed-eavesdropping')
 def attacks_exfiltration_camera_feed_eavesdropping():
     return render_template('pages/attacks/exfiltration/camera_feed_eavesdropping.html', section='attacks', sub_section='exfiltration', current_page='camera-feed-eavesdropping')
+
+@main.route('/attacks/exfiltration/wireless-client-data-leakage')
+def attacks_exfiltration_wireless_client_data_leakage():
+    return render_template('pages/attacks/exfiltration/wireless-client-data-leakage.html', section='attacks', sub_section='exfiltration', current_page='wireless-client-data-leakage')
+
 
 # FIRMWARE ATTACKS
 
