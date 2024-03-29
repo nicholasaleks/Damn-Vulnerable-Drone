@@ -23,6 +23,8 @@ services:
       - flight-controller
     volumes:
       - serial-uart-socket:/sockets
+    environment:
+      - WIFI_ENABLED
     networks:
       simulator:
         ipv4_address: 10.13.0.3

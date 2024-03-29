@@ -5,11 +5,11 @@
     <div class="container-xl p-5">
         <section class="mb-4">
             <div class="d-flex align-items-center mb-0">
-                <h2 class="mb-0">Drone Discovery</h2>
+                <h2 class="mb-0">Drone Signal Discovery</h2>
                 <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
             </div>
             <p class="mb-3">
-                Identifying the presence and type of drones in an area using signal detection or visual spotting.
+                Identifying the presence and type of drones in an area using signal detection.
             </p>
             <div class="alert bg-light show pb-0" role="alert">
                 <nav aria-label="breadcrumb">
@@ -33,10 +33,9 @@
                                     <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
                                 </div>
                                 <p class="mb-4">
-                                    Drone State Spoofing is a technique where an attacker injects fabricated information into a drone's communication system to misrepresent the drone's actual state to the Ground Control Station (GCS). For instance, an attacker might trick the GCS into believing the drone has entered an emergency mode, even when it's operating normally.
-                                </p>
+                                    Drone signals discovery involves scanning a network range of endpoint addresses and ports on a UAV or MAVLink-compatible device to discover open ports and active services. Typically this technique requires an attack to be on the same wireless network as the GCS and Drone data-link. This process helps in understanding the UAV's network interface setup and identifying potential entry points for further analysis or penetration testing.</p>
                                 <p class="mb-4">
-                                    This kind of spoofing can cause the GCS to initiate inappropriate responses, such as emergency landing protocols or return-to-home procedures. A bad actor might use this method to disrupt operations, divert a drone from its intended path, or to ground it prematurely. The impacts can range from operational disruption to potential safety hazards.
+                                    Drone systems that use MAVLink can choose arbitrary ports for communication. However, there are several commonly used UDP ports within the drone and ground station software ecosystems. These ports are often used for various purposes such as telemetry, Ground Control Station (GCS) communication, and inter-vehicle communication. (14550, 14540, 14560, 14580, 5760, 5762, 5763)
                                 </p>
                             </section>
                         </div>
@@ -49,9 +48,7 @@
                                     <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
                                 </div>
                                 <ul>
-                                    <li><a class="link" href="/learning/mavlink">MAVLink Documentation</a></li>
-                                    <li><a class="link" href="https://mavlink.io/en/services/traffic_management.html">Traffic Managment and Avoidance (UTM/ADSB)</a></li>
-                                    <li><a class="link" href="/getting-started#flight-states">Autopilot Flight States</a></li>
+                                    <li><a class="link" target="_blank" href="https://nmap.org/">Nmap</a></li>
                                 </ul>
                             </section>
                         </div>
@@ -73,9 +70,20 @@
                                 <div class="collapse" id="collapseSolution">
                                     <div class="alert alert-success">
                                         <h5 class="mb-3">Step 1</h5>
-                                        <p class="text-dark">
-                                            Insert Solution Here
-                                        </p>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <p>
+                                                    Use Nmap to scan the network range of endpoint addresses and ports on a UAV or 
+                                                    MAVLink-compatible device to discover open ports and active services.
+                                                </p>
+                                                <code>
+                                                    nmap -sn 10.13.0.0/24 -p 14550,14540,14560,14580,5760,5762,5763
+                                                </code>
+                                                <p>
+                                                    After running this scan you should be able to identify the open ports and active services on the drone and the ground control station.
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </section>

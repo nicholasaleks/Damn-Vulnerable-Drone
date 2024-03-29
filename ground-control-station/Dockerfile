@@ -9,12 +9,22 @@ RUN apt-get update && apt-get install -y \
     iproute2 \
     nano \
     net-tools \
+    wpasupplicant \
+    isc-dhcp-client \
     iputils-ping \
     python3 \
     python3-pip \
+    wget \
+    git \
+    make \
+    g++ \
+    libnl-3-dev \
+    libnl-genl-3-dev \
     expect \
     && pip3 install future pymavlink MAVProxy mavsdk \
     && rm -rf /var/lib/apt/lists/*
+
+COPY ground-control-station/conf/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
 
 COPY ground-control-station/stages/arm-and-takeoff.py /arm-and-takeoff.py
 COPY ground-control-station/stages/autopilot-flight.py /autopilot-flight.py

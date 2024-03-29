@@ -49,7 +49,8 @@
                             <h4 class="mb-0">How does it work?</h4>
                             <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
                         </div>
-                        <p>The Damn Vulnerable Drone platform operates on the principle of <a target="_blank" class="link" href="https://ardupilot.org/dev/docs/sitl-simulator-software-in-the-loop.html">Software-in-the-Loop (SITL)</a>, a simulation technique that allows users to run drone software code as if it were executing on an actual drone, thereby replicating authentic drone behaviors and responses.</p>
+                        <p>The Damn Vulnerable Drone platform operates on the principle of <a target="_blank" class="link" href="https://ardupilot.org/dev/docs/sitl-simulator-software-in-the-loop.html">Software-in-the-Loop (SITL)</a>, a simulation technique that allows users to run drone software as if it were executing on an actual drone, thereby replicating authentic drone behaviors and responses.</p>
+                        <img src="/static/images/a43dbcd7-10b0-4f7a-b920-5925bac59642.gif" class="img-fluid rounded-3 mb-4" alt="Damn Vulnerable Drone Simulator Screenshot" />
                         <p>ArduPilot's SITL allows for the execution of the drone's firmware within a virtual environment, mimicking the behavior of a real drone without the need for physical hardware. This simulation is further enhanced with <a target="_blank" class="link" href="https://gazebosim.org/home">Gazebo</a>, a dynamic 3D robotics simulator, which provides a realistic environment and physics engine for the drone to interact with. Together, ArduPilot's SITL and Gazebo lay the foundation for a sophisticated and authentic drone simulation experience.</p>
                         <p>While the current Damn Vulnerable Drone setup doesn't mirror every drone architecture or configuration, the integrated tactics, techniques and scenarios are broadly applicable across various drone systems, models and communication protocols.</p>
                     </section>
@@ -64,46 +65,42 @@
                         <p>Below is a high-level overview of the Damn Vulnerable Drone architecture:</p>
                         <img src="/static/images/Damn-Vulnerable-Drone-Architecture-getting-started.png" class="img-fluid rounded-3 mb-4" alt="Damn Vulnerable Drone Architecture" />
                         <p>As shown in the diagram, the Damn Vulnerable Drone architecture consists of the following 4 core components:</p>
+                        <table class="table table-bordered table-sm">
+                            <tr>
+                                <td class="table-light" width="200">Component</td>
+                                <td class="table-light">Description</td>
+                                <td class="table-light" width="100">Docker IP</td>
+                                <td class="table-light" width="100">Wireless IP</td>
+                            </tr>
+                            <tr>
+                                <td>Flight Controller</td>
+                                <td>This is the brain of the drone, running the ArduPilot firmware to simulate a drone's flight controls. It interacts with the Gazebo simulator through a Gazebo driver, allowing it to process virtual sensor data and respond as if it were flying in the real world.</td>
+                                <td><p class="text-primary">10.13.0.2</p></td>
+                                <td><p class="text-primary">-</p></td>
+                            </tr>
+                            <tr>
+                                <td>Companion Computer</td>
+                                <td>The Companion Computer (attached to the drone) handles higher-level processing tasks that are too complex for the flight controller. It manages wireless networking, telemetry logs, facilitates camera streaming for surveillance or reconnaissance, and interfaces with guidance systems for autonomous operations.</td>
+                                <td><p class="text-primary">10.13.0.3</p></td>
+                                <td><p class="text-primary">192.168.13.1</p></td>
+                            </tr>
+                            <tr>
+                                <td>Ground Control Station</td>
+                                <td>This component acts as the remote pilot's interface, providing mission planning capabilities, flight mapping, video streaming, and joystick control inputs. It communicates with the flight controller and companion computer over a simulated wireless MAVLink connection.</td>
+                                <td><p class="text-primary">10.13.0.4</p></td>
+                                <td><p class="text-primary">192.168.13.14</p></td>
+                            </tr>
+                            <tr>
+                                <td>Simulator</td>
+                                <td>Gazebo provides a richly detailed 3D world where the physics of drone flight are accurately modeled. This allows for realistic simulations of how the drone would react to control inputs and environmental factors. It’s here that the rotors spin, and the virtual drone takes to the skies, all under the watchful control of the <a href="/" class="link">Simulator Management Web Console</a>. <div class="alert alert-danger">Warning: Try not to target the simulator directly as this may break Damn Vulnerable Drone</div></td>
+                                <td><p class="text-primary">10.13.0.5</p></td>
+                                <td><p class="text-primary">-</p></td>
+                            </tr>
+                        </table>
+                        <div class="alert alert-warning">Note: Wireless IP Addresses will only be set if wireless mode is enabled.</div>
                     </section>
                 </div>
-                <div id="flight-controller">
-                    <section class="mb-5">
-                        <div class="d-flex align-items-center mb-3">
-                            <h5 class="mb-0">Flight Controller</h5>
-                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
-                        </div>
-                        <p>This is the brain of the drone, running the ArduPilot firmware to simulate a drone's flight controls. It interacts with the Gazebo simulator through a Gazebo driver, allowing it to process virtual sensor data and respond as if it were flying in the real world.</p>
-                    </section>
-                </div>
-                <div id="companion-computer">
-                    <section class="mb-5">
-                        <div class="d-flex align-items-center mb-3">
-                            <h5 class="mb-0">Companion Computer</h5>
-                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
-                        </div>
-                        <p>The Companion Computer (attached to the drone) handles higher-level processing tasks that are too complex for the flight controller. It manages wireless networking, telemetry logs, facilitates camera streaming for surveillance or reconnaissance, and interfaces with guidance systems for autonomous operations.</p>
-                    </section>
-                </div>
-                <div id="ground-control-station">
-                    <section class="mb-5">
-                        <div class="d-flex align-items-center mb-3">
-                            <h5 class="mb-0">Ground Control Station</h5>
-                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
-                        </div>
-                        <p>This component acts as the remote pilot's interface, providing mission planning capabilities, flight mapping, video streaming, and joystick control inputs. It communicates with the flight controller and companion computer over a simulated wireless MAVLink connection.</p>
-                    </section>
-                    
-                </div>
-                <div id="simulator">
-                    <section class="mb-5">
-                        <div class="d-flex align-items-center mb-3">
-                            <h5 class="mb-0">Simulator</h5>
-                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
-                        </div>
-                        <p>Gazebo provides a richly detailed 3D world where the physics of drone flight are accurately modeled. This allows for realistic simulations of how the drone would react to control inputs and environmental factors. It’s here that the rotors spin, and the virtual drone takes to the skies, all under the watchful control of the <a href="/" class="link">Simulator Management Web Console</a>.</p>
-                    </section>
-                    
-                </div>
+                
                 <div id="flight-states">
                     <section class="mb-5">
                         <div class="d-flex align-items-center mb-3">
@@ -112,32 +109,40 @@
                         </div>
                         <p>Damn Vulnerable Drone encompasses a range of flight states that are essential for simulating real-world drone operations, crucial for constructing a variety of drone hacking scenarios.</p>
                         <p>The ability to simulate these various flight states is fundamental in DVD, as it allows users to test and exploit different aspects of drone operations. By understanding how a drone behaves in each state, offensive security professionals can better strategize their attack vectors, identify weaknesses in the system, and develop measures to mitigate potential security threats in real-world drone systems.</p>  
-                        <p>These states include:</p>
-                        <p class="small">
-                            <span class="fw-500 text-expanded">1. Initial Boot:</span>
-                            <br />
-                            This simulates the drone's startup sequence, where all systems are initialized. It's a critical phase for security checks and ensuring communication protocols are secure before flight.
-                        </p>
-                        <p class="small">
-                            <span class="fw-500 text-expanded">2. Arm & Takeoff</span>
-                            <br />
-                            The phase where the drone transitions from a stationary state to airborne, testing the responsiveness of flight controls and the integrity of take-off protocols. <i>Note: This may take some time to complete as the drone requires <a target="_blank" class="link" href="https://ardupilot.org/copter/docs/common-positioning-landing-page.html">GPS</a> & <a class="link" target="_blank" href="https://ardupilot.org/copter/docs/common-apm-navigation-extended-kalman-filter-overview.html">EKF3</a> to be ready)</i>
-                        </p>
-                        <p class="small">
-                            <span class="fw-500 text-expanded">3. Autopilot Flight</span>
-                            <br />
-                            Represents the drone's ability to navigate autonomously based on predefined waypoints or dynamic commands, a vital state for exploring vulnerabilities in navigation and control systems.
-                        </p>
-                        <p class="small">
-                            <span class="fw-500 text-expanded">4. Emergency / Return-To-Land</span>
-                            <br />
-                            Simulates the drone's emergency protocols, automatically returning to a home location upon triggering fail-safes or loss of control signals, which can be a target for exploitation in hacking scenarios.
-                        </p>
-                        <p class="small">
-                            <span class="fw-500 text-expanded">5. Post-Flight Data Processing</span>
-                            <br />
-                            This state involves the handling of all data collected during the flight, including telemetry and logs, making it an important phase for understanding data exfiltration and integrity attacks.
-                        </p>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <p>These states include:</p>
+                                <p class="small">
+                                    <span class="fw-500 text-expanded">1. Initial Boot:</span>
+                                    <br />
+                                    This simulates the drone's startup sequence, where all systems are initialized. Clicking this initial boot will simulate you "pressing" the power on button on the drone flight controller, allowing for the companion computer to establish a connection to it. This phase is critical for security/safety checks, calibration and ensuring communication protocols are setup before flight.
+                                </p>
+                                <p class="small">
+                                    <span class="fw-500 text-expanded">2. Arm & Takeoff</span>
+                                    <br />
+                                    The phase where the drone transitions from a stationary state to airborne, testing the responsiveness of flight controls and the integrity of take-off protocols. <i>Note: This may take some time to complete as the drone requires <a target="_blank" class="link" href="https://ardupilot.org/copter/docs/common-positioning-landing-page.html">GPS</a> & <a class="link" target="_blank" href="https://ardupilot.org/copter/docs/common-apm-navigation-extended-kalman-filter-overview.html">EKF3</a> to be ready)</i>
+                                </p>
+                                <p class="small">
+                                    <span class="fw-500 text-expanded">3. Autopilot Flight</span>
+                                    <br />
+                                    Represents the drone's ability to navigate autonomously based on predefined waypoints or dynamic commands, a vital state for exploring vulnerabilities in navigation and control systems.
+                                </p>
+                                <p class="small">
+                                    <span class="fw-500 text-expanded">4. Emergency / Return-To-Land</span>
+                                    <br />
+                                    Simulates the drone's emergency protocols, automatically returning to a home location upon triggering fail-safes or loss of control signals, which can be a target for exploitation in hacking scenarios.
+                                </p>
+                                <p class="small">
+                                    <span class="fw-500 text-expanded">5. Post-Flight Data Processing</span>
+                                    <br />
+                                    This state involves the handling of all data collected during the flight, including telemetry and logs, making it an important phase for understanding data exfiltration and integrity attacks.
+                                </p>
+                            </div>
+                            <div class="col-md-4">
+                                <img src="/static/images/flight-states.png" class="img-fluid rounded-3 mb-4" alt="Flight States" />
+                            </div>
+                        </div>
+                        
                     </section>
                     <!-- Divider-->
                     <hr class="my-5" />

@@ -47,17 +47,6 @@ def reset_world():
     kill_command_2 = "pkill -f arducopter"
     container.exec_run(kill_command_2)
 
-    # Reset GCS
-    ########################################################
-    try:
-        gcs_container = client.containers.get('ground-control-station')
-        gcs_container.restart()
-    except NotFound:
-        print("GCS container not found.")
-
-    # Reset Simulator
-    ########################################################
-
     output = 'Reset'
     return render_template('pages/simulator.html', output=output, current_page='home')
 
@@ -75,7 +64,7 @@ def stage1():
     client = docker.from_env()
     container = client.containers.get('flight-controller')
     logging.info('Triggering Stage 1...')
-    command = "Tools/autotest/sim_vehicle.py --location=0,0,0 -v ArduCopter -f gazebo-iris --no-rebuild --no-mavproxy --sim-address=10.13.0.5 -A '--serial0=uart:/dev/ttyACM0:57600'"
+    command = "Tools/autotest/sim_vehicle.py -v ArduCopter -f gazebo-iris --no-rebuild --no-mavproxy --sim-address=10.13.0.5 -A '--serial0=uart:/dev/ttyACM0:57600'"
     
     # Log the command before executing it
     logging.info("Executing command: %s", command)
@@ -309,6 +298,18 @@ def attacks_recon():
 def attacks_recon_drone_discovery():
     return render_template('pages/attacks/recon/drone-discovery.html', section='attacks', sub_section='recon', current_page='drone-discovery')
 
+@main.route('/attacks/recon/packet-sniffing')
+def attacks_recon_packet_sniffing():
+    return render_template('pages/attacks/recon/packet-sniffing.html', section='attacks', sub_section='recon', current_page='packet-sniffing')
+
+@main.route('/attacks/recon/protocol-fingerprinting')
+def attacks_recon_protocol_fingerprinting():
+    return render_template('pages/attacks/recon/protocol-fingerprinting.html', section='attacks', sub_section='recon', current_page='protocol-fingerprinting')
+
+@main.route('/attacks/recon/gps-telemetry-analysis')
+def attacks_recon_gps_telemetry_analysis():
+    return render_template('pages/attacks/recon/gps-telemetry-analysis.html', section='attacks', sub_section='recon', current_page='gps-telemetry-analysis')
+
 @main.route('/attacks/recon/companion-computer-discovery')
 def attacks_recon_companion_computer_discovery():
     return render_template('pages/attacks/recon/companion-computer-discovery.html', section='attacks', sub_section='recon', current_page='companion-computer-discovery')
@@ -317,13 +318,6 @@ def attacks_recon_companion_computer_discovery():
 def attacks_recon_ground_control_station_discovery():
     return render_template('pages/attacks/recon/ground-control-station-discovery.html', section='attacks', sub_section='recon', current_page='ground-control-station-discovery')
 
-@main.route('/attacks/recon/mavlink-packet-sniffing')
-def attacks_recon_mavlink_packet_sniffing():
-    return render_template('pages/attacks/recon/mavlink-packet-sniffing.html', section='attacks', sub_section='recon', current_page='mavlink-packet-sniffing')
-
-@main.route('/attacks/recon/mavlink-version-fingerprinting')
-def attacks_recon_mavlink_version_fingerprinting():
-    return render_template('pages/attacks/recon/mavlink-version-fingerprinting.html', section='attacks', sub_section='recon', current_page='mavlink-version-fingerprinting')
 
 # WIRELESS
 

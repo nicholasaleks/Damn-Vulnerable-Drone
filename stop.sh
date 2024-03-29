@@ -19,9 +19,10 @@ LOG_FILE="dvd.log"
 
     # Remove virtual wifi interfaces
     echo "[+] Removing virtual wifi interfaces..."
-    sudo iw dev wlan0 del
-    sudo iw dev wlan1 del
-    sudo iw dev wlan2 del
+    sudo iw dev wlan0 del >/dev/null 2>&1
+    sudo iw dev wlan1 del >/dev/null 2>&1
+    sudo iw dev wlan2 del >/dev/null 2>&1
+    sudo iw dev wlan3 del >/dev/null 2>&1
 
     # Unload mac80211_hwsim kernel module
     echo "[+] Unloading kernel module mac80211_hwsim..."

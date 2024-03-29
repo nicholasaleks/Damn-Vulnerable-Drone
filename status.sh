@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define container names
-CONTAINERS=("companion-computer" "ground-control-station")
+CONTAINERS=("companion-computer" "ground-control-station" "flight-controller" "simulator")
 ENVIRONMENT_STATUS="Stopped"
 
 # Check if Docker is running

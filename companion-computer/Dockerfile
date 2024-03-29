@@ -42,13 +42,6 @@ COPY companion-computer/conf/dnsmasq.conf /etc/dnsmasq.conf
 COPY companion-computer/conf/hostapd.conf /etc/hostapd.conf
 COPY companion-computer/conf/isc-dhcp-server /etc/default/isc-dhcp-server
 
-# Get vwifi
-RUN git clone https://github.com/Raizo62/vwifi.git
-WORKDIR /vwifi
-RUN make
-RUN make tools
-RUN make install
-
 WORKDIR /
 
 RUN git clone https://github.com/stephendade/Rpanion-server.git
@@ -77,6 +70,3 @@ CMD /bin/bash -c "\
     sleep 20 && \
     echo 'Starting Companion Computer...' && \
     /usr/bin/expect /init"
-
-# To connect to the drone via MAVProxy:
-# mavproxy.py --master=/dev/ttyUSB0 --baudrate 57600 --out=udp:10.13.0.4:14550
