@@ -3,13 +3,167 @@
 {% block content %}
 <main>
     <div class="container-xl p-5">
-        <section class="mb-5">
-            <div class="d-flex align-items-center mb-3">
-                <h2 class="mb-0">Wireless Authentication Cracking</h2>
+        <section class="mb-4">
+            <div class="d-flex align-items-center mb-0">
+                <h2 class="mb-0">Wifi Analysis & Cracking</h2>
                 <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
             </div>
+            <p class="mb-3">
+                Breaking WiFi security to gain unauthorized access to the drone network.
+            </p>
+            <div class="alert bg-light show pb-0" role="alert">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/attacks" class="link">Attack Scenarios</a></li>
+                        <li class="breadcrumb-item"><a href="/attacks/recon" class="link">Reconnaissance</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Wifi Analysis & Cracking</li>
+                    </ol>
+                </nav>
+            </div>
         </section>
-        <hr class="my-5" />
+        <!-- Knowledgebase content row-->
+        <div class="row gx-5">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-6">
+                        <div id="description">
+                            <section class="mb-2">
+                                <div class="d-flex align-items-center mb-3">
+                                    <h4 class="mb-0">Description</h4>
+                                    <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                                </div>
+                                <p class="mb-4">
+                                    To penetrate and analyze the security of wireless networks by identifying vulnerabilities in Wi-Fi encryption and authentication mechanisms. This involves capturing network traffic to crack the network's password and gain unauthorized access to the network's data and devices connected to it.</p>
+                                <p class="mb-4">
+                                    Wi-Fi Analysis and Cracking entails the use of specialized software tools to monitor, capture, and analyze Wi-Fi network traffic. This scenario typically begins with the identification of available Wi-Fi networks and the gathering of information such as the network's SSID (Service Set Identifier), BSSID (Basic Service Set Identifier), and the type of encryption used (WPA, WPA2, WEP, etc.). 
+                                </p>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div id="solution">
+                            <section class="mb-2">
+                                <div class="d-flex align-items-center mb-3">
+                                    <h4 class="mb-0">Resources</h4>
+                                    <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                                </div>
+                                <ul>
+                                    <li><a class="link" target="_blank" href="https://www.wireshark.org/docs/wsug_html_chunked/index.html">Wireshark</a></li>
+                                    <li><a class="link" target="_blank" href="https://www.aircrack-ng.org/doku.php#documentation">Aircrack-ng</a></li>
+                                </ul>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div id="solution">
+                            <section class="mb-2">
+                                <div class="d-flex align-items-center mb-3">
+                                    <h4 class="mb-0">Solution Guide</h4>
+                                    <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                                </div>
+                                <p>
+                                    <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseSolution" role="button" aria-expanded="false" aria-controls="collapseSolution">
+                                    Reveal Solution (Spoiler Alert)
+                                    </a>
+                                </p>
+                                <div class="collapse" id="collapseSolution">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h4 class="mb-3">Non-Wifi-Mode (Half-Baked)</h4>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="alert alert-success">
+                                                        <h5 class="mb-3">Step 1. Ensure Docker Bridge Connection</h5>
+                                                        <p>
+                                                            Verify you are connected to the Docker bridge network, you can do this by running the following command:
+                                                        </p>
+
+                                                        <code class="code mb-3">
+                                                            ifconfig
+                                                        </code>
+
+                                                        <p>
+                                                            You should have a bridge network with an IP address within the range of 10.13.0.0/24.
+                                                        </p>
+
+                                                        <h5 class="mb-3">Step 2. Host Discovery</h5>
+                                                        <p>
+                                                            Use Nmap to scan the network range.
+                                                        </p>
+                                                        
+                                                        <code class="code mb-3">
+                                                            nmap -sn 10.13.0.0/24 
+                                                        </code>
+
+                                                        <p>
+                                                            After running this scan you should be able to identify the IP address of hosts on the network.
+                                                        </p>
+
+                                                        <h5 class="mb-3">Step 3. MAVLink Port Scan</h5>
+                                                        <p>
+                                                            Use Nmap to scan the specific network ports of each host to identify UAV or MAVLink-compatible services.
+                                                        </p>
+                                                        
+                                                        <code class="code mb-3">
+                                                            nmap 10.13.0.0/24 -p 14550,14540,14560,14580,5760,5762,5763
+                                                        </code>
+
+                                                        <p>
+                                                            After running this scan you should be able to identify the open ports and active services on the drone and the ground control station.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h4 class="mb-3">Wifi-Mode (Full-Deploy)</h4>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="alert alert-success">
+                                                        <h5 class="mb-3">Step 1. Connect to Wifi Network</h5>
+                                                        <p>
+                                                            Use your access gained from: <a href="/attacks/recon/wifi-analysis-cracking">Wireless Analysis & Cracking</a>
+                                                        </p>
+
+                                                        <h5 class="mb-3">Step 2. Host Discovery</h5>
+                                                        <p>
+                                                            Use Nmap to scan the network range.
+                                                        </p>
+                                                        
+                                                        <code class="code mb-3">
+                                                            nmap -sn 192.168.13.0/24 
+                                                        </code>
+
+                                                        <p>
+                                                            After running this scan you should be able to identify the IP address of hosts on the network.
+                                                        </p>
+
+                                                        <h5 class="mb-3">Step 3. MAVLink Port Scan</h5>
+                                                        <p>
+                                                            Use Nmap to scan the specific network ports of each host to identify UAV or MAVLink-compatible services.
+                                                        </p>
+                                                        
+                                                        <code class="code mb-3">
+                                                            nmap 192.168.13.0/24 -p 14550,14540,14560,14580,5760,5762,5763
+                                                        </code>
+
+                                                        <p>
+                                                            After running this scan you should be able to identify the open ports and active services on the drone and the ground control station.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 {% endblock %}

@@ -104,6 +104,14 @@ if [ "$wifi_simulation" = "y" ]; then
     LOG_FILE="dvd.log"
 
     {
+
+        # Start Docker Compose
+        echo -e "${CYAN}[+] Starting Docker Pull...${NC}"
+        docker compose pull
+
+        echo -e "${CYAN}[+] Starting Docker Build...${NC}"
+        docker compose build
+
         # Print current time
         echo -e "${CYAN}[+] Starting Docker Lab Environment - $(date)${NC}"
 
@@ -126,7 +134,7 @@ if [ "$wifi_simulation" = "y" ]; then
 
         # Start Docker Compose
         echo -e "${CYAN}[+] Starting Docker Compose...${NC}"
-        docker compose up --build -d
+        docker compose up -d
 
         echo -e "${CYAN}[+] Fetching Docker Compose logs...${NC}"
         docker compose logs -f &

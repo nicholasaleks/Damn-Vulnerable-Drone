@@ -60,6 +60,7 @@ While the current Damn Vulnerable Drone setup doesn't mirror every drone archite
 - **Simulated Wireless Networking**: Simulated Wifi (802.11) interfaces to practice wireless drone attacks.
 - **Simulator Management Web Console**: Simple to use simulator management web console used to trigger scenarios and drone flight states.
 - **Comprehensive Hacking Scenarios**: Ideal for practicing a wide range of drone hacking techniques, from basic reconnaissance to advanced exploitation.
+- **Detailed Walkthroughs**: If you need help hacking against a particular scenario you can leverage the detailed walkthrough documentation as a spoiler.
 
 ## Architecture
 
@@ -109,7 +110,7 @@ The list of attack scenarios below is organized by stages. Note that some attack
 | Reconnaissance              | Protocol Tampering   | Denial of Service            | Injection                      | Exfiltration           | Firmware Attacks      |
 |-----------------------------|----------------------|------------------------------|--------------------------------|------------------------|-----------------------|
 | Wifi Analysis & Cracking    | Telemetry Spoofing   | Battery Drain Attack         | MAVLink Command Injection      | Flight Log Extraction  | Firmware Decompile    |
-| Drone Signal Discovery      | Flight Mode Spoofing | Communication Link Flooding  | Camera Gimbal Takeover         | Parameter Extraction   | Firmware Modding      |
+| Drone Discovery             | Flight Mode Spoofing | Communication Link Flooding  | Camera Gimbal Takeover         | Parameter Extraction   | Firmware Modding      |
 | Packet Sniffing             | Drone State Spoofing | Denial-of-Takeoff            | Waypoint Injection             | Mission Extraction     |                       |
 | Protocol Fingerprinting     | GPS Spoofing         | Geo-Squeezing                | Sensor Data Injection          | FTP Eavesdropping      |                       |
 | GPS & Telemetry Analysis    |                      | Altitude Limiting            | Flight Mode Injection          | Camera Feed Eavesdropping |                    |

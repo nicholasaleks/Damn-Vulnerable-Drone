@@ -55,26 +55,15 @@
                 <!-- Nested drawer nav (Forms)-->
                 <div class="collapse {% if section == 'learning' %}show{% endif %}" id="collapseLearning" aria-labelledby="headingOne" data-bs-parent="#drawerAccordion">
                     <nav class="drawer-menu-nested nav">
-                        <a class="nav-link {% if current_page == 'aircrack-ng' %}active{% endif %}" href="/learning/aircrack-ng">Aircrack-ng</a>
-                        <a class="nav-link {% if current_page == 'wireshark' %}active{% endif %}" href="/learning/wireshark">Wireshark</a>
-                        <a class="nav-link {% if current_page == 'mavlink' %}active{% endif %}" href="/learning/mavlink">MAVLink</a>
-                        <a class="nav-link {% if current_page == 'mavproxy' %}active{% endif %}" href="/learning/mavproxy">MAVProxy</a>
-                        <a class="nav-link {% if current_page == 'ardupilot' %}active{% endif %}" href="/learning/ardupilot">ArduPilot</a>
-                        <a class="nav-link {% if current_page == 'arducopter' %}active{% endif %}" href="/learning/arducopter">ArduCopter</a>
-                        <a class="nav-link {% if current_page == 'sitl' %}active{% endif %}" href="/learning/sitl">SITL Simulation</a>
-                        <a class="nav-link {% if current_page == 'gazebo' %}active{% endif %}" href="/learning/gazebo">Gazebo</a>
-                        <a class="nav-link {% if current_page == 'swarmsec' %}active{% endif %}" href="/learning/swarmsec">SwarmSec</a>
+                        <a class="nav-link {% if current_page == 'aircrack-ng' %}active{% endif %}" target="_blank" href="https://www.aircrack-ng.org/doku.php#documentation">Aircrack-ng</a>
+                        <a class="nav-link {% if current_page == 'wireshark' %}active{% endif %}" target="_blank" href="https://www.wireshark.org/docs/wsug_html_chunked/index.html">Wireshark</a>
+                        <a class="nav-link {% if current_page == 'mavlink' %}active{% endif %}" target="_blank" href="https://mavlink.io/en/">MAVLink</a>
+                        <a class="nav-link {% if current_page == 'mavproxy' %}active{% endif %}" target="_blank" href="https://ardupilot.org/mavproxy/">MAVProxy</a>
+                        <a class="nav-link {% if current_page == 'ardupilot' %}active{% endif %}" target="_blank" href="https://ardupilot.org/ardupilot/">ArduPilot</a>
+                        <a class="nav-link {% if current_page == 'arducopter' %}active{% endif %}" target="_blank" href="https://ardupilot.org/copter/index.html">ArduCopter</a>
+                        <a class="nav-link {% if current_page == 'sitl' %}active{% endif %}" target="_blank" href="https://ardupilot.org/dev/docs/sitl-simulator-software-in-the-loop.html">SITL Simulation</a>
+                        <a class="nav-link {% if current_page == 'gazebo' %}active{% endif %}" target="_blank" href="https://gazebosim.org/docs">Gazebo</a>
                     </nav>
-                </div>
-            </div>
-        </div>
-        <!-- Drawer footer        -->
-        <div class="drawer-footer border-top">
-            <div class="d-flex align-items-center">
-                <i class="material-icons text-muted">settings</i>
-                <div class="ms-3">
-                    <div class="caption">Mode:</div>
-                    <div class="small fw-500">Beginner</div>
                 </div>
             </div>
         </div>
