@@ -89,12 +89,14 @@
 
                                                         <h5 class="mb-3">Step 2. Host Discovery</h5>
                                                         <p>
-                                                            Use Nmap to scan the network range.
+                                                            Use Nmap to scan the network range. (Excluding the IP address of the attacker machine and the simulator machine.)
                                                         </p>
                                                         
                                                         <code class="code mb-3">
-                                                            nmap -sn 10.13.0.0/24 
+                                                            nmap -sn 10.13.0.0/24 --exclude 10.13.0.1,10.13.0.5
                                                         </code>
+
+                                                        <img src="/static/images/attacks/drone-discovery/non-wifi1.png" alt="Nmap Scan" class="img-fluid mb-3">
 
                                                         <p>
                                                             After running this scan you should be able to identify the IP address of hosts on the network.
@@ -102,12 +104,14 @@
 
                                                         <h5 class="mb-3">Step 3. MAVLink Port Scan</h5>
                                                         <p>
-                                                            Use Nmap to scan the specific network ports of each host to identify UAV or MAVLink-compatible services.
+                                                            Use Nmap to scan the specific network ports of each host to identify UAV or MAVLink-compatible services. (Excluding the IP address of the attacker machine and the simulator machine.)
                                                         </p>
                                                         
                                                         <code class="code mb-3">
-                                                            nmap 10.13.0.0/24 -p 14550,14540,14560,14580,5760,5762,5763
+                                                            nmap 10.13.0.0/24 -p 1-16000 --exclude 10.13.0.1,10.13.0.5
                                                         </code>
+
+                                                        <img src="/static/images/attacks/drone-discovery/non-wifi2.png" alt="Nmap Scan" class="img-fluid mb-3">
 
                                                         <p>
                                                             After running this scan you should be able to identify the open ports and active services on the drone and the ground control station.
@@ -128,12 +132,14 @@
 
                                                         <h5 class="mb-3">Step 2. Host Discovery</h5>
                                                         <p>
-                                                            Use Nmap to scan the network range.
+                                                            Use Nmap to scan the network range. (Excluding the IP address of the attacker machine.)
                                                         </p>
                                                         
                                                         <code class="code mb-3">
-                                                            nmap -sn 192.168.13.0/24 
+                                                            nmap -sn 192.168.13.0/24 --exclude 192.168.13.10
                                                         </code>
+
+                                                        <img src="/static/images/attacks/drone-discovery/wifi1.png" alt="Nmap Scan" class="img-fluid mb-3">
 
                                                         <p>
                                                             After running this scan you should be able to identify the IP address of hosts on the network.
@@ -141,12 +147,14 @@
 
                                                         <h5 class="mb-3">Step 3. MAVLink Port Scan</h5>
                                                         <p>
-                                                            Use Nmap to scan the specific network ports of each host to identify UAV or MAVLink-compatible services.
+                                                            Use Nmap to scan a wide range of network ports of each host to identify UAV or MAVLink-compatible services. (Excluding the IP address of the attacker machine.)
                                                         </p>
                                                         
                                                         <code class="code mb-3">
-                                                            nmap 192.168.13.0/24 -p 14550,14540,14560,14580,5760,5762,5763
+                                                            nmap 192.168.13.0/24 -p 1-16000 --exlucde 192.168.13.10
                                                         </code>
+
+                                                        <img src="/static/images/attacks/drone-discovery/wifi2.png" alt="Nmap Scan" class="img-fluid mb-3">
 
                                                         <p>
                                                             After running this scan you should be able to identify the open ports and active services on the drone and the ground control station.

@@ -263,7 +263,7 @@ However, "Half-Baked Mode" does not support wifi simulations and you will need t
 
 The Damn Vulnerable Drone platform thrives on the active participation and collaboration of its user community. This community is a collective of like-minded individuals ranging from cybersecurity enthusiasts to professional ethical hackers, all focused on sharing knowledge and advancing skills in drone security. Whether you're encountering technical issues, seeking advice on tackling scenarios, or looking to discuss the latest trends in drone vulnerabilities, the Damn Vulnerable Drone community is a valuable resource.
 
-The community [Slack Channel](https://join.slack.com/t/slack-ghk2217/shared_invite/zt-2celpe33m-cvMB50w_BVsViXnbrLtLHA) is available for users to connect, share experiences, and provide mutual support. Users are encouraged to participate actively, ask questions, and offer help to others. Experienced members of the community often mentor newcomers, fostering a culture of continuous learning and improvement. Remember, every question you ask and every answer you provide helps the entire community grow stronger.
+The community [Slack Channel](https://join.slack.com/t/damnvulnerabledrone/shared_invite/zt-2g9tp202t-x5csb~uTyvHurgptki_XwQ) is available for users to connect, share experiences, and provide mutual support. Users are encouraged to participate actively, ask questions, and offer help to others. Experienced members of the community often mentor newcomers, fostering a culture of continuous learning and improvement. Remember, every question you ask and every answer you provide helps the entire community grow stronger.
 
 # Feedback & Contributions
 

@@ -22,6 +22,7 @@
         <use_parent_model_frame>true</use_parent_model_frame>
       </axis>
     </joint>
+    
     <!-- visual markers for debugging
     <link name="rotor_0_blade_1_cp">
       <gravity>0</gravity>
