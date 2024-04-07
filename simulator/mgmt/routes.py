@@ -214,13 +214,13 @@ def getting_started():
 def guide_index():
     return render_template('pages/guide/index.html', section='guide')
 
-@main.route('/guide/user-interface')
-def guide_ui():
-    return render_template('pages/guide/user-interface.html', section='guide', current_page='user-interface')
-
 @main.route('/guide/basic-operations')
 def guide_basics():
     return render_template('pages/guide/basic-operations.html', section='guide', current_page='basic-operations')
+
+@main.route('/guide/system-architecture')
+def guide_ui():
+    return render_template('pages/guide/system-architecture.html', section='guide', current_page='system-architecture')
 
 @main.route('/guide/system-health-check')
 def guide_health():
