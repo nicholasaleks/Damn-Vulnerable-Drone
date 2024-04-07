@@ -27,11 +27,6 @@
                     <div class="nav-link-icon"><i class="material-icons">flag</i></div>
                     Getting Started
                 </a>
-                <a class="nav-link {% if section == 'attacks' %}active{% endif %}" href="/attacks">
-                    <div class="nav-link-icon"><i class="material-icons">warning</i></div>
-                    Attack Scenarios
-                </a>
-                <!-- Drawer link (Forms)-->
                 <a class="nav-link {% if section != 'guide' %}collapsed{% else %}active{% endif %}" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapseSimulatorGuide" aria-expanded="false" aria-controls="collapseForms">
                     <div class="nav-link-icon"><i class="material-icons">help_center</i></div>
                     Simulator User Guide
@@ -40,13 +35,17 @@
                 <!-- Nested drawer nav (Forms)-->
                 <div class="collapse {% if section == 'guide' %}show{% endif %}" id="collapseSimulatorGuide" aria-labelledby="headingOne" data-bs-parent="#drawerAccordion">
                     <nav class="drawer-menu-nested nav">
-                        <a class="nav-link {% if current_page == 'user-interface' %}active{% endif %}" href="/guide/user-interface">User Interface</a>
-                        <a class="nav-link {% if current_page == 'system-health-check' %}active{% endif %}" href="/guide/system-health-check">System Health Check</a>
                         <a class="nav-link {% if current_page == 'basic-operations' %}active{% endif %}" href="/guide/basic-operations">Basic Operations</a>
+                        <a class="nav-link {% if current_page == 'system-architecture' %}active{% endif %}" href="/guide/system-architecture">System Architecture</a>
+                        <a class="nav-link {% if current_page == 'system-health-check' %}active{% endif %}" href="/guide/system-health-check">System Health Check</a>
                         <a class="nav-link {% if current_page == 'manual-testing' %}active{% endif %}" href="/guide/manual-testing">Manual Testing Containers</a>
                         <a class="nav-link {% if current_page == 'troubleshooting' %}active{% endif %}" href="/guide/troubleshooting">Troubleshooting</a>
                     </nav>
                 </div>
+                <a class="nav-link {% if section == 'attacks' %}active{% endif %}" href="/attacks">
+                    <div class="nav-link-icon"><i class="material-icons">warning</i></div>
+                    Attack Scenarios
+                </a>
                 <a class="nav-link {% if section != 'learning' %}collapsed{% else %}active{% endif %}" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapseLearning" aria-expanded="false" aria-controls="collapseLearning">
                     <div class="nav-link-icon"><i class="material-icons">support</i></div>
                     Learning Resources
@@ -61,8 +60,11 @@
                         <a class="nav-link {% if current_page == 'mavproxy' %}active{% endif %}" target="_blank" href="https://ardupilot.org/mavproxy/">MAVProxy</a>
                         <a class="nav-link {% if current_page == 'ardupilot' %}active{% endif %}" target="_blank" href="https://ardupilot.org/ardupilot/">ArduPilot</a>
                         <a class="nav-link {% if current_page == 'arducopter' %}active{% endif %}" target="_blank" href="https://ardupilot.org/copter/index.html">ArduCopter</a>
-                        <a class="nav-link {% if current_page == 'sitl' %}active{% endif %}" target="_blank" href="https://ardupilot.org/dev/docs/sitl-simulator-software-in-the-loop.html">SITL Simulation</a>
-                        <a class="nav-link {% if current_page == 'gazebo' %}active{% endif %}" target="_blank" href="https://gazebosim.org/docs">Gazebo</a>
+                        <a class="nav-link {% if current_page == 'arducopter' %}active{% endif %}" target="_blank" href="https://docs.px4.io/main/en/index.html">PX4</a>
+                        <a class="nav-link {% if current_page == 'arducopter' %}active{% endif %}" target="_blank" href="https://dronecode.org/">Dronecode</a>
+                        <a class="nav-link {% if current_page == 'arducopter' %}active{% endif %}" target="_blank" href="https://dronecode.org/">QGroundControl</a>
+                        <a class="nav-link {% if current_page == 'arducopter' %}active{% endif %}" target="_blank" href="https://nmap.org/">Nmap</a>
+                        <a class="nav-link {% if current_page == 'arducopter' %}active{% endif %}" target="_blank" href="https://www.gnuradio.org/">GNURadio</a>
                     </nav>
                 </div>
             </div>

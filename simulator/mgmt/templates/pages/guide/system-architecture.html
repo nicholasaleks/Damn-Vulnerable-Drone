@@ -1,0 +1,80 @@
+{% extends "pages/index.html" %}
+
+{% block content %}
+<main>
+    <div class="container-xl p-5">
+        <section class="mb-5" id="getting-started">
+            <div class="d-flex align-items-center mb-3">
+                <h2 class="mb-0">System Architecture</h2>
+                <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+            </div>
+            <p>This guide will help you understand the typical drone stack architecture and highlight the core components used in Damn Vulnerable Drone </p>
+        </section>
+        <hr class="my-5" />
+        <!-- Knowledgebase content row-->
+        <div class="row gx-5">
+            <div class="col-lg-9">
+                <div id="architecture-diagram">
+                    <section class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <h4 class="mb-0">Architecture Diagram</h4>
+                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                        </div>
+                        <p>The Damn Vulnerable Drone simulation and core drone architectural components are integrated within Docker containers, providing a stable, isolated environment for each component of the drone system. Docker facilitates easy setup, consistent performance across different systems, and simplifies the process of simulating complex drone architectures and scenarios.</p>
+                        <p>Below is a high-level overview of the Damn Vulnerable Drone architecture:</p>
+                        <img src="/static/images/Damn-Vulnerable-Drone-Architecture-getting-started.png" class="img-fluid rounded-3 mb-4" alt="Damn Vulnerable Drone Architecture" />
+                        <p>As shown in the diagram, the Damn Vulnerable Drone architecture consists of the following 4 core components:</p>
+                        <table class="table table-bordered table-sm">
+                            <tr>
+                                <td class="table-light" width="200">Component</td>
+                                <td class="table-light">Description</td>
+                                <td class="table-light" width="100">Docker IP</td>
+                                <td class="table-light" width="100">Wireless IP</td>
+                            </tr>
+                            <tr>
+                                <td>Flight Controller</td>
+                                <td>This is the brain of the drone, running the ArduPilot firmware to simulate a drone's flight controls. It interacts with the Gazebo simulator through a Gazebo driver, allowing it to process virtual sensor data and respond as if it were flying in the real world.</td>
+                                <td><p class="text-primary">10.13.0.2</p></td>
+                                <td><p class="text-primary">-</p></td>
+                            </tr>
+                            <tr>
+                                <td>Companion Computer</td>
+                                <td>The Companion Computer (attached to the drone) handles higher-level processing tasks that are too complex for the flight controller. It manages wireless networking, telemetry logs, facilitates camera streaming for surveillance or reconnaissance, and interfaces with guidance systems for autonomous operations.</td>
+                                <td><p class="text-primary">10.13.0.3</p></td>
+                                <td><p class="text-primary">192.168.13.1</p></td>
+                            </tr>
+                            <tr>
+                                <td>Ground Control Station</td>
+                                <td>This component acts as the remote pilot's interface, providing mission planning capabilities, flight mapping, video streaming, and joystick control inputs. It communicates with the flight controller and companion computer over a simulated wireless MAVLink connection.</td>
+                                <td><p class="text-primary">10.13.0.4</p></td>
+                                <td><p class="text-primary">192.168.13.14</p></td>
+                            </tr>
+                            <tr>
+                                <td>Simulator</td>
+                                <td>Gazebo provides a richly detailed 3D world where the physics of drone flight are accurately modeled. This allows for realistic simulations of how the drone would react to control inputs and environmental factors. It’s here that the rotors spin, and the virtual drone takes to the skies, all under the watchful control of the <a href="/" class="link">Simulator Management Web Console</a>. <div class="alert alert-danger">Warning: Try not to target the simulator directly as this may break Damn Vulnerable Drone</div></td>
+                                <td><p class="text-primary">10.13.0.5</p></td>
+                                <td><p class="text-primary">-</p></td>
+                            </tr>
+                        </table>
+                        <div class="alert alert-warning">Note: Wireless IP Addresses will only be set if wireless mode is enabled.</div>
+                    </section>
+                </div>
+            </div>
+            <div class="col-lg-3 mb-5 mb-lg-0">
+                <!-- Side column sticky navigation stick-->
+                <div class="sticky-top nav-stick">
+                    <div class="nav-heading">Contents</div>
+                    <ul class="nav flex-column" id="navStick">
+                        <li class="nav-item"><a class="nav-link" href="#architecture-diagram">Architecture Diagram</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#system-components">System Components</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#flight-controller">Flight Controller</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#companion-computer">Companion Computer</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#ground-control-station">Ground Control Station</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#payloads">Payloads</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

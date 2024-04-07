@@ -55,115 +55,26 @@
                         <p>While the current Damn Vulnerable Drone setup doesn't mirror every drone architecture or configuration, the integrated tactics, techniques and scenarios are broadly applicable across various drone systems, models and communication protocols.</p>
                     </section>
                 </div>
-                <div id="architecture-overview">
-                    <section class="mb-5">
-                        <div class="d-flex align-items-center mb-3">
-                            <h4 class="mb-0">Architecture Overview</h4>
-                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
-                        </div>
-                        <p>The Damn Vulnerable Drone simulation and core drone architectural components are integrated within Docker containers, providing a stable, isolated environment for each component of the drone system. Docker facilitates easy setup, consistent performance across different systems, and simplifies the process of simulating complex drone architectures and scenarios.</p>
-                        <p>Below is a high-level overview of the Damn Vulnerable Drone architecture:</p>
-                        <img src="/static/images/Damn-Vulnerable-Drone-Architecture-getting-started.png" class="img-fluid rounded-3 mb-4" alt="Damn Vulnerable Drone Architecture" />
-                        <p>As shown in the diagram, the Damn Vulnerable Drone architecture consists of the following 4 core components:</p>
-                        <table class="table table-bordered table-sm">
-                            <tr>
-                                <td class="table-light" width="200">Component</td>
-                                <td class="table-light">Description</td>
-                                <td class="table-light" width="100">Docker IP</td>
-                                <td class="table-light" width="100">Wireless IP</td>
-                            </tr>
-                            <tr>
-                                <td>Flight Controller</td>
-                                <td>This is the brain of the drone, running the ArduPilot firmware to simulate a drone's flight controls. It interacts with the Gazebo simulator through a Gazebo driver, allowing it to process virtual sensor data and respond as if it were flying in the real world.</td>
-                                <td><p class="text-primary">10.13.0.2</p></td>
-                                <td><p class="text-primary">-</p></td>
-                            </tr>
-                            <tr>
-                                <td>Companion Computer</td>
-                                <td>The Companion Computer (attached to the drone) handles higher-level processing tasks that are too complex for the flight controller. It manages wireless networking, telemetry logs, facilitates camera streaming for surveillance or reconnaissance, and interfaces with guidance systems for autonomous operations.</td>
-                                <td><p class="text-primary">10.13.0.3</p></td>
-                                <td><p class="text-primary">192.168.13.1</p></td>
-                            </tr>
-                            <tr>
-                                <td>Ground Control Station</td>
-                                <td>This component acts as the remote pilot's interface, providing mission planning capabilities, flight mapping, video streaming, and joystick control inputs. It communicates with the flight controller and companion computer over a simulated wireless MAVLink connection.</td>
-                                <td><p class="text-primary">10.13.0.4</p></td>
-                                <td><p class="text-primary">192.168.13.14</p></td>
-                            </tr>
-                            <tr>
-                                <td>Simulator</td>
-                                <td>Gazebo provides a richly detailed 3D world where the physics of drone flight are accurately modeled. This allows for realistic simulations of how the drone would react to control inputs and environmental factors. It’s here that the rotors spin, and the virtual drone takes to the skies, all under the watchful control of the <a href="/" class="link">Simulator Management Web Console</a>. <div class="alert alert-danger">Warning: Try not to target the simulator directly as this may break Damn Vulnerable Drone</div></td>
-                                <td><p class="text-primary">10.13.0.5</p></td>
-                                <td><p class="text-primary">-</p></td>
-                            </tr>
-                        </table>
-                        <div class="alert alert-warning">Note: Wireless IP Addresses will only be set if wireless mode is enabled.</div>
-                    </section>
-                </div>
-                
-                <div id="flight-states">
-                    <section class="mb-5">
-                        <div class="d-flex align-items-center mb-3">
-                            <h4 class="mb-0">Flight States</h4>
-                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
-                        </div>
-                        <p>Damn Vulnerable Drone encompasses a range of flight states that are essential for simulating real-world drone operations, crucial for constructing a variety of drone hacking scenarios.</p>
-                        <p>The ability to simulate these various flight states is fundamental in DVD, as it allows users to test and exploit different aspects of drone operations. By understanding how a drone behaves in each state, offensive security professionals can better strategize their attack vectors, identify weaknesses in the system, and develop measures to mitigate potential security threats in real-world drone systems.</p>  
-                        <div class="row">
-                            <div class="col-md-8">
-                                <p>These states include:</p>
-                                <p class="small">
-                                    <span class="fw-500 text-expanded">1. Initial Boot:</span>
-                                    <br />
-                                    This simulates the drone's startup sequence, where all systems are initialized. Clicking this initial boot will simulate you "pressing" the power on button on the drone flight controller, allowing for the companion computer to establish a connection to it. This phase is critical for security/safety checks, calibration and ensuring communication protocols are setup before flight.
-                                </p>
-                                <p class="small">
-                                    <span class="fw-500 text-expanded">2. Arm & Takeoff</span>
-                                    <br />
-                                    The phase where the drone transitions from a stationary state to airborne, testing the responsiveness of flight controls and the integrity of take-off protocols. <i>Note: This may take some time to complete as the drone requires <a target="_blank" class="link" href="https://ardupilot.org/copter/docs/common-positioning-landing-page.html">GPS</a> & <a class="link" target="_blank" href="https://ardupilot.org/copter/docs/common-apm-navigation-extended-kalman-filter-overview.html">EKF3</a> to be ready)</i>
-                                </p>
-                                <p class="small">
-                                    <span class="fw-500 text-expanded">3. Autopilot Flight</span>
-                                    <br />
-                                    Represents the drone's ability to navigate autonomously based on predefined waypoints or dynamic commands, a vital state for exploring vulnerabilities in navigation and control systems.
-                                </p>
-                                <p class="small">
-                                    <span class="fw-500 text-expanded">4. Emergency / Return-To-Land</span>
-                                    <br />
-                                    Simulates the drone's emergency protocols, automatically returning to a home location upon triggering fail-safes or loss of control signals, which can be a target for exploitation in hacking scenarios.
-                                </p>
-                                <p class="small">
-                                    <span class="fw-500 text-expanded">5. Post-Flight Data Processing</span>
-                                    <br />
-                                    This state involves the handling of all data collected during the flight, including telemetry and logs, making it an important phase for understanding data exfiltration and integrity attacks.
-                                </p>
-                            </div>
-                            <div class="col-md-4">
-                                <img src="/static/images/flight-states.png" class="img-fluid rounded-3 mb-4" alt="Flight States" />
-                            </div>
-                        </div>
-                        
-                    </section>
-                    <!-- Divider-->
-                    <hr class="my-5" />
-                </div>
                 <div id="how-should-i-use-damn-vulnerable-drone">
                     <section class="mb-5">
                         <div class="d-flex align-items-center mb-3">
                             <h3 class="mb-0">How should I use Damn Vulnerable Drone?</h3>
                             <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
                         </div>
-                        <h6><u>Step 1: Learning about Drone Fundamental</u></h6>
-                        <p>For those new to drone technology or the specifics of ArduPilot and MAVLink, the first step in utilizing Damn Vulnerable Drone is to engage with the provided <a class="link" href="/learning">Learning Resources</a>. This foundational knowledge is crucial for understanding the operational aspects and potential vulnerabilities of drone systems. Once you're comfortable with the basics, or if you already have a grounding in these areas, proceed to step two.</p>
+                        <p>Follow these steps to get the most out of DVD:</p>
+
+                        <h4>Step 1: Read the Basic Operations Guide</h4>
+                        <p>Delve into the <a class="link" href="/guide/basic-operations">Basic Operations</a> guide. This document will help you navigating the environment, as well as the tool you'll use to initially interact with the drone by engaging it's flight states. (<i>Within the simulator, we assume flight states are triggered by the ground control station "operator", and not you, the drone hacker</i>)</p>
                         
-                        <h6><u>Step 2: Review the Simulator Guide</u></h6>
-                        <p>Moving forward, your second step is to delve into the <a class="link" href="/guide/simulator">Simulator User Guide</a>. This will be your interface to navigating the environment, as well as the tool you'll use to initially interact with the drone by engaging it's flight states. (<i>Within the simulator, we assume flight states are triggered by the ground control station "operator", and not you, the drone hacker</i>)</p>
+                        
+                        <h4>Step 2: Review the System Architecture </h4>
+                        <p>Get a better idea of the Damn Vulnerable Drone <a class="link" href="/guide/system-architecture">System Architecture</a>. This will outline the core components used in a typicaly drone-stack, including flight controlls, ground control stations, and companion computers. This part will also help steer you away from accidently attacking the simulator infrastructure (preventing you from breaking DVD)</p>
+                        
+                        <h4>Step 3: Execute a Simulation Health Check</h4>
+                        <p>After getting familiar with the Simulator, you'll want to run a <a class="link" href="/guide/system-health-check">System Health Check</a>. This will ensure that all of the Damn Vulnerable Drone systems have been installed properly and are ready for testing.</p>
                     
-                        <h6><u>Step 3: Execute a Simulation Health Check</u></h6>
-                        <p>After getting familiar with the Simulator, you'll want to run a <a class="link" href="/guide/health-check">Simulator Health Check</a>. This will ensure that all of the Damn Vulnerable Drone systems have been installed properly and are ready for testing.</p>
-                    
-                        <h6><u>Step 4: Start the Attack Scenarios</u></h6>
-                        <p>Next, actively engage with the <a class="link" href="/attacks">Attack Scenario</a> presented by DVD. Start with reconnaissance to understand the simulated environment you're working in, then methodically progress through the scenarios from wireless attacks to data exfiltration. For users who have set up DVD with virtual wifi, you can explore the Wireless Network Attack scenarios to deepen your understanding of network vulnerabilities. If you didn't install the virtual wifi component, it's assumed you have network access, and you can skip directly to focusing on other vulnerabilities within the drone's network.</p>
+                        <h4>Step 4: Start the Attack Scenarios</h4>
+                        <p>Next, actively engage with the <a class="link" href="/attacks">Attack Scenarios</a> presented by DVD. Start with reconnaissance to understand the simulated environment you're working in, then methodically progress through the scenarios from wireless attacks to data exfiltration. For users who have set up DVD with virtual wifi, you can explore the Wireless Network Attack scenarios to deepen your understanding of network vulnerabilities. If you didn't install the virtual wifi component, it's assumed you have network access, and you can skip directly to focusing on other vulnerabilities within the drone's network.</p>
                         
                     </section>
                 </div>
@@ -255,11 +166,23 @@
                     <div class="col-3 col-sm-6 mb-4">
                         <div class="card card-raised ripple-gray">
                             <div class="card-body">
-                                <div class="card-title"><h6>Simulator User Interface Guide</h6></div>
-                                <p class="card-text">Understanding how to navigate, control and troubleshoot the simulator</p>
+                                <div class="card-title"><h6>Basic Operation Guide</h6></div>
+                                <p class="card-text">A guide to help you understand how to navigate, and control the simulator</p>
                             </div>
                             <div class="card-actions">
-                                <a class="card-link text-muted text-decoration-none stretched-link" href="/guide"></a>
+                                <a class="card-link text-muted text-decoration-none stretched-link" href="/guide/basic-operations"></a>
+                                <i class="material-icons text-muted rotate-45">arrow_upward</i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 col-sm-6 mb-4">
+                        <div class="card card-raised ripple-gray">
+                            <div class="card-body">
+                                <div class="card-title"><h6>System Health Check</h6></div>
+                                <p class="card-text">Run a system health check to ensure all Drone stack components are working properly</p>
+                            </div>
+                            <div class="card-actions">
+                                <a class="card-link text-muted text-decoration-none stretched-link" href="/guide/system-health-check"></a>
                                 <i class="material-icons text-muted rotate-45">arrow_upward</i>
                             </div>
                         </div>
@@ -271,7 +194,7 @@
                                 <p class="card-text">Review external documentation on drone systems & hacking utilities</p>
                             </div>
                             <div class="card-actions">
-                                <a class="card-link text-muted text-decoration-none stretched-link" href="/guide"></a>
+                                <a class="card-link text-muted text-decoration-none stretched-link" href="/guide/learning"></a>
                                 <i class="material-icons text-muted rotate-45">arrow_upward</i>
                             </div>
                         </div>
@@ -283,19 +206,7 @@
                                 <p class="card-text">Review external documentation on drone systems & hacking utilities</p>
                             </div>
                             <div class="card-actions">
-                                <a class="card-link text-muted text-decoration-none stretched-link" href="/guide"></a>
-                                <i class="material-icons text-muted rotate-45">arrow_upward</i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-3 col-sm-6 mb-4">
-                        <div class="card card-raised ripple-gray">
-                            <div class="card-body">
-                                <div class="card-title"><h6>Solutions (Spoiler Alert)</h6></div>
-                                <p class="card-text">Review external documentation on drone systems & hacking utilities</p>
-                            </div>
-                            <div class="card-actions">
-                                <a class="card-link text-muted text-decoration-none stretched-link" href="/guide"></a>
+                                <a class="card-link text-muted text-decoration-none stretched-link" href="/attacks"></a>
                                 <i class="material-icons text-muted rotate-45">arrow_upward</i>
                             </div>
                         </div>
