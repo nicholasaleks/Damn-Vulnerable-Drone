@@ -104,7 +104,8 @@ RUN export DISPLAY=:100
 
 # Run the Gazebo Server and Web App
 
-CMD Xvfb :100 -screen 0 1600x1200x16 & \
+CMD rm -rf /tmp/.X100-lock; \
+    Xvfb :100 -screen 0 1600x1200x16 & \
     gzserver --verbose /Simulator/ardupilot_gazebo/worlds/damn-vulnerable-drone.world & \
     cd /Simulator/gzweb && sleep 15 && npm start > /dev/null 2>&1 & \
     cd /Simulator/mgmt && sleep 15 && python3 app.py
