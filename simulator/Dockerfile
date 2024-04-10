@@ -71,9 +71,6 @@ ENV GAZEBO_PLUGIN_PATH /Simulator/ardupilot_gazebo/build:/usr/lib/aarch64-linux-
 ENV GAZEBO_MODEL_DATABASE_URI ''
 ENV DISPLAY :100
 
-# Move Camera Plugin to the right place
-RUN cp /opt/ros/foxy/lib/libgazebo_ros_camera.so /usr/lib/aarch64-linux-gnu/gazebo-11/plugins/
-
 RUN npm install -g n
 RUN n 8.14.0
 
