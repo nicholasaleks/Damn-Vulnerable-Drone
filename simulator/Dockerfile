@@ -79,7 +79,7 @@ RUN git config --global advice.detachedHead false
 COPY simulator/gzweb /Simulator/gzweb
 WORKDIR /Simulator/gzweb
 RUN apt-get update && apt-get install -y dos2unix
-RUN dos2unix deploy.sh && chmod +x deploy.sh
+RUN find . -type f -exec dos2unix {} \; && chmod +x deploy.sh
 RUN npm install
 RUN /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy -- -m local"
 
