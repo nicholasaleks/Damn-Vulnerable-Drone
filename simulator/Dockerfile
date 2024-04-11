@@ -39,17 +39,15 @@ RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pk
 # Create Symbolic link for python2.7
 RUN ln -s /usr/bin/python2.7 /usr/bin/python
 
-# Install ROS2
-RUN locale-gen en_US en_US.UTF-8; update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8; export LANG=en_US.UTF-8
+# Install ROS
 RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -
-RUN sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros2-latest.list'
-RUN apt update -y && apt install -y ros-foxy-ros-base ros-foxy-gazebo-ros-pkgs ros-foxy-image-transport
+RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros-latest.list'
+RUN apt update -y && apt install -y ros-noetic-ros-base ros-noetic-gazebo-ros-pkgs ros-noetic-image-transport
 
 # Install ArduPilot Gazebo Plugin
 WORKDIR /Simulator
 
 RUN git clone https://github.com/khancyr/ardupilot_gazebo.git
-
 
 # Move assets to the right place
 # 3D Models
@@ -77,15 +75,11 @@ RUN n 8.14.0
 # Ignore git warnings
 RUN git config --global advice.detachedHead false
 
-# Clone GzWeb
-# RUN git clone https://github.com/osrf/gzweb && \
-#     cd gzweb && \
-#     git checkout gzweb_1.4.1
-
+# Pull & build gzweb
 COPY simulator/gzweb /Simulator/gzweb
-
-# Build GzWeb
-RUN cd /Simulator/gzweb && /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy --- -m local"
+WORKDIR /Simulator/gzweb
+RUN npm install
+RUN /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy -- -m local"
 
 # Modify GzWeb CSS
 #COPY simulator/assets/gz3d.css /Simulator/gzweb/http/client/style/gz3d.css
