@@ -664,6 +664,9 @@ $(function()
   // Click event
   $('#stage1, #stage2, #stage3, #stage4, #stage5, #stage6').click(function() {
     var $this = $(this); // Reference to the clicked button
+
+    console.log('Clicked:')
+    console.log($this)
   
     if (!$this.is(':disabled') && !$this.hasClass('active-stage-btn') && !$this.hasClass('loading-stage-btn')) {
       $this.data('clicked', true); // Set data attribute to indicate the button was clicked
@@ -675,7 +678,12 @@ $(function()
       $this.prepend('<img width="16" class="loading-stage-img" src="style/images/loader.gif" /> Starting ');
       $this.append('...');
 
-      window.parent.postMessage(this.id, "http://localhost:8000");
+      console.log('Sending message to parent:', this.id);
+      try {
+          window.parent.postMessage(this.id, "http://localhost:8000");
+      } catch (error) {
+          console.error('Error sending message:', error);
+      }
 
     }
   });
