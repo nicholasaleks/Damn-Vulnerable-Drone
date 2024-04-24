@@ -8,8 +8,7 @@
 
 <script>
 window.addEventListener("message", (event) => {
-    // Check the origin of the message for security
-    console.log(event.data)
+
     // Handle the message
     if (event.data === "stage1") {
         fetch("/stage1", {
@@ -142,6 +141,25 @@ window.addEventListener("message", (event) => {
 </script>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (window.location.hostname !== 'localhost') {
+            Swal.fire({
+                title: "Access Alert",
+                text: "You are not accessing the application from the standard 'localhost' origin. Would you like to redirect to the correct origin?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: "Redirect",
+                cancelButtonText: "Stay here"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirect to the localhost origin
+                    // Change the port as needed if it's not the default HTTP 80
+                    window.location.hostname = 'localhost';
+                }
+            });
+        }
+    });
     // wait for 1 second before sending the message to the iframe
     setTimeout(function () {
     var iframeWindow = document.getElementById("sim-iframe").contentWindow;
