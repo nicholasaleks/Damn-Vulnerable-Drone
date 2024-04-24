@@ -9,9 +9,6 @@
 <script>
 window.addEventListener("message", (event) => {
     // Check the origin of the message for security
-    if (event.origin !== "http://localhost:8080") {
-        return; // Not from the expected origin, ignore it
-    }
     console.log(event.data)
     // Handle the message
     if (event.data === "stage1") {

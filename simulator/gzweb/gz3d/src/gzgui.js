@@ -326,9 +326,6 @@ function updateStageStatus(stageNum, status) {
 document.addEventListener("DOMContentLoaded", function() {
   window.addEventListener("message", function(event) {
     // Check the origin for security
-    if (event.origin !== "http://localhost:8000") {
-        return;
-    }
 
     const match = event.data.match(/^set-stage(\d+)-(\w+)$/);
       if (match) {
