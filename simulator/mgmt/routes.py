@@ -314,9 +314,9 @@ def attacks_recon_protocol_fingerprinting():
 def attacks_recon_gps_telemetry_analysis():
     return render_template('pages/attacks/recon/gps-telemetry-analysis.html', section='attacks', sub_section='recon', current_page='gps-telemetry-analysis')
 
-@main.route('/attacks/recon/camera-detection')
-def attacks_recon_protocol_fingerprinting():
-    return render_template('pages/attacks/recon/camera-detection.html', section='attacks', sub_section='recon', current_page='camera-detection')
+@main.route('/attacks/recon/payload-detection')
+def attacks_recon_payload_detection():
+    return render_template('pages/attacks/recon/payload-detection.html', section='attacks', sub_section='recon', current_page='payload-detection')
 
 @main.route('/attacks/recon/companion-computer-discovery')
 def attacks_recon_companion_computer_discovery():
