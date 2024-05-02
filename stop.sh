@@ -8,30 +8,50 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-LOG_FILE="dvd.log"
 
-{
-    echo "[+] Stopping Damn Vulnerable Drone Lab Environment - $(date)"
+echo "[+] Stopping Damn Vulnerable Drone Lab Environment - $(date)"
+
+# Check if a card is virtual
+check_virtual_interface() {
+    interface=$1
+    phy_device=$(readlink -f "/sys/class/net/$interface/device/ieee80211" 2>/dev/null)
+    if [[ -n "$phy_device" && "$phy_device" =~ "mac80211_hwsim" ]]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+# Clean up
+clean_up_and_setup() {
+    echo -e "${CYAN}[+] Running System clean up...${NC}"
 
     # Stop Docker Compose services
     echo "[+] Stopping Docker Compose services..."
     docker compose down
 
-    # Remove virtual wifi interfaces
-    echo "[+] Removing virtual wifi interfaces..."
-    sudo iw dev wlan0 del >/dev/null 2>&1
-    sudo iw dev wlan1 del >/dev/null 2>&1
-    sudo iw dev wlan2 del >/dev/null 2>&1
-    sudo iw dev wlan3 del >/dev/null 2>&1
+    # Function to delete wireless interfaces
+    delete_wireless_interface() {
+        sudo iw dev "$1" del >/dev/null 2>&1
+    }
 
-    # Unload mac80211_hwsim kernel module
-    echo "[+] Unloading kernel module mac80211_hwsim..."
+    # Get a list of all wireless interfaces
+    wireless_interfaces=$(iw dev | awk '$1=="Interface"{print $2}' | tac)
+
+    # Iterate over each wireless interface and delete if check_virtual_interface returns 1
+    for interface in $wireless_interfaces; do
+        if ! check_virtual_interface "$interface"; then
+            echo "Removing $interface..."
+            delete_wireless_interface "$interface"
+        fi
+    done
+
+    # Start services
     sudo modprobe -r mac80211_hwsim
-
-    # Reloading Network
     sudo service networking start
     sudo service NetworkManager start
 
-    echo "[+] Damn Vulnerable Drone Lab Environment stopped."
+    echo -e "${CYAN}[+] System Ready...${NC}"
+}
 
-} |& tee -a "$LOG_FILE"
+clean_up_and_setup

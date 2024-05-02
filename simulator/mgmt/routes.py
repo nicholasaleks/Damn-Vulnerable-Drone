@@ -64,7 +64,7 @@ def stage1():
     client = docker.from_env()
     container = client.containers.get('flight-controller')
     logging.info('Triggering Stage 1...')
-    command = "Tools/autotest/sim_vehicle.py -v ArduCopter -f gazebo-iris --no-rebuild --no-mavproxy --sim-address=10.13.0.5 -A '--serial0=uart:/dev/ttyACM0:57600'"
+    command = "Tools/autotest/sim_vehicle.py -v ArduCopter --location Kingaroy -f gazebo-iris --no-rebuild --no-mavproxy --sim-address=10.13.0.5 -A '--serial0=uart:/dev/ttyACM0:57600'"
     
     # Log the command before executing it
     logging.info("Executing command: %s", command)
@@ -313,6 +313,10 @@ def attacks_recon_protocol_fingerprinting():
 @main.route('/attacks/recon/gps-telemetry-analysis')
 def attacks_recon_gps_telemetry_analysis():
     return render_template('pages/attacks/recon/gps-telemetry-analysis.html', section='attacks', sub_section='recon', current_page='gps-telemetry-analysis')
+
+@main.route('/attacks/recon/camera-detection')
+def attacks_recon_protocol_fingerprinting():
+    return render_template('pages/attacks/recon/camera-detection.html', section='attacks', sub_section='recon', current_page='camera-detection')
 
 @main.route('/attacks/recon/companion-computer-discovery')
 def attacks_recon_companion_computer_discovery():

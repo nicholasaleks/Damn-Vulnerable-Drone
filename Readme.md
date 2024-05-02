@@ -114,7 +114,7 @@ The list of attack scenarios below is organized by stages. Note that some attack
 | Packet Sniffing             | Drone State Spoofing | Denial-of-Takeoff            | Waypoint Injection             | Mission Extraction     |                       |
 | Protocol Fingerprinting     | GPS Spoofing         | Geo-Squeezing                | Sensor Data Injection          | FTP Eavesdropping      |                       |
 | GPS & Telemetry Analysis    |                      | Altitude Limiting            | Flight Mode Injection          | Camera Feed Eavesdropping |                    |
-| Camera Detection            |                      | Camera Feed Disruption       | Ground Control Station Takeover |                       |                       |
+| Payload Detection           |                      | Camera Feed Disruption       | Ground Control Station Takeover |                       |                       |
 | Ground Control Station Discovery |                 | GPS Jamming                  | Companion Computer Takeover    |                        |                       |
 | Companion Computer Discovery |                     | Wireless Deauthentication    |                                |                        |                       |
 

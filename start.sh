@@ -22,6 +22,15 @@ show_help() {
     echo "  sudo $0 --no-wifi   # Starts without virtual Wi-Fi"
 }
 
+check_virtual_interface() {
+    interface=$1
+    phy_device=$(readlink -f "/sys/class/net/$interface/device/ieee80211" 2>/dev/null)
+    if [[ -n "$phy_device" && "$phy_device" =~ "mac80211_hwsim" ]]; then
+        return 1
+    else
+        return 0
+    fi
+}
 
 if [ "$EUID" -ne 0 ]; then
     echo "This script must be run with sudo privileges."
@@ -57,16 +66,75 @@ do
     esac
 done
 
-echo -e "${CYAN}[+] Running System clean up...${NC}"
-docker compose down
-sudo iw dev wlan0 del >/dev/null 2>&1
-sudo iw dev wlan1 del >/dev/null 2>&1
-sudo iw dev wlan2 del >/dev/null 2>&1
-sudo iw dev wlan3 del >/dev/null 2>&1
-sudo modprobe -r mac80211_hwsim
-sudo service networking start
-sudo service NetworkManager start
-echo -e "${CYAN}[+] System Ready...${NC}"
+# Check if a card is virtual
+check_virtual_interface() {
+    interface=$1
+    phy_device=$(readlink -f "/sys/class/net/$interface/device/ieee80211" 2>/dev/null)
+    if [[ -n "$phy_device" && "$phy_device" =~ "mac80211_hwsim" ]]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+# Clean up
+clean_up_and_setup() {
+    echo -e "${CYAN}[+] Running System clean up...${NC}"
+
+    # Stop Docker Compose services
+    echo "[+] Stopping Docker Compose services..."
+    docker compose down
+
+    # Function to delete wireless interfaces
+    delete_wireless_interface() {
+        sudo iw dev "$1" del >/dev/null 2>&1
+    }
+
+    # Get a list of all wireless interfaces
+    wireless_interfaces=$(iw dev | awk '$1=="Interface"{print $2}' | tac)
+
+    # Iterate over each wireless interface and delete if check_virtual_interface returns 1
+    for interface in $wireless_interfaces; do
+        if ! check_virtual_interface "$interface"; then
+            echo "Removing $interface..."
+            delete_wireless_interface "$interface"
+        fi
+    done
+
+    # Start services
+    sudo modprobe -r mac80211_hwsim
+    sudo service networking start
+    sudo service NetworkManager start
+
+    echo -e "${CYAN}[+] System Ready...${NC}"
+}
+
+
+# Get the first virtual card
+first_virtual_card() {
+    # Get a list of all wireless interfaces
+    wireless_interfaces=$(iw dev | awk '$1=="Interface"{print $2}' | tac)
+
+    # Iterate over each wireless interface and delete if check_virtual_interface returns 1
+    for int in $wireless_interfaces; do
+        if ! check_virtual_interface "$int"; then
+            echo "$int"
+            return  # Exit the loop once the first virtual card is found
+        fi
+    done
+}
+
+# Get next virtual card number
+increment_interface_number() {
+    local interface="$1"
+    local number=$(echo "$interface" | grep -o '[0-9]*$')
+    local incremented_number=$((number + 1))
+    local interface_prefix=$(echo "$interface" | sed 's/[0-9]*$//')
+    echo "${interface_prefix}${incremented_number}"
+}
+
+
+clean_up_and_setup
 
 # Read the ID line from /etc/os-release
 OS_ID=$(grep ^ID= /etc/os-release 2>/dev/null | cut -d= -f2)
@@ -119,8 +187,18 @@ if [ "$wifi_simulation" = "y" ]; then
         echo -e "${CYAN}[+] Loading kernel modules...${NC}"
         sudo modprobe mac80211_hwsim radios=4
 
-        # # Set wlan0 to monitor mode
-        output=$(sudo airmon-ng start wlan0 2>&1)
+        # Set the first virtual card into monitor mode
+        first_virtual_card_name=$(first_virtual_card)
+        echo "First virtual Card: ${first_virtual_card_name}"
+
+        # Check if a virtual card was found
+        if [ -n "$first_virtual_card_name" ]; then
+            # Set the first virtual card into monitor mode
+            output=$(sudo airmon-ng start "$first_virtual_card_name" 2>&1)
+        else
+            echo "Error: No virtual card found. Check that modprobe mac80211_hwsim is working..."
+            exit 1
+        fi
 
         # Look for lines with PIDs and extract them
         # This regex looks for lines that start with space(s), followed by numbers (PID), and then space/tab and text (process name)
@@ -168,27 +246,39 @@ if [ "$wifi_simulation" = "y" ]; then
         # Get PIDs of Docker containers and move interfaces
         echo -e "${CYAN}[+] Moving interfaces to Docker containers...${NC}"
 
-        # Companion Computer gets wlan1 interface
+        # Companion Computer gets the next interface
+        companion_computer_interface=$(increment_interface_number "$first_virtual_card_name")
         CC_PID=$(docker inspect --format '{{ .State.Pid }}' companion-computer)
-        PHY_WLAN1=$(iw dev | awk '/phy#/{phy=$0} /Interface wlan1/{print phy; exit}')
-        PHY_WLAN1=$(echo $PHY_WLAN1 | awk -F'#' '{print "phy"$2}')
-        sudo iw phy $PHY_WLAN1 set netns $CC_PID
+        CC_PHY_INTERFACE=$(iw dev | awk '/phy#/{phy=$0} /Interface '"$companion_computer_interface"'/{print phy; exit}')
+        CC_PHY_INTERFACE=$(echo "$CC_PHY_INTERFACE" | awk -F'#' '{print "phy"$2}')
+        sudo iw phy "$CC_PHY_INTERFACE" set netns "$CC_PID"
 
-        # Ground Control Station gets wlan2 interface
+        # Ground Control Station gets the next interface
+        gcs_interface=$(increment_interface_number "$companion_computer_interface")
         GCS_PID=$(docker inspect --format '{{ .State.Pid }}' ground-control-station)
-        PHY_WLAN2=$(iw dev | awk '/phy#/{phy=$0} /Interface wlan2/{print phy; exit}')
-        PHY_WLAN2=$(echo $PHY_WLAN2 | awk -F'#' '{print "phy"$2}')
-        sudo iw phy $PHY_WLAN2 set netns $GCS_PID
+        GCS_PHY_INTERFACE=$(iw dev | awk '/phy#/{phy=$0} /Interface '"$gcs_interface"'/{print phy; exit}')
+        GCS_PHY_INTERFACE=$(echo $GCS_PHY_INTERFACE | awk -F'#' '{print "phy"$2}')
+        sudo iw phy $GCS_PHY_INTERFACE set netns $GCS_PID
 
         # CC Access Point Setup
         echo -e "${CYAN}[+] Setting up Access Point on Companion Computer...${NC}"
         
         # Execute multiple commands in the companion-computer container
         docker exec companion-computer sh -c '
-        # Set IP address for wlan1
-        ip a a 192.168.13.1/24 dev wlan1 &&
-        echo "[companion-computer] IP address set for wlan1." ||
-        { echo "[companion-computer] Failed to set IP address for wlan1."; exit 1; }
+        # Set IP address for companion computer
+        ip a a 192.168.13.1/24 dev '"$companion_computer_interface"' &&
+        echo "[companion-computer] IP address set for '"$companion_computer_interface"'" ||
+        { echo "[companion-computer] Failed to set IP address for '"$companion_computer_interface"'."; exit 1; }
+
+        # Update interface name in dnsmasq.conf
+        sed -i "s/wlan1/'"${companion_computer_interface}"'/" /etc/dnsmasq.conf &&
+        echo "[companion-computer] Interface name updated in dnsmasq.conf." ||
+        { echo "[companion-computer] Failed to update interface name in dnsmasq.conf."; exit 1; }
+
+        # Update interface name in hostapd.conf
+        sed -i "s/wlan1/'"${companion_computer_interface}"'/" /etc/hostapd.conf &&
+        echo "[companion-computer] Interface name updated in hostapd.conf." ||
+        { echo "[companion-computer] Failed to update interface name in hostapd.conf."; exit 1; }
 
         # Create dhcpd.leases file if it doesnt exist
         if [ ! -f /var/lib/dhcp/dhcpd.leases ]; then
@@ -223,34 +313,26 @@ if [ "$wifi_simulation" = "y" ]; then
         '
 
         service NetworkManager start
+
+        kali_interface=$(increment_interface_number "$gcs_interface")
         
         # Ground Control Station Access Point Setup
         echo -e "${CYAN}[+] Setting up Ground Control Station Access Point...${NC}"
 
         # Execute commands in the ground-control-station container
         docker exec ground-control-station sh -c "
-            wpa_supplicant -B -i wlan2 -c /etc/wpa_supplicant/wpa_supplicant.conf -D nl80211;
-            ip addr add 192.168.13.14/24 dev wlan2;
-            ip route add default via 192.168.13.1 dev wlan2;
-            echo '${CYAN}[ground-control-station] IP address set for wlan2.${NC}' ||
-            { echo '${RED}[ground-control-station] Failed to set IP address for wlan2.${NC}'; exit 1; }
-        "        output=$(sudo airmon-ng start wlan0 2>&1)
-
-        # Look for lines with PIDs and extract them
-        # This regex looks for lines that start with space(s), followed by numbers (PID), and then space/tab and text (process name)
-        pids=($(echo "$output" | grep -oP '^\s*\K[0-9]+(?=\s+\S)'))
-
-        # Kill the processes
-        for pid in $pids; do
-            echo "Killing process $pid"
-            sudo kill $pid
-        done
+            wpa_supplicant -B -i '"$gcs_interface"' -c /etc/wpa_supplicant/wpa_supplicant.conf -D nl80211;
+            ip addr add 192.168.13.14/24 dev '"$gcs_interface"';
+            ip route add default via 192.168.13.1 dev '"$gcs_interface"';
+            echo '${CYAN}[ground-control-station] IP address set for '"$gcs_interface"'.${NC}' ||
+            { echo '${RED}[ground-control-station] Failed to set IP address for '"$gcs_interface"'.${NC}'; exit 1; }
+        "
 
         echo -e "${CYAN}------------------------------------------------------"
         echo -e "${CYAN}[+] Build Complete."
         echo -e "${CYAN}------------------------------------------------------"
-        echo -e "${CYAN}[+] - Virtual interface wlan0mon put into monitoring mode."
-        echo -e "${CYAN}[+] - Virtual interface wlan3 is available for regular wifi networking."
+        echo -e "${CYAN}[+] - Virtual interface ${first_virtual_card_name}mon put into monitoring mode."
+        echo -e "${CYAN}[+] - Virtual interface ${kali_interface} is available for regular wifi networking."
         echo -e "${CYAN}------------------------------------------------------"
         echo -e "${CYAN}[+] Damn Vulnerable Drone Lab Environment is running..."
         echo -e "${CYAN}[+] Log file: dvd.log"

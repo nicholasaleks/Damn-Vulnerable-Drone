@@ -10,7 +10,7 @@ def read_waypoints(filename):
     return waypoints
 
 # Connect to the drone
-connection_string = "udp:10.13.0.4:14550"  # Replace with your connection string
+connection_string = "udp:0.0.0.0:14550"  # Replace with your connection string
 master = mavutil.mavlink_connection(connection_string)
 master.wait_heartbeat()
 print("Connected to drone")
