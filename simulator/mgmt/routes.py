@@ -290,10 +290,6 @@ def attacks_index():
 
 # RECON
 
-@main.route('/attacks/recon')
-def attacks_recon():
-    return render_template('pages/attacks/recon/index.html', section='attacks', sub_section='recon')
-
 @main.route('/attacks/recon/wifi-analysis-cracking')
 def attacks_recon_wifi_analysis_cracking():
     return render_template('pages/attacks/recon/wifi-analysis-cracking.html', section='attacks', sub_section='recon', current_page='wifi-analysis-cracking')
@@ -329,10 +325,6 @@ def attacks_recon_ground_control_station_discovery():
 
 # PROTOCOL TAMPERING
 
-@main.route('/attacks/tampering')
-def attacks_tampering():
-    return render_template('pages/attacks/tampering/index.html', section='attacks', sub_section='tampering')
-
 @main.route('/attacks/tampering/telemetry-spoofing')
 def attacks_tampering_telemetry_spoofing():
     return render_template('pages/attacks/tampering/telemetry-spoofing.html', section='attacks', sub_section='tampering', current_page='telemetry-spoofing')
@@ -351,10 +343,6 @@ def attacks_tampering_gps_spoofing():
 
 
 # DENAIL OF SERVICE
-
-@main.route('/attacks/dos')
-def attacks_dos():
-    return render_template('pages/attacks/dos/index.html', section='attacks', sub_section='dos')
 
 @main.route('/attacks/dos/battery-drain-attack')
 def attacks_dos_battery_drain_attack():
@@ -384,7 +372,7 @@ def attacks_dos_camera_feed_disruption():
 def attacks_dos_gps_jamming():
     return render_template('pages/attacks/dos/gps-jamming.html', section='attacks', sub_section='dos', current_page='gps-jamming')
 
-@main.route('/attacks/wireless/wireless-deauthentication')
+@main.route('/attacks/dos/wireless-deauthentication')
 def attacks_dos_wireless_deauthentication():
     return render_template('pages/attacks/dos/wireless-deauthentication.html', section='attacks', sub_section='dos', current_page='wireless-deauthentication')
 
@@ -392,17 +380,17 @@ def attacks_dos_wireless_deauthentication():
 
 # INJECTION & HIJACKING
 
-@main.route('/attacks/injection')
-def attacks_injection():
-    return render_template('pages/attacks/injection/index.html', section='attacks', sub_section='injection')
-
 @main.route('/attacks/injection/mavlink-command-injection')
 def attacks_injection_mavlink_command_injection():
     return render_template('pages/attacks/injection/mavlink-command-injection.html', section='attacks', sub_section='injection', current_page='mavlink-command-injection')
 
-@main.route('/attacks/injection/camera-gimbal-command-injection')
-def attacks_injection_camera_gimbal_command_injection():
-    return render_template('pages/attacks/injection/camera-gimbal-command-injection.html', section='attacks', sub_section='injection', current_page='camera-gimbal-command-injection')
+@main.route('/attacks/injection/camera-gimbal-takeover')
+def attacks_injection_camera_gimbal_takeover():
+    return render_template('pages/attacks/injection/camera-gimbal-takeover.html', section='attacks', sub_section='injection', current_page='camera-gimbal-command-injection')
+
+@main.route('/attacks/injection/return-to-home-override')
+def attacks_injection_return_to_home_takeover():
+    return render_template('pages/attacks/injection/return-to-home-override.html', section='attacks', sub_section='injection', current_page='return-to-home-override')
 
 @main.route('/attacks/injection/waypoint-injection')
 def attacks_injection_waypoint_injection():
@@ -416,24 +404,20 @@ def attacks_injection_sensor_data_injection():
 def attacks_injection_flight_mode_injection():
     return render_template('pages/attacks/injection/flight-mode-injection.html', section='attacks', sub_section='injection', current_page='flight-mode-injection')
 
-@main.route('/attacks/injection/ground-control-station-hijacking')
+@main.route('/attacks/injection/ground-control-station-takeover')
 def attacks_injection_ground_control_station_hijacking():
     return render_template('pages/attacks/injection/ground-control-station-hijacking.html', section='attacks', sub_section='injection', current_page='ground-control-station-hijacking')
 
-@main.route('/attacks/injection/companion-computer-explitation')
+@main.route('/attacks/injection/companion-computer-takeover')
 def attacks_injection_gps_jamming():
     return render_template('pages/attacks/injection/companion-computer-exploitation.html', section='attacks', sub_section='injection', current_page='companion-computer-exploitation')
 
 
 # DATA EXFILTRATION
 
-@main.route('/attacks/exfiltration')
-def attacks_exfiltrationn():
-    return render_template('pages/attacks/exfiltration/index.html', section='attacks', sub_section='exfiltration')
-
-@main.route('/attacks/exfiltration/flight-log-collection')
-def attacks_exfiltration_flight_log_collection():
-    return render_template('pages/attacks/exfiltration/mavlink-command-injection.html', section='attacks', sub_section='exfiltration', current_page='flight-log-collection')
+@main.route('/attacks/exfiltration/flight-log-extraction')
+def attacks_exfiltration_flight_log_extraction():
+    return render_template('pages/attacks/exfiltration/flight-log-extraction.html', section='attacks', sub_section='exfiltration', current_page='flight-log-collection')
 
 @main.route('/attacks/exfiltration/mission-plan-exfiltration')
 def attacks_exfiltration_mission_plan_exfiltration():
@@ -449,22 +433,18 @@ def attacks_exfiltration_sensor_data_injection():
 
 @main.route('/attacks/exfiltration/camera-feed-eavesdropping')
 def attacks_exfiltration_camera_feed_eavesdropping():
-    return render_template('pages/attacks/exfiltration/camera_feed_eavesdropping.html', section='attacks', sub_section='exfiltration', current_page='camera-feed-eavesdropping')
+    return render_template('pages/attacks/exfiltration/camera-feed-eavesdropping.html', section='attacks', sub_section='exfiltration', current_page='camera-feed-eavesdropping')
 
-@main.route('/attacks/exfiltration/wireless-client-data-leakage')
-def attacks_exfiltration_wireless_client_data_leakage():
-    return render_template('pages/attacks/exfiltration/wireless-client-data-leakage.html', section='attacks', sub_section='exfiltration', current_page='wireless-client-data-leakage')
+@main.route('/attacks/exfiltration/wifi-client-data-leak')
+def attacks_exfiltration_wireless_client_data_leak():
+    return render_template('pages/attacks/exfiltration/wifi-client-data-leak.html', section='attacks', sub_section='exfiltration', current_page='wireless-client-data-leakage')
 
 
 # FIRMWARE ATTACKS
 
-@main.route('/attacks/firmware')
-def attacks_firmware():
-    return render_template('pages/attacks/firmware/index.html', section='attacks', sub_section='firmware')
-
-@main.route('/attacks/firmware/firmware-decompiling')
-def attacks_firmware_firmware_decompiling():
-    return render_template('pages/attacks/firmware/firmware-decompiling.html', section='attacks', sub_section='firmware', current_page='firmware-decompiling')
+@main.route('/attacks/firmware/firmware-decompile')
+def attacks_firmware_firmware_decompile():
+    return render_template('pages/attacks/firmware/firmware-decompile.html', section='attacks', sub_section='firmware', current_page='firmware-decompiling')
 
 @main.route('/attacks/firmware/firmware-modding')
 def attacks_firmware_firmware_modding():
