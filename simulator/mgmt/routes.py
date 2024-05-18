@@ -419,13 +419,13 @@ def attacks_injection_gps_jamming():
 def attacks_exfiltration_flight_log_extraction():
     return render_template('pages/attacks/exfiltration/flight-log-extraction.html', section='attacks', sub_section='exfiltration', current_page='flight-log-collection')
 
-@main.route('/attacks/exfiltration/mission-plan-exfiltration')
-def attacks_exfiltration_mission_plan_exfiltration():
-    return render_template('pages/attacks/exfiltration/camera-gimbal-command-injection.html', section='attacks', sub_section='exfiltration', current_page='mission-plan-extraction')
+@main.route('/attacks/exfiltration/mission-extraction')
+def attacks_exfiltration_mission_extraction():
+    return render_template('pages/attacks/exfiltration/mission-extraction.html', section='attacks', sub_section='exfiltration', current_page='mission-plan-extraction')
 
-@main.route('/attacks/exfiltration/ardupilot-parameter-collection')
-def attacks_exfiltration_ardupilot_parameter_collection():
-    return render_template('pages/attacks/exfiltration/ardupilot-parameter-collection.html', section='attacks', sub_section='exfiltration', current_page='ardupilot-parameter-collection')
+@main.route('/attacks/exfiltration/parameter-extraction')
+def attacks_exfiltration_parameter_exfiltration():
+    return render_template('pages/attacks/exfiltration/parameter-extraction.html', section='attacks', sub_section='exfiltration', current_page='ardupilot-parameter-collection')
 
 @main.route('/attacks/exfiltration/ftp-eavesdropping')
 def attacks_exfiltration_sensor_data_injection():

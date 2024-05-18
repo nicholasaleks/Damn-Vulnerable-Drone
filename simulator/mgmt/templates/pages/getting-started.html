@@ -66,14 +66,13 @@
                         <h4>Step 1: Read the Basic Operations Guide</h4>
                         <p>Delve into the <a class="link" href="/guide/basic-operations">Basic Operations</a> guide. This document will help you navigating the environment, as well as the tool you'll use to initially interact with the drone by engaging it's flight states. (<i>Within the simulator, we assume flight states are triggered by the ground control station "operator", and not you, the drone hacker</i>)</p>
                         
-                        
                         <h4>Step 2: Review the System Architecture </h4>
                         <p>Get a better idea of the Damn Vulnerable Drone <a class="link" href="/guide/system-architecture">System Architecture</a>. This will outline the core components used in a typicaly drone-stack, including flight controlls, ground control stations, and companion computers. This part will also help steer you away from accidently attacking the simulator infrastructure (preventing you from breaking DVD)</p>
                         
-                        <h4>Step 3: Execute a Simulation Health Check</h4>
-                        <p>After getting familiar with the Simulator, you'll want to run a <a class="link" href="/guide/system-health-check">System Health Check</a>. This will ensure that all of the Damn Vulnerable Drone systems have been installed properly and are ready for testing.</p>
+                        <h4>Step 3: Review documentation on MAVLink & Ardupilot</h4>
+                        <p>After getting familiar with the Simulator, you'll want to read about <a class="link" target="_blank" href="https://mavlink.io/en/">MAVLink</a> and <a class="link" target="_blank" href="https://ardupilot.org/ardupilot/">Ardupilot</a>. This will ensure some you will have a good foundational understanding with some of the concepts introduced in the attack scenarios.</p>
                     
-                        <h4>Step 4: Start the Attack Scenarios</h4>
+                        <h4>Step 3: Start the Attack Scenarios</h4>
                         <p>Next, actively engage with the <a class="link" href="/attacks">Attack Scenarios</a> presented by DVD. Start with reconnaissance to understand the simulated environment you're working in, then methodically progress through the scenarios from wireless attacks to data exfiltration. For users who have set up DVD with virtual wifi, you can explore the Wireless Network Attack scenarios to deepen your understanding of network vulnerabilities. If you didn't install the virtual wifi component, it's assumed you have network access, and you can skip directly to focusing on other vulnerabilities within the drone's network.</p>
                         
                     </section>
@@ -93,7 +92,7 @@
                             <div class="col-6 mb-3">
                                 <div class="alert alert-dark mb-0" role="alert">
                                     <span class="fw-500 text-expanded">Tip 2: Master the Simulator</span><br>
-                                    Gain proficiency with the simulator. <a class="link" href=/guide/basic-operations">Basic operations</a> like "Reset View" and "Reset Simulator" are crucial for effective navigation and troubleshooting. For more complex issues, refer to the <a class="link" href="/guide/troubleshooting">Troubleshooting</a> section for guidance on Docker container rebuilding.</div>
+                                    Gain proficiency with the simulator. <a class="link" href=/guide/basic-operations">Basic operations</a> like "Reset View" and "Reset Simulator" are crucial for effective navigation.</div>
                             </div>
                         </div>
                         <div class="row">
@@ -178,11 +177,11 @@
                     <div class="col-3 col-sm-6 mb-4">
                         <div class="card card-raised ripple-gray">
                             <div class="card-body">
-                                <div class="card-title"><h6>System Health Check</h6></div>
-                                <p class="card-text">Run a system health check to ensure all Drone stack components are working properly</p>
+                                <div class="card-title"><h6>System Architecture</h6></div>
+                                <p class="card-text">Learn more about the Damn Vulnerable Drone system architecture</p>
                             </div>
                             <div class="card-actions">
-                                <a class="card-link text-muted text-decoration-none stretched-link" href="/guide/system-health-check"></a>
+                                <a class="card-link text-muted text-decoration-none stretched-link" href="/guide/system-architecture"></a>
                                 <i class="material-icons text-muted rotate-45">arrow_upward</i>
                             </div>
                         </div>
