@@ -168,6 +168,8 @@ function updateTelemetryUI(isTelemetryRunning) {
         $('#addUdpButton').prop('disabled', false);
         $('#udpDestination').prop('disabled', false);
         $('#startTelemetry').show();
+        $('#startTelemetry').prop('disabled', false);
+        $('#connection_note').hide();
         $('#stopTelemetry').hide();
         $('#enableUdpServer').prop('disabled', false);
         $('#udpServerPort').prop('disabled', false);
