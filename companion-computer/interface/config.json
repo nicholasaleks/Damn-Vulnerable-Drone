@@ -1,0 +1,5 @@
+{
+    "autoselect_device": "/dev/ttyUSB0",
+    "autoselect_baud": 57600,
+    "autoselect_mavlink_version": 2.0
+}

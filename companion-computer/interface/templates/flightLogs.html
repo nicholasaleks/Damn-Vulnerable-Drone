@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Flight Logs</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <!-- CONNECTION STATUS -->
+        <h2>Status</h2>
+        <div>
+            <p>Telemetry Status: <span id="telemetryStatus" class="badge badge-danger">Not Connected (Go to Flight Controller Page to Connect)</span></p>
+            <p>Disk Space: Used <span id="diskSpaceUsed">0</span> Gb (<span id="diskSpaceUsedPercent">0</span>%)</p>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div>
+    <h2>SD Card Data Flash Logs</h2>
+    <button class="btn btn-danger" onclick="clearInactiveLogs()">Clear inactive logs</button>
+    <table style="width: 500px;">
+        <thead>
+            <tr>
+                <!-- space out each column -->
+                <th style="width: 25%">File Name</th>
+                <th style="width: 25%">Size</th>
+                <th style="width: 25%">Modified</th>
+                <th style="width: 25%">Download</th>
+            </tr>
+        </thead>
+        <tbody id="binLogsTable">
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/flightLogs.js') }}"></script>
+{% endblock %}
