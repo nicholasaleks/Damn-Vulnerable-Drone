@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y \
     git \
     make \
     g++ \
+    expect \
     libnl-3-dev \
     libnl-genl-3-dev \
     expect \
@@ -31,5 +32,7 @@ COPY ground-control-station/stages/autopilot-flight.py /autopilot-flight.py
 COPY ground-control-station/stages/return-to-land.py /return-to-land.py
 COPY ground-control-station/stages/post-flight-analysis.py /post-flight-analysis.py
 COPY ground-control-station/missions /missions
+COPY ground-control-station/init /init
+RUN chmod +x /init
 
-CMD echo "Ground Control Online..." && tail -f /dev/null
+CMD echo "Ground Control Online..." && /usr/bin/expect /init

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Damn Vulnerable Companion Computer | {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <style>
+        body {
+            display: flex;
+        }
+        .sidebar {
+            min-width: 200px;
+            max-width: 200px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            height: 100vh;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        .nav-link.active {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <!-- include logo /images/logo-small.png centered -->
+        <img src="{{ url_for('static', filename='images/logo-small.png') }}" class="mx-auto d-block" alt="DVCC Logo" style="margin-bottom: 20px;">
+        <!-- Add site name "Damn Vulnerable Companion Computer" centered and in all caps -->
+        <h6 class="text-center" style="text-transform: uppercase; font-size: 13px;">Damn Vulnerable Companion Computer</h6>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="/telemetry/flight-controller">Flight Controller</a>
+            <a class="nav-link" href="/logs/flight-logs">Flight Logs</a>
+            <a class="nav-link" href="/wifi/wifi-network">Wifi Network</a>
+            <a class="nav-link" href="/camera/camera-stream">Camera Streaming</a>
+        </nav>
+    </div>
+    <div class="content">
+        <div id="error" style="color: red; display: none;"></div>
+        {% block content %}{% endblock %}
+    </div>
+    <script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            checkTelemetryStatus();
+            const socket = io();
+
+            socket.on('telemetry_status', function(data) {
+                updateTelemetryUI(data.status);
+                $('#packetsReceived').text(data.packets_received);
+                $('#vehicleType').text(data.vehicle_type);
+                $('#firmwareVersion').text(data.firmware_version);
+            });
+
+            socket.on('mavlink_message', function(data) {
+                $('#consoleOutput').append(JSON.stringify(data) + '\n');
+            });
+
+        });
+        function checkTelemetryStatus() {
+            $.getJSON('/telemetry/telemetry-status', function(data) {
+                updateTelemetryUI(data.isTelemetryRunning);
+            });
+        }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

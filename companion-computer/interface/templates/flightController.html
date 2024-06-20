@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Flight Controller{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Flight Controller</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">Status</h2>
+            <p>Telemetry Status: <span id="telemetryStatus" class="badge bg-danger">Not Connected</span></p>
+            <p>Packets Received: <span id="packetsReceived">0 (0 bytes/sec)</span></p>
+            <p>Vehicle Type: <span id="vehicleType"></span></p>
+            <p>Vehicle Firmware: <span id="firmwareVersion"></span></p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">Connection</h2>
+                    <div class="mb-3">
+                        <label for="serialDevice" class="form-label">Serial Device</label>
+                        <select id="serialDevice" class="form-select"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="baudRate" class="form-label">Baud Rate</label>
+                        <select id="baudRate" class="form-select"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="mavlinkVersion" class="form-label">MAVLink Version</label>
+                        <select id="mavlinkVersion" class="form-select"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">Telemetry Forwarding</h2>
+                    <table id="udpDestinationsTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Destination IP:Port</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div class="input-group mb-3">
+                        <input type="text" id="udpDestination" class="form-control" placeholder="Add new destination">
+                        <button id="addUdpButton" class="btn btn-primary" onclick="addUdpDestination()">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">Options</h2>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="enableUdpServer">
+                        <label class="form-check-label" for="enableUdpServer">Enable UDP Server</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="udpServerPort" class="form-label">UDP Server Port</label>
+                        <input type="number" id="udpServerPort" class="form-control" value="14550">
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="enableTcpServer" checked>
+                        <label class="form-check-label" for="enableTcpServer">Enable TCP Server at port 5760</label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="enableDatastreamRequests">
+                        <label class="form-check-label" for="enableDatastreamRequests">Enable datastream requests</label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="enableHeartbeat">
+                        <label class="form-check-label" for="enableHeartbeat">Enable MAVLink heartbeats</label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="enableTlogs">
+                        <label class="form-check-label" for="enableTlogs">Record MAVLink telemetry stream to logfile</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="mb-4">
+                <button id="startTelemetry" class="btn btn-primary w-100" onclick="startTelemetry()">Start Telemetry</button>
+            </div>
+            <div class="mb-4" style="display: none;">
+                <button id="stopTelemetry" class="btn btn-danger w-100" onclick="stopTelemetry()">Stop Telemetry</button>
+            </div>
+            <p id="connection_note" class="text-danger" style="display: none;">Note: Make sure the drone flight controller is first initialized before starting telemetry.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/flightController.js') }}"></script>
+{% endblock %}

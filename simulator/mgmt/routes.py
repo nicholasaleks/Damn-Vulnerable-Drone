@@ -5,6 +5,11 @@ from models import Stage
 from extensions import db
 from models import Stage
 import logging
+import json
+import requests
+import threading
+
+
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -15,6 +20,26 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 main = Blueprint('main', __name__)
+
+
+def send_start_telemetry_request(data):
+    url = 'http://10.13.0.3:3000/telemetry/start-telemetry'
+    headers = {'Content-Type': 'application/json'}
+    try:
+        response = requests.post(url, data=json.dumps(data), headers=headers)
+        logging.info("Telemetry response: %s", response.text)
+    except requests.exceptions.RequestException as e:
+        logging.error("Failed to send telemetry data: %s", str(e))
+
+def send_stop_telemetry_request():
+    url = 'http://10.13.0.3:3000/telemetry/stop-telemetry'
+    headers = {'Content-Type': 'application/json'}
+    try:
+        response = requests.post(url, headers=headers)
+        logging.info("Telemetry response: %s", response.text)
+    except requests.exceptions.RequestException as e:
+        logging.error("Failed to send telemetry data: %s", str(e))
+
 
 @main.route('/')
 def index():
@@ -47,8 +72,15 @@ def reset_world():
     kill_command_2 = "pkill -f arducopter"
     container.exec_run(kill_command_2)
 
+    # Remove all MAVLink logs from the flight controller
+    container.exec_run(cmd="sh -c 'rm -rf /ardupilot/logs/*'", workdir="/")
+
+    # Stop telemetry on the companion computer
+    send_stop_telemetry_request()
+
     output = 'Reset'
     return render_template('pages/simulator.html', output=output, current_page='home')
+
 
 @main.route('/stage1', methods=['POST', ])
 def stage1():
@@ -61,6 +93,8 @@ def stage1():
     stage2.status = 'Enabled'
     db.session.commit()
 
+
+    # Start up the Flight Controller
     client = docker.from_env()
     container = client.containers.get('flight-controller')
     logging.info('Triggering Stage 1...')
@@ -76,7 +110,30 @@ def stage1():
             line = line.decode()
         logging.info("Command output: %s", line)
         output_stream.append(line)
-    
+
+    # Start up the Companion Computer Telemetry
+    logging.info('Starting MAVLink Router on Companion Computer...')
+
+    # POST request to start telemetry
+    data = {
+        'serial_device': '/dev/ttyUSB0',
+        'baud_rate': '57600',
+        'mavlink_version': '2',
+        'enable_udp_server': False,
+        'udp_server_port': '14550',
+        'enable_tcp_server': True,
+        'enable_datastream_requests': False,
+        'enable_heartbeat': False,
+        'enable_tlogs': False
+    }
+
+    # Send request but don't wait for response
+    thread = threading.Thread(target=send_start_telemetry_request, args=(data,))
+    thread.start()
+
+    # response = requests.post('http://localhost:3000/telemetry/start-telemetry', data=json.dumps(data))
+    # logging.info("Telemetry response: %s", response.text)
+
     return render_template('pages/simulator.html', output=output_stream, current_page='home')
 
 @main.route('/stage2', methods=['POST', ])
@@ -183,6 +240,20 @@ def stage5():
     container = client.containers.get('ground-control-station')
     logging.info('Triggering Stage 5...')
     command = "python3 /post-flight-analysis.py"
+
+    stage1 = Stage.query.filter_by(name='Stage 1').first()
+    stage1.status = 'Enabled'
+    stage2 = Stage.query.filter_by(name='Stage 2').first()
+    stage2.status = 'Disabled'
+    stage3 = Stage.query.filter_by(name='Stage 3').first()
+    stage3.status = 'Disabled'
+    stage4 = Stage.query.filter_by(name='Stage 4').first()
+    stage4.status = 'Disabled'
+    stage5 = Stage.query.filter_by(name='Stage 5').first()
+    stage5.status = 'Disabled'
+    stage6 = Stage.query.filter_by(name='Stage 6').first()
+    stage6.status = 'Disabled'
+    db.session.commit()
     
     # Log the command before executing it
     logging.info("Executing command: %s", command)

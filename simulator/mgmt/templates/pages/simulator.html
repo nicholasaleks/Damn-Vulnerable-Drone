@@ -112,7 +112,7 @@ window.addEventListener("message", (event) => {
     if (event.data === "resetWorldClicked") {
         Swal.fire({
             title: "Reset Simulator?",
-            text: "This will return the drone flight controller, companion computer, and ground station to their initial state!",
+            text: "This will return the drone flight controller, companion computer, and ground station to their initial state! Drone flight logs will also be deleted.",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: '#d33',

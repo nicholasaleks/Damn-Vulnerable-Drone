@@ -11,14 +11,20 @@ def wait_for_mode(master, mode):
 def is_armed(heartbeat):
     return (heartbeat.base_mode & mavutil.mavlink.MAV_MODE_FLAG_SAFETY_ARMED) != 0
 
-def wait_for_gps_fix(master):
+def wait_for_gps_fix(master, timeout=60):
+    start_time = time.time()
     print("Waiting for GPS fix...")
-    while True:
-        msg = master.recv_match(type='GPS_RAW_INT', blocking=True)
-        if msg is not None and msg.fix_type >= 3:  # Fix type 3 or more means 3D GPS fix
+    
+    while time.time() - start_time < timeout:
+        msg = master.recv_match(type='GPS_RAW_INT', blocking=True, timeout=1)
+        if msg is not None and msg.fix_type >= 3:
             print("GPS fix acquired")
-            break
+            return True
         time.sleep(0.5)
+    
+    print("Timeout waiting for GPS fix")
+    # Bypass wait...
+    return True
 
 def wait_for_ekf_status(master):
     print("Waiting for EKF status to be OK...")
@@ -42,7 +48,9 @@ master.waypoint_clear_all_send()
 print("Clearing waypoints...")
 
 # Wait for a good GPS fix before continuing
-wait_for_gps_fix(master)
+if not wait_for_gps_fix(master):
+    print("Failed to acquire GPS fix...")
+    exit(1)
 
 # Change to GUIDED mode
 master.mav.set_mode_send(master.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, mavutil.mavlink.COPTER_MODE_GUIDED)

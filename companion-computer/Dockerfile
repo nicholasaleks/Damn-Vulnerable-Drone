@@ -24,7 +24,6 @@ RUN apt-get update && apt-get install -y \
     net-tools \
     iputils-ping \
     gnupg \
-    expect \
     lsb-release \
     sudo \
     wget \
@@ -44,29 +43,36 @@ COPY companion-computer/conf/isc-dhcp-server /etc/default/isc-dhcp-server
 
 WORKDIR /
 
-RUN git clone https://github.com/stephendade/Rpanion-server.git
+# Define environment variable for architecture
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then \
+        wget https://github.com/mavlink-router/mavlink-router/releases/download/v4/mavlink-routerd-glibc-x86_64 -O /usr/bin/mavlink-routerd; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+        wget https://github.com/mavlink-router/mavlink-router/releases/download/v4/mavlink-routerd-glibc-aarch64 -O /usr/bin/mavlink-routerd; \
+    else \
+        echo "Unsupported architecture: $ARCH"; \
+        exit 1; \
+    fi && \
+    chmod +x /usr/bin/mavlink-routerd
 
-RUN sed -i 's|sudo hostnamectl set-hostname rpanion --static|# &|' /Rpanion-server/deploy/RasPi-ubuntu22-deploy.sh
-RUN sed -i 's|sudo systemctl stop unattended-upgrades.service|# &|' /Rpanion-server/deploy/RasPi-ubuntu22-deploy.sh
-RUN sed -i 's|sudo apt -y remove needrestart|# &|' /Rpanion-server/deploy/RasPi-ubuntu22-deploy.sh
+# Get Conf file
+RUN mkdir -p /etc/mavlink-router
+#COPY companion-computer/conf/mavlink-router.conf /etc/mavlink-router/main.conf
 
-RUN chmod +x /Rpanion-server/deploy/RasPi-ubuntu22-deploy.sh
+#RUN /usr/bin/mavlink-routerd &
 
-WORKDIR /Rpanion-server/deploy
-
-RUN npm install react-scripts --save
-
-RUN npm run build
-
-RUN PORT=3000
-
-RUN npm run server &
-
+# Web Interface Setup
+###########################
+RUN pip3 install flask docker flask-cors Flask-SQLAlchemy flask-socketio
+COPY companion-computer/interface /interface
+COPY companion-computer/interface/config.json /interface/config.json
+RUN mkdir -p /var/log/mavlink-router
 COPY companion-computer/init /init
 RUN chmod +x /init
+RUN mkdir -p /logs
 
 CMD /bin/bash -c "\
     socat pty,link=/dev/ttyUSB0,raw,echo=0 unix-connect:/sockets/socket.sock & \
-    sleep 20 && \
+    sleep 5 && \
     echo 'Starting Companion Computer...' && \
-    /usr/bin/expect /init"
+    python3 /interface/app.py"

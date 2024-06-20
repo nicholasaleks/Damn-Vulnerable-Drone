@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Wi-Fi Network</h1>
+
+    <!-- Select Connection Section -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Select Connection</h5>
+            <form class="row g-3">
+                <div class="col-md-4">
+                    <label for="adapter" class="form-label">Adapter:</label>
+                    <select id="adapter" class="form-select">
+                        <option value="wlan0">wlan0 (wifi)</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <button type="button" class="btn btn-primary" disabled>Refresh Connection List</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Connection Section -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Edit Connection</h5>
+            <form id="editConnectionForm">
+                <div class="mb-3">
+                    <label for="ssid" class="form-label">SSID Name:</label>
+                    <input type="text" id="ssid" name="ssid" value="Drone_Wifi" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="band" class="form-label">Band:</label>
+                    <select id="band" name="band" class="form-select">
+                        <option value="2.4GHz">2.4 GHz</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="channel" class="form-label">Channel:</label>
+                    <select id="channel" name="channel" class="form-select">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option selected value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="security" class="form-label">Security:</label>
+                    <select id="security" name="security" class="form-select">
+                        <option value="WEP">WEP</option>
+                        <option value="WPA_PSK">WPA (PSK)</option>
+                        <option value="WPA 2">WPA 2</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password:</label>
+                    <input type="password" id="password" name="password" class="form-control" value="1234567890">
+                </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="submit" class="btn btn-success" disabled>Save Changes</button>
+                    <button type="button" class="btn btn-danger ml-2" disabled>Discard Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/wifiNetwork.js') }}"></script>
+{% endblock %}
