@@ -1,6 +1,8 @@
 from pymavlink import mavutil
 import time
 
+connection_string = "udp:0.0.0.0:14550"  # Replace with your connection string
+
 def read_waypoints(filename):
     waypoints = []
     with open(filename, 'r') as file:
@@ -9,15 +11,37 @@ def read_waypoints(filename):
             waypoints.append((lat, lon, alt))
     return waypoints
 
-# Connect to the drone
-connection_string = "udp:0.0.0.0:14550"  # Replace with your connection string
-master = mavutil.mavlink_connection(connection_string)
-master.wait_heartbeat()
-print("Connected to drone")
+def connect_to_drone(connection_string, timeout=30, retries=5):
+    for attempt in range(retries):
+        try:
+            print(f"Attempt {attempt+1} of {retries} to connect to drone")
+            master = mavutil.mavlink_connection(connection_string)
+            start_time = time.time()
+
+            while True:
+                if time.time() - start_time > timeout:
+                    raise TimeoutError("Timed out waiting for heartbeat")
+
+                msg = master.recv_match(type='HEARTBEAT', blocking=True, timeout=1)
+                if msg:
+                    print("Connected to drone")
+                    return master
+                else:
+                    print("Waiting for heartbeat...")
+
+        except TimeoutError as e:
+            print(str(e))
+        except Exception as e:
+            print(f"Unexpected error: {str(e)}")
+        
+        time.sleep(5)  # Wait before retrying
+
+    raise ConnectionError("Failed to connect to the drone after multiple attempts")
 
 # Read waypoints from file
 waypoints = read_waypoints('/missions/waypoints_circle.txt')
 
+master = connect_to_drone(connection_string)
 # Start mission upload
 master.waypoint_clear_all_send()
 master.mav.mission_count_send(master.target_system, master.target_component, len(waypoints))

@@ -1,31 +1,5 @@
 $(document).ready(function() {
-    checkTelemetryStatus();
-    const socket = io();
-
-    socket.on('telemetry_status', function(data) {
-        updateTelemetryUI(data.status);
-        $('#packetsReceived').text(data.packets_received);
-        $('#vehicleType').text(data.vehicle_type);
-        $('#firmwareVersion').text(data.firmware_version);
-    });
-
-    socket.on('mavlink_message', function(data) {
-        $('#consoleOutput').append(JSON.stringify(data) + '\n');
-    });
-
     loadConfigAndDevices();
-
-    $.getJSON('/telemetry/udp-destinations', function(destinations) {
-        destinations.forEach(function(destination) {
-            if (destination.ip === '127.0.0.1' && destination.port === 14540) {
-                $('#udpDestinationsTable tbody').append('<tr><td>' + destination.ip + ':' + destination.port + '</td><td>Required for companion computer</td></tr>');
-            } else if (destination.ip === '10.13.0.4' || destination.ip === '192.168.13.14') {
-                $('#udpDestinationsTable tbody').append('<tr><td>' + destination.ip + ':' + destination.port + '</td><td>Required for GCS</td></tr>');
-            } else {
-                $('#udpDestinationsTable tbody').append('<tr><td>' + destination.ip + ':' + destination.port + '</td><td></td></tr>');
-            }
-        });
-    });
 });
 
 function loadConfigAndDevices() {
@@ -51,10 +25,26 @@ function loadConfigAndDevices() {
             $('#mavlinkVersion').val(config.autoselect_mavlink_version);
         });
     });
+
+    // Add UDP destinations
+    $.getJSON('/telemetry/udp-destinations', function(destinations) {
+        destinations.forEach(function(destination) {
+            if (destination.ip === '127.0.0.1' && destination.port === 14540) {
+                $('#udpDestinationsTable tbody').append('<tr><td>' + destination.ip + ':' + destination.port + '</td><td>Required for companion computer</td></tr>');
+            } else if (destination.ip === '10.13.0.4' || destination.ip === '192.168.13.14') {
+                $('#udpDestinationsTable tbody').append('<tr><td>' + destination.ip + ':' + destination.port + '</td><td>Required for GCS</td></tr>');
+            } else {
+                $('#udpDestinationsTable tbody').append('<tr><td>' + destination.ip + ':' + destination.port + '</td><td><button class="btn btn-danger" onclick="removeUdpDestination(' + destination.ip + ',' + destination.port + ')">Delete</button></td></tr>');
+            }
+        });
+    });
 }
 
-function startTelemetry() {
-
+function startTelemetry(event) {
+    if (event) event.preventDefault();
+    $('#connection_note').show();
+    $('#startTelemetry').prop('disabled', true);
+    $('#startTelemetry').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Connecting...');
     // Disable the startTelemetry button and put a loading spinner
     const serialDevice = $('#serialDevice').val();
     const baudRate = $('#baudRate').val();
@@ -124,7 +114,7 @@ function stopTelemetry() {
 
 function updateTelemetryUI(isTelemetryRunning) {
     if (isTelemetryRunning == "Connected") {
-        $('#startTelemetry').text('Stop Telemetry').off('click').on('click', stopTelemetry);
+        $('#startTelemetry').text('Stop Telemetry');
         $('#telemetryStatus').text('Connected');
         $('#telemetryStatus').removeClass('badge-danger').addClass('badge-success');
         $('#serialDevice').prop('disabled', true);
@@ -133,6 +123,7 @@ function updateTelemetryUI(isTelemetryRunning) {
         $('#addUdpButton').prop('disabled', true);
         $('#udpDestination').prop('disabled', true);
         $('#startTelemetry').hide();
+        $('#connection_note').hide();
         $('#stopTelemetry').show();
         $('#enableUdpServer').prop('disabled', true);
         $('#udpServerPort').prop('disabled', true);
@@ -159,8 +150,9 @@ function updateTelemetryUI(isTelemetryRunning) {
         $('#enableHeartbeat').prop('disabled', true);
         $('#enableTlogs').prop('disabled', true);
     } else {
-        $('#startTelemetry').text('Start Telemetry').off('click').on('click', startTelemetry);
+        $('#startTelemetry').text('Start Telemetry');
         $('#telemetryStatus').text('Not Connected');
+        $('#connection_note').hide();
         $('#telemetryStatus').addClass('badge-danger').removeClass('badge-success');
         $('#serialDevice').prop('disabled', false);
         $('#baudRate').prop('disabled', false);
@@ -193,7 +185,9 @@ function addUdpDestination() {
         data: JSON.stringify({ ip: ip, port: port }),
         success: function(response) {
             console.log(response);
-            $('#udpDestinationsTable tbody').append('<tr><td>' + ip + ':' + port + '</td><td></td></tr>');
+            // Add row to table and remove udp button in the last column
+            $('#udpDestination').val('');
+            $('#udpDestinationsTable tbody').append('<tr><td>' + ip + ':' + port + '</td><td><button class="btn btn-danger" onclick="removeUdpDestination(' + ip + ', ' + port + ')">Delete</button></td></tr>');
         },
         error: function(error) {
             console.error(error);
@@ -201,8 +195,20 @@ function addUdpDestination() {
     });
 }
 
-function checkTelemetryStatus() {
-    $.getJSON('/telemetry/telemetry-status', function(data) {
-        updateTelemetryUI(data.isTelemetryRunning);
+
+// Remove UDP destination
+function removeUdpDestination(ip, port) {
+    $.ajax({
+        url: '/telemetry/remove-udp-destination',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ ip: ip, port: port }),
+        success: function(response) {
+            console.log(response);
+            $('#udpDestinationsTable tbody').find('td:contains(' + ip + ':' + port + ')').parent().remove();
+        },
+        error: function(error) {
+            console.error(error);
+        }
     });
 }

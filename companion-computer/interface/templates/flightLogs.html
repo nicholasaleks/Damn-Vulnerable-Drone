@@ -3,22 +3,33 @@
 {% block content %}
 <h1>Flight Logs</h1>
 
+
 <div class="row">
     <div class="col-md-4">
         <!-- CONNECTION STATUS -->
         <h2>Status</h2>
         <div>
-            <p>Telemetry Status: <span id="telemetryStatus" class="badge badge-danger">Not Connected (Go to Flight Controller Page to Connect)</span></p>
-            <p>Disk Space: Used <span id="diskSpaceUsed">0</span> Gb (<span id="diskSpaceUsedPercent">0</span>%)</p>
+            <p>Telemetry Status: <span id="telemetryStatus" class="badge badge-danger">Not Connected</span></p>
+            <p>Packets Received: <span id="packetsReceived">0 (0 bytes/sec)</span></p>
+            <p>Vehicle Type: <span id="vehicleType"></span></p>
+            <p>Vehicle Firmware: <span id="firmwareVersion"></span></p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h2>File System</h2>
+        <div>
+            <p>Companion Computer Disk Space: Used <span id="diskSpaceUsed">0</span> Gb (<span id="diskSpaceUsedPercent">0</span>%)</p>
         </div>
     </div>
 </div>
 <hr>
-
 <div>
     <h2>SD Card Data Flash Logs</h2>
-    <button class="btn btn-danger" onclick="clearInactiveLogs()">Clear inactive logs</button>
-    <table style="width: 500px;">
+    <!-- warning -->
+    <div class="alert alert-warning" role="alert">
+        <p>Note: Drone must have completed a flight and be disarmed to view and download flight logs.</p>
+    </div>
+    <table style="width: 900px;">
         <thead>
             <tr>
                 <!-- space out each column -->

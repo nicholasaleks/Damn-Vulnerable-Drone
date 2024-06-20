@@ -46,9 +46,13 @@
             <tbody>
             </tbody>
         </table>
-        <div>
-            <input type="text" id="udpDestination" class="form-control" placeholder="Add new destination"><br>
-            <button id="addUdpButton" class="btn btn-primary" onclick="addUdpDestination()">Add</button>
+        <div class="row">
+            <div class="col-md-9">
+                <input type="text" id="udpDestination" class="form-control" placeholder="Add new destination">
+            </div>
+            <div class="col-md-3">
+                <button id="addUdpButton" class="btn btn-primary" onclick="addUdpDestination()">Add</button>
+            </div>
         </div>
     </div>
     <div class="col-md-4">
@@ -63,7 +67,7 @@
         </div>
         <div>
             <label for="enableTcpServer">Enable TCP Server at port 5760</label>
-            <input type="checkbox" id="enableTcpServer">
+            <input type="checkbox" id="enableTcpServer" checked>
         </div>
         <div>
             <label for="enableDatastreamRequests">Enable datastream requests</label>
@@ -79,6 +83,7 @@
         </div>
     </div>
 </div>
+<br><br>
 <div class="row">
     <div class="col-md-12">
         <p style="display: none; color: red;" id="connection_note">Note: Make sure the drone flight controller is first initialized before starting telemetry.</p>

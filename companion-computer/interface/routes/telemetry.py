@@ -4,10 +4,11 @@ from extensions import db
 from models import TelemetryStatus, UdpDestination
 import subprocess
 from pymavlink import mavutil
+import logging
 import threading
 import serial.tools.list_ports
 from flask import render_template
-from mavlink_connection import close_mavlink_connection
+from mavlink_connection import close_mavlink_connection, set_parameter
 
 telemetry_bp = Blueprint('telemetry', __name__)
 
@@ -16,9 +17,11 @@ telemetry_bp = Blueprint('telemetry', __name__)
 def flight_controller():
     return render_template('flightController.html')
 
+# Configure logging
+logging.basicConfig(filename='/var/log/mavlink-routerd.log', level=logging.DEBUG)
+
 @telemetry_bp.route('/start-telemetry', methods=['POST'])
 def start_telemetry():
-
     data = request.json
     serial_device = data.get('serial_device')
     baud_rate = data.get('baud_rate')
@@ -36,7 +39,6 @@ def start_telemetry():
             'mavlink-routerd',
             '-r',
             '-l', '/var/log/mavlink-router',
-            '-e', '127.0.0.1:14540',
             '--tcp-port', str(tcp_server_port),
             serial_device + ':' + str(baud_rate)
         ]
@@ -51,9 +53,15 @@ def start_telemetry():
         for destination in udp_destinations:
             cmd.extend(['-e', f"{destination.ip}:{destination.port}"])
 
-        subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # Start the process and make sure it's handled properly
+        process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
 
-        # If a telemtery status record already exists, update it. Otherwise, create a new record.
+        if process.returncode != 0:
+            logging.error(f"mavlink-routerd failed: {stderr.decode().strip()}")
+            raise RuntimeError(f"mavlink-routerd failed: {stderr.decode().strip()}")
+
+        # Update the telemetry status in the database
         telemetry_status_record = TelemetryStatus.query.first()
         if telemetry_status_record:
             telemetry_status_record.status = "Connecting"
@@ -64,17 +72,42 @@ def start_telemetry():
 
         return jsonify({'status': 'Telemetry started', 'cmd': ' '.join(cmd)})
     except Exception as e:
+        logging.error(f"Failed to start telemetry: {str(e)}")
         telemetry_status = "Not connected"
         return jsonify({'error': str(e)}), 500
 
 @telemetry_bp.route('/stop-telemetry', methods=['POST'])
 def stop_telemetry():
     global telemetry_status
+
     try:
-        close_mavlink_connection()
+        # List all processes
+        ps_output = subprocess.check_output(["ps", "aux"]).decode()
+        
+        # Filter for lines containing "mavlink-routerd"
+        lines = ps_output.splitlines()
+        mavlink_routerd_pids = []
+        
+        for line in lines:
+            if "mavlink-routerd" in line:
+                # Extract the PID (second column in ps aux output)
+                pid = int(line.split()[1])
+                mavlink_routerd_pids.append(pid)
+        
+        # Kill each mavlink-routerd process
+        for pid in mavlink_routerd_pids:
+            try:
+                subprocess.run(["kill", "-9", str(pid)], check=True)
+                print(f"Successfully killed mavlink-routerd process with PID {pid}")
+            except subprocess.CalledProcessError as e:
+                print(f"Failed to kill mavlink-routerd process with PID {pid}: {e}")
+        
+        if not mavlink_routerd_pids:
+            print("No mavlink-routerd processes found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
-        subprocess.run(["pkill", "-f", "mavlink-routerd"], check=True)
-
+    try:
         # If a telemtery status record already exists, update it. Otherwise, create a new record.
         telemetry_status_record = TelemetryStatus.query.first()
         if telemetry_status_record:
@@ -99,14 +132,14 @@ def get_telemetry_status():
     # Double check status by checking for mavlink-routerd process, if process is running keep status as connected else update status to not connected
     if telemetry_status and telemetry_status.status == "Connected":
         try:
-            subprocess.run(["pgrep", "-f", "mavlink-routerd"], check=True)
+            subprocess.run(["pgrep", "-f", "mavlink-routerd"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except subprocess.CalledProcessError:
             telemetry_status.status = "Not Connected"
             db.session.commit()
     # else if find "Connecting" status in db, check for mavlink-routerd process, if process is not running update status to not connected
     elif telemetry_status and telemetry_status.status == "Connecting":
         try:
-            subprocess.run(["pgrep", "-f", "mavlink-routerd"], check=True)
+            subprocess.run(["pgrep", "-f", "mavlink-routerd"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except subprocess.CalledProcessError:
             telemetry_status.status = "Not Connected"
             db.session.commit()
@@ -164,3 +197,29 @@ def add_udp_destination():
     db.session.add(new_destination)
     db.session.commit()
     return jsonify({"status": "UDP destination added"})
+
+# Remove UDP endpoint
+@telemetry_bp.route('/remove-udp-destination', methods=['POST'])
+def remove_udp_destination():
+    data = request.json
+    ip = data.get('ip')
+    port = data.get('port')
+    destination = UdpDestination.query.filter_by(ip=ip, port=port).first()
+    db.session.delete(destination)
+    db.session.commit()
+    return jsonify({"status": "UDP destination removed"})
+
+@telemetry_bp.route('/set_parameter', methods=['POST'])
+def set_parameter_endpoint():
+    data = request.json
+    param_id = data.get('param_id')
+    param_value = data.get('param_value')
+
+    if not param_id or param_value is None:
+        return jsonify({'error': 'Invalid parameter ID or value'}), 400
+
+    result = set_parameter(param_id, param_value)
+    if result is not None:
+        return jsonify({'status': 'Parameter set', 'param_id': param_id, 'param_value': result})
+    else:
+        return jsonify({'error': 'Failed to set parameter'}), 500

@@ -24,7 +24,6 @@ RUN apt-get update && apt-get install -y \
     net-tools \
     iputils-ping \
     gnupg \
-    expect \
     lsb-release \
     sudo \
     wget \
@@ -43,7 +42,6 @@ COPY companion-computer/conf/hostapd.conf /etc/hostapd.conf
 COPY companion-computer/conf/isc-dhcp-server /etc/default/isc-dhcp-server
 
 WORKDIR /
-
 
 # Define environment variable for architecture
 RUN ARCH=$(uname -m) && \
@@ -71,10 +69,10 @@ COPY companion-computer/interface/config.json /interface/config.json
 RUN mkdir -p /var/log/mavlink-router
 COPY companion-computer/init /init
 RUN chmod +x /init
+RUN mkdir -p /logs
 
 CMD /bin/bash -c "\
     socat pty,link=/dev/ttyUSB0,raw,echo=0 unix-connect:/sockets/socket.sock & \
     sleep 5 && \
     echo 'Starting Companion Computer...' && \
-    python3 /interface/app.py & \
-    /usr/bin/expect /init"
+    python3 /interface/app.py"

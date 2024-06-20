@@ -49,6 +49,25 @@ def get_vehicle_type_and_firmware():
 
     return vehicle_type, firmware_version
 
+def set_parameter(param_id, param_value):
+    global mav_connection
+
+    mav_connection.mav.param_set_send(
+        mav_connection.target_system,
+        mav_connection.target_component,
+        param_id.encode('utf-8'),
+        param_value,
+        mavutil.mavlink.MAV_PARAM_TYPE_REAL32
+    )
+
+    # Wait for an acknowledgment of the parameter change
+    start = time.time()
+    while time.time() - start < 5:
+        msg = mav_connection.recv_match(type='PARAM_VALUE', blocking=True, timeout=1)
+        if msg and msg.param_id == param_id:
+            return msg.param_value
+
+    return None
 
 def listen_to_mavlink():
     global mav_connection, telemetry_status
