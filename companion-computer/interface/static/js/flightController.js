@@ -116,7 +116,7 @@ function updateTelemetryUI(isTelemetryRunning) {
     if (isTelemetryRunning == "Connected") {
         $('#startTelemetry').text('Stop Telemetry');
         $('#telemetryStatus').text('Connected');
-        $('#telemetryStatus').removeClass('badge-danger').addClass('badge-success');
+        $('#telemetryStatus').removeClass('bg-danger').addClass('bg-success');
         $('#serialDevice').prop('disabled', true);
         $('#baudRate').prop('disabled', true);
         $('#mavlinkVersion').prop('disabled', true);
@@ -153,7 +153,7 @@ function updateTelemetryUI(isTelemetryRunning) {
         $('#startTelemetry').text('Start Telemetry');
         $('#telemetryStatus').text('Not Connected');
         $('#connection_note').hide();
-        $('#telemetryStatus').addClass('badge-danger').removeClass('badge-success');
+        $('#telemetryStatus').addClass('bg-danger').removeClass('bg-success');
         $('#serialDevice').prop('disabled', false);
         $('#baudRate').prop('disabled', false);
         $('#mavlinkVersion').prop('disabled', false);

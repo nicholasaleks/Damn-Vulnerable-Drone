@@ -3,12 +3,16 @@
 {% block title %}Home - Companion Computer Web Interface{% endblock %}
 
 {% block content %}
-<h1>Welcome to the Damn Vulnerable Companion Computer Web Interface</h1>
-<p class="lead">This is the main splash page. Navigate to the Flight Controller page to manage your flight controller.</p>
-<a href="/telemetry/flight-controller" class="btn btn-primary">Go to Flight Controller</a>
+<div class="container mt-4">
+    <h1>Damn Vulnerable Companion Computer Web Interface</h1>
+    <p class="lead">This is the main splash page. Navigate to the Flight Controller page to manage your flight controller.</p>
+    
+    <p>Companion computers are small, embedded computers that are integrated into drone systems to augment the primary flight controller. They typically run on Linux-based operating systems and are designed to handle tasks beyond basic flight control, such as sensor data processing, computer vision, communication with ground control stations, and more. By offloading these tasks to companion computers, drones can perform complex operations and execute customized applications.</p>
+    <a href="/telemetry/flight-controller" class="btn btn-primary">Go to Flight Controller</a>
 
-<!-- Make a request to /config to display current config settings here -->
-<div id="config"></div>
+    <!-- Config Settings Section -->
+    <div id="config" class="mt-4"></div>
+</div>
 {% endblock %}
 
 {% block scripts %}

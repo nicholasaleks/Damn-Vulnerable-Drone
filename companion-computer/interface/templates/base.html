@@ -26,6 +26,10 @@
 </head>
 <body>
     <div class="sidebar">
+        <!-- include logo /images/logo-small.png centered -->
+        <img src="{{ url_for('static', filename='images/logo-small.png') }}" class="mx-auto d-block" alt="DVCC Logo" style="margin-bottom: 20px;">
+        <!-- Add site name "Damn Vulnerable Companion Computer" centered and in all caps -->
+        <h6 class="text-center" style="text-transform: uppercase; font-size: 13px;">Damn Vulnerable Companion Computer</h6>
         <nav class="nav flex-column">
             <a class="nav-link" href="/">Home</a>
             <a class="nav-link" href="/telemetry/flight-controller">Flight Controller</a>

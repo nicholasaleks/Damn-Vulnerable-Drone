@@ -10,8 +10,8 @@ import serial.tools.list_ports
 from flask import render_template
 from mavlink_connection import close_mavlink_connection, set_parameter
 
-wifi_bp = Blueprint('wifi', __name__)
+camera_bp = Blueprint('camera', __name__)
 
-@wifi_bp.route('/wifi-network')
-def wifi_network():
-    return render_template('wifiNetwork.html')
+@camera_bp.route('/camera-stream')
+def camera_stream():
+    return render_template('cameraStream.html')

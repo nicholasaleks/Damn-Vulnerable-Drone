@@ -1,4 +1,3 @@
-
 $(document).ready(function() {
     checkTelemetryStatus();
     updateDiskSpace();
@@ -51,14 +50,14 @@ function formatBytes(bytes, decimals = 2) {
 function updateTelemetryUI(isTelemetryRunning) {
     if (isTelemetryRunning == "Connected") {
         $('#telemetryStatus').text('Connected');
-        $('#telemetryStatus').removeClass('badge-danger').addClass('badge-success').removeClass('badge-warning');
+        $('#telemetryStatus').removeClass('bg-danger').addClass('bg-success').removeClass('bg-warning');
 
     } else if (isTelemetryRunning == "Connecting") {
         $('#connection_note').show();
         $('#telemetryStatus').text('Connecting');
-        $('#telemetryStatus').removeClass('badge-danger').removeClass('badge-success').addClass('badge-warning');
+        $('#telemetryStatus').removeClass('bg-danger').removeClass('bg-success').addClass('bg-warning');
     } else {
         $('#telemetryStatus').text('Not Connected (Go to Flight Controller Page to Connect)');
-        $('#telemetryStatus').addClass('badge-danger').removeClass('badge-warning').removeClass('badge-success');
+        $('#telemetryStatus').addClass('bg-danger').removeClass('bg-warning').removeClass('bg-success');
     }
 }

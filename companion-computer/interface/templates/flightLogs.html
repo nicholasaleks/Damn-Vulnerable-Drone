@@ -1,47 +1,56 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Flight Logs</h1>
+<div class="container mt-4">
+    <h1>Flight Logs</h1>
 
-
-<div class="row">
-    <div class="col-md-4">
-        <!-- CONNECTION STATUS -->
-        <h2>Status</h2>
-        <div>
-            <p>Telemetry Status: <span id="telemetryStatus" class="badge badge-danger">Not Connected</span></p>
-            <p>Packets Received: <span id="packetsReceived">0 (0 bytes/sec)</span></p>
-            <p>Vehicle Type: <span id="vehicleType"></span></p>
-            <p>Vehicle Firmware: <span id="firmwareVersion"></span></p>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">Status</h2>
+                    <p>Telemetry Status: <span id="telemetryStatus" class="badge bg-danger">Not Connected</span></p>
+                    <p>Packets Received: <span id="packetsReceived">0 (0 bytes/sec)</span></p>
+                    <p>Vehicle Type: <span id="vehicleType"></span></p>
+                    <p>Vehicle Firmware: <span id="firmwareVersion"></span></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">File System</h2>
+                    <p>Companion Computer Disk Space: Used <span id="diskSpaceUsed">0</span> Gb (<span id="diskSpaceUsedPercent">0</span>%)</p>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <h2>File System</h2>
-        <div>
-            <p>Companion Computer Disk Space: Used <span id="diskSpaceUsed">0</span> Gb (<span id="diskSpaceUsedPercent">0</span>%)</p>
+
+    <hr>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <h2 class="card-title">SD Card Data Flash Logs</h2>
+            <div class="alert alert-warning" role="alert">
+                <p>Note: Drone must have completed a flight and be disarmed to view and download flight logs.</p>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%">File Name</th>
+                            <th style="width: 25%">Size</th>
+                            <th style="width: 25%">Modified</th>
+                            <th style="width: 25%">Download</th>
+                        </tr>
+                    </thead>
+                    <tbody id="binLogsTable">
+                        <!-- Table rows will be filled here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
-<hr>
-<div>
-    <h2>SD Card Data Flash Logs</h2>
-    <!-- warning -->
-    <div class="alert alert-warning" role="alert">
-        <p>Note: Drone must have completed a flight and be disarmed to view and download flight logs.</p>
-    </div>
-    <table style="width: 900px;">
-        <thead>
-            <tr>
-                <!-- space out each column -->
-                <th style="width: 25%">File Name</th>
-                <th style="width: 25%">Size</th>
-                <th style="width: 25%">Modified</th>
-                <th style="width: 25%">Download</th>
-            </tr>
-        </thead>
-        <tbody id="binLogsTable">
-        </tbody>
-    </table>
 </div>
 {% endblock %}
 

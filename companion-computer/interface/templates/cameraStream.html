@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Camera Streaming</h1>
+    <p>Stream live video from any connected camera devices. Only 1 camera can be streamed at a time.</p>
+
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">Configuration</h2>
+            <form>
+                <div class="mb-3">
+                    <label for="streamingMode" class="form-label">Streaming Mode</label>
+                    <select class="form-select" id="streamingMode">
+                        <option selected>RTP (stream to single client)</option>
+                        <option>RTSP (multiple clients can connect to stream)</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="device" class="form-label">Device</label>
+                    <select class="form-select" id="device">
+                        <option selected>CSI Port Camera</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="resolution" class="form-label">Resolution</label>
+                    <select class="form-select" id="resolution">
+                        <option selected>1920x1080</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="rotation" class="form-label">Rotation</label>
+                    <select class="form-select" id="rotation">
+                        <option selected>0°</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="bitrate" class="form-label">Average Bitrate</label>
+                    <input type="number" class="form-control" id="bitrate" value="1000">
+                    <small class="form-text text-muted">kbps</small>
+                </div>
+                <div class="mb-3">
+                    <label for="framerate" class="form-label">Framerate</label>
+                    <input type="number" class="form-control" id="framerate" value="10">
+                    <small class="form-text text-muted">fps (max: 30)</small>
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="timestampOverlay">
+                    <label class="form-check-label" for="timestampOverlay">Timestamp Overlay</label>
+                </div>
+                <div class="mb-3">
+                    <label for="destinationIP" class="form-label">Destination IP</label>
+                    <input type="text" class="form-control" id="destinationIP" value="127.0.0.1">
+                </div>
+                <div class="mb-3">
+                    <label for="destinationPort" class="form-label">Destination Port</label>
+                    <input type="number" class="form-control" id="destinationPort" value="5400">
+                </div>
+                <button type="button" class="btn btn-primary">Start Streaming</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/cameraStream.js') }}"></script>
+{% endblock %}

@@ -10,6 +10,8 @@ from models import TelemetryStatus
 from extensions import db
 from routes.telemetry import telemetry_bp
 from routes.logs import logs_bp
+from routes.wifi import wifi_bp
+from routes.camera import camera_bp
 from mavlink_connection import listen_to_mavlink, initialize_socketio
 import logging
 from logging.handlers import RotatingFileHandler
@@ -46,6 +48,8 @@ def create_app():
     # Register blueprints
     app.register_blueprint(telemetry_bp, url_prefix='/telemetry')
     app.register_blueprint(logs_bp, url_prefix='/logs')
+    app.register_blueprint(wifi_bp, url_prefix='/wifi')
+    app.register_blueprint(camera_bp, url_prefix='/camera')
 
     @app.route('/')
     def index():
