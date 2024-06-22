@@ -83,8 +83,6 @@ RUN find . -type f -exec dos2unix {} \; && chmod +x deploy.sh
 RUN npm install
 RUN /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy -- -m local"
 
-# Modify GzWeb CSS
-#COPY simulator/assets/gz3d.css /Simulator/gzweb/http/client/style/gz3d.css
 
 # Install Damn Vulnerable Drone Sim Mgmt Web App
 RUN pip3 install flask docker flask-cors Flask-SQLAlchemy
@@ -94,14 +92,6 @@ RUN rm -rf /Simulator/mgmt/instance/stages.db
 
 RUN rm -rf /tmp/.X*
 RUN export DISPLAY=:100
-
-# Run the Gazebo Server and Web App
-
-# CMD rm -rf /tmp/.X100-lock; \
-#     Xvfb :100 -screen 0 1600x1200x16 & \
-#     gzserver --verbose /Simulator/ardupilot_gazebo/worlds/damn-vulnerable-drone.world & \
-#     cd /Simulator/gzweb && sleep 15 && npm start > /dev/null 2>&1 & \
-#     cd /Simulator/mgmt && sleep 15 && python3 app.py
 
 # Move launch file
 COPY simulator/damn-vulnerable-drone.launch /Simulator/damn-vulnerable-drone.launch
