@@ -65,7 +65,7 @@ WORKDIR /Simulator
 # Setup gazebo environment variables
 ENV GAZEBO_MODEL_PATH /Simulator/ardupilot_gazebo/models:/usr/share/gazebo-11/models:${GAZEBO_MODEL_PATH}
 ENV GAZEBO_RESOURCE_PATH /Simulator/ardupilot_gazebo/worlds:/usr/share/gazebo-11:/usr/share/gazebo-11:${GAZEBO_RESOURCE_PATH}
-ENV GAZEBO_PLUGIN_PATH /Simulator/ardupilot_gazebo/build:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:${GAZEBO_PLUGIN_PATH}
+ENV GAZEBO_PLUGIN_PATH /Simulator/ardupilot_gazebo/build:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/noetic/lib:${GAZEBO_PLUGIN_PATH}
 ENV GAZEBO_MODEL_DATABASE_URI ''
 ENV DISPLAY :100
 
@@ -83,8 +83,6 @@ RUN find . -type f -exec dos2unix {} \; && chmod +x deploy.sh
 RUN npm install
 RUN /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy -- -m local"
 
-# Modify GzWeb CSS
-#COPY simulator/assets/gz3d.css /Simulator/gzweb/http/client/style/gz3d.css
 
 # Install Damn Vulnerable Drone Sim Mgmt Web App
 RUN pip3 install flask docker flask-cors Flask-SQLAlchemy
@@ -95,10 +93,12 @@ RUN rm -rf /Simulator/mgmt/instance/stages.db
 RUN rm -rf /tmp/.X*
 RUN export DISPLAY=:100
 
-# Run the Gazebo Server and Web App
+# Move launch file
+COPY simulator/damn-vulnerable-drone.launch /Simulator/damn-vulnerable-drone.launch
 
 CMD rm -rf /tmp/.X100-lock; \
     Xvfb :100 -screen 0 1600x1200x16 & \
-    gzserver --verbose /Simulator/ardupilot_gazebo/worlds/damn-vulnerable-drone.world & \
-    cd /Simulator/gzweb && sleep 15 && npm start > /dev/null 2>&1 & \
-    cd /Simulator/mgmt && sleep 15 && python3 app.py
+    bash -c "source /opt/ros/noetic/setup.bash && \
+             roslaunch /Simulator/damn-vulnerable-drone.launch & \
+             cd /Simulator/gzweb && sleep 15 && npm start > /dev/null 2>&1 & \
+             cd /Simulator/mgmt && sleep 15 && python3 app.py"

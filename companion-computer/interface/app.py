@@ -16,6 +16,7 @@ from mavlink_connection import listen_to_mavlink, initialize_socketio
 import logging
 from logging.handlers import RotatingFileHandler
 import os
+import rospy
 
 socketio = SocketIO()
 
@@ -31,6 +32,8 @@ def configure_logging(app):
 
 def create_app():
     app = Flask(__name__)
+
+    rospy.init_node('camera_display_node', anonymous=True)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///telemetry.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

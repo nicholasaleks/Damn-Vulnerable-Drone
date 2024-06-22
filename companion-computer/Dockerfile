@@ -1,9 +1,9 @@
-FROM ubuntu:22.04
+FROM ubuntu:20.04
 
 # Avoid prompts during package installations
 ENV DEBIAN_FRONTEND=noninteractive
 
-EXPOSE 3000
+EXPOSE 3000 5000
 
 RUN apt-get update && apt-get install -y \
     apt-utils \
@@ -36,6 +36,17 @@ RUN apt-get update && apt-get install -y \
     && pip3 install future pymavlink MAVProxy \
     && rm -rf /var/lib/apt/lists/*
 
+# Install ROS
+RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -
+RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros-latest.list'
+RUN apt update -y && apt install -y ros-noetic-ros-base ros-noetic-gazebo-ros-pkgs ros-noetic-cv-bridge ros-noetic-image-transport
+
+ENV ROS_MASTER_URI=http://10.13.0.5:11311
+ENV ROS_IP=10.13.0.3
+
+# Add ros source to bashrc
+RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
+
 COPY companion-computer/conf/dhcpd.conf /etc/dhcp/dhcpd.conf
 COPY companion-computer/conf/dnsmasq.conf /etc/dnsmasq.conf
 COPY companion-computer/conf/hostapd.conf /etc/hostapd.conf
@@ -63,16 +74,12 @@ RUN mkdir -p /etc/mavlink-router
 
 # Web Interface Setup
 ###########################
-RUN pip3 install flask docker flask-cors Flask-SQLAlchemy flask-socketio
+RUN pip3 install flask docker flask-cors Flask-SQLAlchemy flask-socketio opencv-python-headless
 COPY companion-computer/interface /interface
 COPY companion-computer/interface/config.json /interface/config.json
 RUN mkdir -p /var/log/mavlink-router
-COPY companion-computer/init /init
-RUN chmod +x /init
+COPY companion-computer/start-companion.sh /start-companion.sh
+RUN chmod +x /start-companion.sh
 RUN mkdir -p /logs
 
-CMD /bin/bash -c "\
-    socat pty,link=/dev/ttyUSB0,raw,echo=0 unix-connect:/sockets/socket.sock & \
-    sleep 5 && \
-    echo 'Starting Companion Computer...' && \
-    python3 /interface/app.py"
+CMD ["/start-companion.sh"]

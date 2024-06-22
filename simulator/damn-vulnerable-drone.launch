@@ -1,0 +1,11 @@
+<launch>
+  <!-- Load the Gazebo ROS package paths -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="/Simulator/ardupilot_gazebo/worlds/damn-vulnerable-drone.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="false"/>
+    <arg name="headless" value="true"/>
+    <arg name="verbose" value="true"/>
+  </include>
+</launch>
