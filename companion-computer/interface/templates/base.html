@@ -7,13 +7,20 @@
     <style>
         body {
             display: flex;
+            height: 100vh;
+            margin: 0;
         }
         .sidebar {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             min-width: 200px;
             max-width: 200px;
             background-color: #f8f9fa;
             padding: 15px;
-            height: 100vh;
+        }
+        .nav-section {
+            flex-grow: 1;
         }
         .content {
             flex-grow: 1;
@@ -22,21 +29,32 @@
         .nav-link.active {
             font-weight: bold;
         }
+        img.logo {
+            max-height: 80px; /* Adjust the height of the logo */
+            margin-bottom: 10px; /* Reduce space below the logo */
+        }
+        h6 {
+            font-size: 12px; /* Smaller font size for the site name */
+            margin-bottom: 10px; /* Reduce space below the site name */
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <!-- include logo /images/logo-small.png centered -->
-        <img src="{{ url_for('static', filename='images/logo-small.png') }}" class="mx-auto d-block" alt="DVCC Logo" style="margin-bottom: 20px;">
-        <!-- Add site name "Damn Vulnerable Companion Computer" centered and in all caps -->
-        <h6 class="text-center" style="text-transform: uppercase; font-size: 13px;">Damn Vulnerable Companion Computer</h6>
-        <nav class="nav flex-column">
-            <a class="nav-link" href="/">Home</a>
-            <a class="nav-link" href="/telemetry/flight-controller">Flight Controller</a>
-            <a class="nav-link" href="/logs/flight-logs">Flight Logs</a>
-            <a class="nav-link" href="/wifi/wifi-network">Wifi Network</a>
-            <a class="nav-link" href="/camera/camera-stream">Camera Streaming</a>
-        </nav>
+        <div class="nav-section">
+            <img src="{{ url_for('static', filename='images/logo-small.png') }}" class="logo mx-auto d-block" alt="DVCC Logo">
+            <h6 class="text-center" style="text-transform: uppercase;">Damn Vulnerable Companion Computer</h6>
+            <nav class="nav flex-column">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="/telemetry/flight-controller">Flight Controller</a>
+                <a class="nav-link" href="/logs/flight-logs">Flight Logs</a>
+                <a class="nav-link" href="/wifi/wifi-network">Wifi Network</a>
+                <a class="nav-link" href="/camera/camera-stream">Camera Streaming</a>
+            </nav>
+        </div>
+        {% if current_user.is_authenticated %}
+            <a href="/logout" class="btn btn-danger mt-3 btn-block">Logout</a>
+        {% endif %}
     </div>
     <div class="content">
         <div id="error" style="color: red; display: none;"></div>

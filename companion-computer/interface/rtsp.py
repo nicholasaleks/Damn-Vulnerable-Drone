@@ -55,7 +55,7 @@ class GstServer:
         self.server.set_service("554")
         factory = SensorFactory()
         factory.set_shared(True)
-        self.server.get_mount_points().add_factory("/stream", factory)
+        self.server.get_mount_points().add_factory("/stream1", factory)
         self.server.attach(None)
 
 if __name__ == '__main__':

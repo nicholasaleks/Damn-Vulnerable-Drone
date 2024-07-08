@@ -76,7 +76,7 @@ RUN mkdir -p /etc/mavlink-router
 
 # Web Interface Setup
 ###########################
-RUN pip3 install flask docker flask-cors Flask-SQLAlchemy flask-socketio opencv-python-headless
+RUN pip3 install flask docker flask-cors Flask-SQLAlchemy flask-socketio opencv-python-headless Flask-Login
 COPY companion-computer/interface /interface
 COPY companion-computer/interface/config.json /interface/config.json
 RUN mkdir -p /var/log/mavlink-router

@@ -9,11 +9,13 @@ import threading
 import serial.tools.list_ports
 from flask import render_template
 from mavlink_connection import close_mavlink_connection, set_parameter
+from flask_login import login_required
 
 telemetry_bp = Blueprint('telemetry', __name__)
 
 # Add flight-controller template html render endpoint
 @telemetry_bp.route('/flight-controller')
+@login_required
 def flight_controller():
     return render_template('flightController.html')
 

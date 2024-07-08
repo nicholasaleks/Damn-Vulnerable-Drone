@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, Response, render_template
 import logging
 from video import VideoStreamer
-
+from flask_login import login_required
 
 camera_bp = Blueprint('camera', __name__)
 
@@ -21,6 +21,7 @@ def video_feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @camera_bp.route('/camera-stream')
+@login_required
 def camera_stream():
     # Assuming 'cameraStream.html' has an img element for displaying the video
     return render_template('cameraStream.html')
