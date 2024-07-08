@@ -6,6 +6,7 @@ import struct
 import subprocess
 import os
 import logging
+from flask_login import login_required
 
 logs_bp = Blueprint('logs', __name__)
 
@@ -18,6 +19,7 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
 @logs_bp.route('/flight-logs')
+@login_required
 def flight_logs():
     return render_template('flightLogs.html')
 

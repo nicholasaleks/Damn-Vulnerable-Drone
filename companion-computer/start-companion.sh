@@ -11,5 +11,8 @@ sleep 5
 # Echo starting message
 echo "Starting Companion Computer..."
 
+# Start RTSP Stream interface/rtsp.py
+python3 /interface/rtsp.py &
+
 # Start the Python application
 exec python3 /interface/app.py

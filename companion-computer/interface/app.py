@@ -3,10 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, emit
 import json
 import time
-from models import UdpDestination
+from models import UdpDestination, TelemetryStatus, User
 import subprocess
 import threading
-from models import TelemetryStatus
 from extensions import db
 from routes.telemetry import telemetry_bp
 from routes.logs import logs_bp
@@ -17,8 +16,19 @@ import logging
 from logging.handlers import RotatingFileHandler
 import os
 import rospy
+from flask_login import LoginManager
+from flask_login import current_user, login_user, logout_user, login_required
+from flask import request, redirect, url_for, flash
+
 
 socketio = SocketIO()
+login_manager = LoginManager()
+login_manager.login_view = 'login'
+login_manager.login_message = "You must be logged in to access this page."
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 def configure_logging(app):
     # Configure logging
@@ -32,7 +42,8 @@ def configure_logging(app):
 
 def create_app():
     app = Flask(__name__)
-
+    app.secret_key = 'supersecretkey'
+    login_manager.init_app(app)
     rospy.init_node('camera_display_node', anonymous=True)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///telemetry.db'
@@ -55,8 +66,34 @@ def create_app():
     app.register_blueprint(camera_bp, url_prefix='/camera')
 
     @app.route('/')
+    @login_required
     def index():
         return render_template('index.html')
+    
+    @app.route('/login', methods=['GET', 'POST'])
+    def login():
+        if current_user.is_authenticated:
+            return redirect(url_for('index'))
+
+        if request.method == 'POST':
+            username = request.form.get('username')
+            password = request.form.get('password')
+            remember = request.form.get('remember_me') == 'on'
+
+            user = User.query.filter_by(username=username).first()
+            if user and user.check_password(password):
+                login_user(user, remember=remember)
+                next_page = request.args.get('next') or url_for('index')
+                return redirect(next_page)
+            else:
+                flash('Invalid username or password')
+
+        return render_template('login.html')
+
+    @app.route('/logout')
+    def logout():
+        logout_user()
+        return redirect(url_for('index'))
 
     @app.route('/config', methods=['GET'])
     def get_config():
@@ -93,6 +130,19 @@ def create_app():
 
     return app
 
+def add_default_user():
+    
+    # Check if the default user exists
+    default_user = User.query.filter_by(username='admin').first()
+    if not default_user:
+        # Create and add the default user
+        new_user = User(username='admin')
+        new_user.set_password('defaultpassword')
+        db.session.add(new_user)
+        db.session.commit()
+        print('Added default user')
+    else:
+        print('Default user already exists')
 
 def initialize_udp_destinations():
 
@@ -123,8 +173,10 @@ def start_mavlink_thread():
 
 if __name__ == '__main__':
     app = create_app()
+
     with app.app_context():
         db.create_all()
+        add_default_user()
         initialize_udp_destinations()
         threading.Thread(target=start_mavlink_thread).start()
         app.logger.info('Application startup')

@@ -40,6 +40,8 @@ RUN apt-get update && apt-get install -y \
 RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros-latest.list'
 RUN apt update -y && apt install -y ros-noetic-ros-base ros-noetic-gazebo-ros-pkgs ros-noetic-cv-bridge ros-noetic-image-transport
+RUN apt install -y gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-tools gstreamer1.0-rtsp
+RUN apt install -y python3-gi python3-gst-1.0 gir1.2-gst-rtsp-server-1.0
 
 ENV ROS_MASTER_URI=http://10.13.0.5:11311
 ENV ROS_IP=10.13.0.3
@@ -74,7 +76,7 @@ RUN mkdir -p /etc/mavlink-router
 
 # Web Interface Setup
 ###########################
-RUN pip3 install flask docker flask-cors Flask-SQLAlchemy flask-socketio opencv-python-headless
+RUN pip3 install flask docker flask-cors Flask-SQLAlchemy flask-socketio opencv-python-headless Flask-Login
 COPY companion-computer/interface /interface
 COPY companion-computer/interface/config.json /interface/config.json
 RUN mkdir -p /var/log/mavlink-router

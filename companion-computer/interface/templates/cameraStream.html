@@ -13,7 +13,6 @@
                 <div class="mb-3">
                     <label for="streamingMode" class="form-label">Streaming Mode</label>
                     <select class="form-select" id="streamingMode">
-                        <option selected>RTP (stream to single client)</option>
                         <option>RTSP (multiple clients can connect to stream)</option>
                     </select>
                 </div>
@@ -26,7 +25,7 @@
                 <div class="mb-3">
                     <label for="resolution" class="form-label">Resolution</label>
                     <select class="form-select" id="resolution">
-                        <option selected>1920x1080</option>
+                        <option selected>640x480</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -48,14 +47,6 @@
                 <div class="mb-3 form-check">
                     <input type="checkbox" class="form-check-input" id="timestampOverlay">
                     <label class="form-check-label" for="timestampOverlay">Timestamp Overlay</label>
-                </div>
-                <div class="mb-3">
-                    <label for="destinationIP" class="form-label">Destination IP</label>
-                    <input type="text" class="form-control" id="destinationIP" value="127.0.0.1">
-                </div>
-                <div class="mb-3">
-                    <label for="destinationPort" class="form-label">Destination Port</label>
-                    <input type="number" class="form-control" id="destinationPort" value="5400">
                 </div>
                 <button type="button" class="btn btn-primary">Start Streaming</button>
             </form>
