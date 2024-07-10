@@ -18,7 +18,7 @@ import os
 import rospy
 from flask_login import LoginManager
 from flask_login import current_user, login_user, logout_user, login_required
-from flask import request, redirect, url_for, flash
+from flask import request, redirect, url_for, flash, make_response
 
 
 socketio = SocketIO()
@@ -87,6 +87,9 @@ def create_app():
                 return redirect(next_page)
             else:
                 flash('Invalid username or password')
+                response = make_response(render_template('login.html'))
+                response.status_code = 403
+                return response
 
         return render_template('login.html')
 
