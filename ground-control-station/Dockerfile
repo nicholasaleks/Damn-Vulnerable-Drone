@@ -36,3 +36,4 @@ COPY ground-control-station/init /init
 RUN chmod +x /init
 
 CMD echo "Ground Control Online..." && /usr/bin/expect /init
+
