@@ -1,0 +1,17 @@
+fuse
+gstreamer1.0-gl
+gstreamer1.0-libav
+gstreamer1.0-plugins-bad
+gstreamer1.0-plugins-base
+gstreamer1.0-plugins-good
+gstreamer1.0-plugins-ugly
+libgl1-mesa-dri
+libgl1-mesa-glx
+libgstreamer-plugins-base1.0-dev
+libqt5gui5
+libsdl2-dev
+mesa-utils
+wget
+x-window-system
+x11-xserver-utils
+xvfb
