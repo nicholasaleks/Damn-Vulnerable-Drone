@@ -31,10 +31,10 @@ function loadConfigAndDevices() {
         destinations.forEach(function(destination) {
             if (destination.ip === '127.0.0.1' && destination.port === 14540) {
                 $('#udpDestinationsTable tbody').append('<tr><td>' + destination.ip + ':' + destination.port + '</td><td>Required for companion computer</td></tr>');
-            } else if (destination.ip === '10.13.0.4' || destination.ip === '192.168.13.14') {
-                $('#udpDestinationsTable tbody').append('<tr><td>' + destination.ip + ':' + destination.port + '</td><td>Required for GCS</td></tr>');
+            } else if (destination.ip === '10.13.0.4' || destination.ip === '192.168.13.14' || destination.ip === '10.13.0.6') {
+                $('#udpDestinationsTable tbody').append('<tr><td>' + destination.ip + ':' + destination.port + '</td><td>Required for GCS/QGC</td></tr>');
             } else {
-                $('#udpDestinationsTable tbody').append('<tr><td>' + destination.ip + ':' + destination.port + '</td><td><button class="btn btn-danger" onclick="removeUdpDestination(' + destination.ip + ',' + destination.port + ')">Delete</button></td></tr>');
+                $('#udpDestinationsTable tbody').append('<tr><td>' + destination.ip + ':' + destination.port + '</td><td><button class="btn btn-danger" onclick="removeUdpDestination(\'' + destination.ip + '\',' + destination.port + ')">Delete</button></td></tr>');
             }
         });
     });
@@ -187,7 +187,7 @@ function addUdpDestination() {
             console.log(response);
             // Add row to table and remove udp button in the last column
             $('#udpDestination').val('');
-            $('#udpDestinationsTable tbody').append('<tr><td>' + ip + ':' + port + '</td><td><button class="btn btn-danger" onclick="removeUdpDestination(' + ip + ', ' + port + ')">Delete</button></td></tr>');
+            $('#udpDestinationsTable tbody').append('<tr><td>' + ip + ':' + port + '</td><td><button class="btn btn-danger" onclick="removeUdpDestination(\'' + ip + '\',' + port + ')">Delete</button></td></tr>');
         },
         error: function(error) {
             console.error(error);
@@ -198,6 +198,7 @@ function addUdpDestination() {
 
 // Remove UDP destination
 function removeUdpDestination(ip, port) {
+    console.log('remove udp destination', ip, port)
     $.ajax({
         url: '/telemetry/remove-udp-destination',
         type: 'POST',
