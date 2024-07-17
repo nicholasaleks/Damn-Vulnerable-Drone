@@ -69,7 +69,8 @@
                 </div>
             </div>
         </div>
-    </nav>
+        <button id="open_qgc" class="btn btn-info">Launch QGroundControl</button>
+    </nav>    
 </div>
 
 <script>
@@ -85,5 +86,27 @@
             }
         }
     });
-    </script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById('open_qgc').addEventListener('click', function() {
+            fetch('/qgc', {
+                method: 'POST'
+            }).then(response => {
+                if (response.ok) {
+                    console.log('QGroundControl launched:', response);
+                } else {
+                    console.error('Error launching QGroundControl');
+                    Swal.fire({
+                        title: "Failed to Launch QGroundControl",
+                        text: "There could be a few reasons why the application didn't launch. It might be due to your system's architecture (ARM) not being supported by QGroundControl or there could be display setting issues.",
+                        icon: "error",
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: "OK"
+                    });
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+</script>
 {% endblock %}

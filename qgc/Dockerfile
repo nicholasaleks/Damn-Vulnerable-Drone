@@ -90,4 +90,5 @@ RUN \
     mkdir /home/user/scripts \
     && ln -s /usr/local/bin/entrypoint.sh /home/user/scripts/entrypoint.sh
 
-ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
+#ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
+CMD tail -f /dev/null
