@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, redirect
+from flask import Blueprint, render_template, url_for, redirect, make_response
 import docker
 from docker.errors import NotFound
 from models import Stage
@@ -40,6 +40,19 @@ def send_stop_telemetry_request():
     except requests.exceptions.RequestException as e:
         logging.error("Failed to send telemetry data: %s", str(e))
 
+@main.route('/qgc', methods=['POST'])
+def open_qgc():
+    client = docker.from_env()
+    try:
+        container = client.containers.get('qgc-container')
+        exec_result = container.exec_run('/usr/local/bin/entrypoint.sh')
+        if exec_result.exit_code == 0:
+            response = make_response('Success', 200)
+        else:
+            response = make_response('Command failed', 400)
+    except Exception as e:
+        response = make_response(f'Error: {str(e)}', 400)
+    return response
 
 @main.route('/')
 def index():

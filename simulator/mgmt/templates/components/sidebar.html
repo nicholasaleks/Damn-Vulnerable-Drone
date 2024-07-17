@@ -69,7 +69,8 @@
                 </div>
             </div>
         </div>
-    </nav>
+        <button id="open_qgc" class="btn btn-info">Launch QGroundControl</button>
+    </nav>    
 </div>
 
 <script>
@@ -85,5 +86,20 @@
             }
         }
     });
-    </script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById('open_qgc').addEventListener('click', function() {
+            fetch('/qgc', {
+                method: 'POST'
+            }).then(response => {
+                if (response.ok) {
+                    console.log('QGroundControl launched:', response);
+                } else {
+                    console.error('Error launching QGroundControl');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+</script>
 {% endblock %}
