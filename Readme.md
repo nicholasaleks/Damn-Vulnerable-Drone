@@ -20,6 +20,7 @@ The Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator
   * [Full-Deploy Mode Installation](#full-deploy-mode-installation)
   * [Half-Baked Mode Installation](#half-baked-mode-installation)
 * [Screenshots](#screenshots)
+* [Mentions](#mentions)
 * [Community Support](#community-support)
 * [Feedback & Contributions](#feedback-&-contributions)
 * [Maintainers](#maintainers)
