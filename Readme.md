@@ -20,6 +20,7 @@ The Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator
   * [Full-Deploy Mode Installation](#full-deploy-mode-installation)
   * [Half-Baked Mode Installation](#half-baked-mode-installation)
 * [Screenshots](#screenshots)
+* [Mentions](#mentions)
 * [Community Support](#community-support)
 * [Feedback & Contributions](#feedback-&-contributions)
 * [Maintainers](#maintainers)
@@ -55,10 +56,14 @@ While the current Damn Vulnerable Drone setup doesn't mirror every drone archite
 
 ## Features
 
-- **Realistic Drone Simulation**: Utilizes the popular drone technologies and architectures to mimic real-world behaviors and vulnerabilities.
-- **Virtualized Environment**: Runs in a completely virtualized setup, making it accessible and safe for experimentation.
+- **Docker-based Environment**: Runs in a completely virtualized docker-based setup, making it accessible and safe for drone hacking experimentation.
 - **Simulated Wireless Networking**: Simulated Wifi (802.11) interfaces to practice wireless drone attacks.
-- **Simulator Management Web Console**: Simple to use simulator management web console used to trigger scenarios and drone flight states.
+- **Onboard Camera Streaming & Gimbal**: Simulated RTSP drone onboard camera stream with gimbal and companion computer integration.
+- **Companion Computer Web Interface**: Companion Computer configuration management via web interface and simulated serial connection to Flight Controller.
+- **QGroundControl/MAVProxy Integration**: One-click QGroundControl UI launching (only supported on x86 architecture) with MAVProxy GCS integration.
+- **MAVLink Router Integration**: Telemetry forwarding via MAVLink Router on the Companion Computer Web Interface.
+- **Dynamic Flight Logging**: Fully dynamic Ardupilot flight bin logs stored on a simulated SD Card.
+- **Management Web Console**: Simple to use simulator management web console used to trigger scenarios and drone flight states.
 - **Comprehensive Hacking Scenarios**: Ideal for practicing a wide range of drone hacking techniques, from basic reconnaissance to advanced exploitation.
 - **Detailed Walkthroughs**: If you need help hacking against a particular scenario you can leverage the detailed walkthrough documentation as a spoiler.
 
@@ -258,6 +263,12 @@ However, "Half-Baked Mode" does not support wifi simulations and you will need t
 <p align="center">
   <img src="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/blob/master/simulator/mgmt/static/images/kali-drone-hacker.png?raw=true" alt="Damn Vulnerable Drone Desktop Background"/>
 </p>
+
+# Mentions
+
+- [David Bombal - Drone Hacking Demo](https://youtu.be/c1ZCHCwqWls?t=5705)
+- [Simulated Drone Hacking - Red Team Village at DEFCON 32](https://x.com/Nick_Aleks/status/1790928597244317913)
+- [Drone Hacking Simulator - Drone Software Meetup Group](https://www.meetup.com/drone-software-meetup-group/events/300478718/)
 
 # Community Support
 
