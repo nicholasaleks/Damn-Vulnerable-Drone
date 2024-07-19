@@ -94,6 +94,45 @@
                         </div>
                     </section>
                 </div>
+                <div id="qgroundcontrol">
+                    <section class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <h4 class="mb-0">Launching QGround Control</h4>
+                            <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                        </div>
+                        <p>QGroundControl is an open-source ground control station (GCS) software that allows users to plan, control, and monitor unmanned aerial vehicles (UAVs). It provides real-time flight data, mission planning, and an intuitive interface for managing UAV operations.</p>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Click "Launch QGroundControl" button on the Simulators Side Nav Bar</p>
+                                <img src="/static/images/guides/launch-qgroundcontrol.png" class="img-fluid rounded-3 mb-4" alt="Launch QGroundControl"><br>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>QGroundControl is used for mission planning, UAV configuration, real-time monitoring, and data analysis. Users can create flight paths, adjust UAV settings, and monitor telemetry data during flights. It supports various UAV platforms and provides tools for safe and efficient UAV operations.</p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="fw-500 text-expanded">Potential Launch Issues</span>
+                                <p>QGroundControl may fail to launch due to several reasons:</p>
+                                <ul>
+                                    <li>Unsupported Architecture: Ensure your system meets the necessary hardware and software requirements (ARM / Apple Silicon is currently not supported).</li>
+                                    <li>Missing Dependencies: Make sure all required libraries and dependencies are installed.</li>
+                                    <li>Permissions: Verify that you have the necessary permissions to run the application.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p style="color:red">Note: Damn Vulnerable Drone does not need to use QGroundControl to function. An alternative tool is used in the ground-control-station container known as MAVProxy to substitue for all core QGroundControl functionality.</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
                 <div id="flight-state-buttons">
                     <section class="mb-5">
                         <div class="d-flex align-items-center mb-3">
@@ -148,6 +187,7 @@
                     <ul class="nav flex-column" id="navStick">
                         <li class="nav-item"><a class="nav-link" href="#interface-components">Interface Components</a></li>
                         <li class="nav-item"><a class="nav-link" href="#camera-navigation">Camera Navigation</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#qgroundcontrol">Launching QGroundControl</a></li>
                         <li class="nav-item"><a class="nav-link" href="#flight-state-buttons">Flight State Buttons</a></li>
                     </ul>
                 </div>
