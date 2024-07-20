@@ -1,0 +1,140 @@
+{% extends "pages/index.html" %}
+
+{% block content %}
+<main>
+    <div class="container-xl p-5">
+        <section class="mb-4">
+            <div class="d-flex align-items-center mb-0">
+                <h2 class="mb-0">{{ title }}</h2>
+                <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+            </div>
+            <p class="mb-3">{{ description }}</p>
+            <div class="alert bg-light show pb-0" role="alert">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        {% for crumb in breadcrumb %}
+                        <li class="breadcrumb-item">
+                            {% if crumb.link %}
+                            <a href="{{ crumb.link }}" class="link">{{ crumb.text }}</a>
+                            {% else %}
+                            {{ crumb.text }}
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ol>
+                </nav>
+            </div>
+        </section>
+        <!-- Knowledgebase content row-->
+        <div class="row gx-5">
+            <div class="col-lg-12">
+                <div class="row">
+                {% for section in sections %}
+                    {% if section.title == "Description" %}
+                        <div class="col-8">
+                            <div id="{{ section.title | lower | replace(' ', '-') }}">
+                                <section class="mb-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <h4 class="mb-0">{{ section.title }}</h4>
+                                        <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                                    </div>
+                                    {% if section.collapsible %}
+                                    <details>
+                                        <summary>{{ section.title }}</summary>
+                                        {% for step in section.steps %}
+                                        <h5>{{ step.title }}</h5>
+                                        <p>{{ step.description | safe }}</p>
+                                        <br>
+                                        {% endfor %}
+                                    </details>
+                                    {% else %}
+                                    {% if section.content %}
+                                    {% if section.content is string %}
+                                    <p>{{ section.content | safe }}</p>
+                                    {% else %}
+                                    <ul>
+                                        {% for item in section.content %}
+                                        <li><a href="{{ item.link }}" class="link">{{ item.text }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                    {% endif %}
+                                    {% endif %}
+                                </section>
+                            </div>
+                        </div>
+                    {% elif section.title == "Resources" %}
+                        <div class="col-4">
+                            <div id="{{ section.title | lower | replace(' ', '-') }}">
+                                <section class="mb-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <h4 class="mb-0">{{ section.title }}</h4>
+                                        <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                                    </div>
+                                    {% if section.collapsible %}
+                                    <details>
+                                        <summary>{{ section.title }}</summary>
+                                        {% for step in section.steps %}
+                                        <h5>{{ step.title }}</h5>
+                                        <p>{{ step.description | safe }}</p>
+                                        <br>
+                                        {% endfor %}
+                                    </details>
+                                    {% else %}
+                                    {% if section.content %}
+                                    {% if section.content is string %}
+                                    <p>{{ section.content | safe }}</p>
+                                    {% else %}
+                                    <ul>
+                                        {% for item in section.content %}
+                                        <li><a href="{{ item.link }}" class="link">{{ item.text }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                    {% endif %}
+                                    {% endif %}
+                                </section>
+                            </div>
+                        </div>
+                    {% else %}
+                    <div class="row">
+                        <div class="col-12">
+                            <div id="{{ section.title | lower | replace(' ', '-') }}">
+                                <section class="mb-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <h4 class="mb-0">{{ section.title }}</h4>
+                                        <button class="btn btn-text-dark btn-icon btn-lg text-muted ms-2" type="button"><i class="material-icons">link</i></button>
+                                    </div>
+                                    {% if section.collapsible %}
+                                    <details>
+                                        <summary>Reveal Solution</summary>
+                                        {% for step in section.steps %}
+                                        <h5>{{ step.title }}</h5>
+                                        <p>{{ step.description | safe }}</p>
+                                        <br>
+                                        {% endfor %}
+                                    </details>
+                                    {% else %}
+                                    {% if section.content %}
+                                    {% if section.content is string %}
+                                    <p>{{ section.content | safe }}</p>
+                                    {% else %}
+                                    <ul>
+                                        {% for item in section.content %}
+                                        <li><a href="{{ item.link }}" class="link">{{ item.text }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                    {% endif %}
+                                    {% endif %}
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

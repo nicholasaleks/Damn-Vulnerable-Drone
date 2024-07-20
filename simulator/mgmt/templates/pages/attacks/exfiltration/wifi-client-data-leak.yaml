@@ -1,0 +1,19 @@
+title: Wifi Client Data Leak
+description: Scenario Under development
+breadcrumb:
+  - text: Attack Scenarios
+    link: /attacks
+  - text: Exfiltration
+  - text: Wifi Client Data Leak
+
+sections:
+  - title: Description
+    content: |
+      <span class="alert-warning">🚧 Scenario Under development</span>
+
+  - title: Resources
+    content: []
+
+  - title: Solution Guide
+    collapsible: true
+    steps: []

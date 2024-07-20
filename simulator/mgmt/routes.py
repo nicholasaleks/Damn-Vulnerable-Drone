@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, redirect, make_response
+from flask import Blueprint, render_template, url_for, redirect, make_response, abort
 import docker
 from docker.errors import NotFound
 from models import Stage
@@ -8,6 +8,9 @@ import logging
 import json
 import requests
 import threading
+import os
+import yaml
+import re
 
 
 
@@ -370,169 +373,73 @@ def learning_swarmsec():
 @main.route('/attacks/all')
 @main.route('/attacks')
 def attacks_index():
-    return render_template('pages/attacks/list.html', section='attacks', sub_section='', current_page='attacks')
+    base_dir = 'templates/pages/attacks'
+    categories = {
+        'Reconnaissance': load_yaml_files(os.path.join(base_dir, 'recon')),
+        'Protocol Tampering': load_yaml_files(os.path.join(base_dir, 'tampering')),
+        'Denial of Service': load_yaml_files(os.path.join(base_dir, 'dos')),
+        'Injection': load_yaml_files(os.path.join(base_dir, 'injection')),
+        'Exfiltration': load_yaml_files(os.path.join(base_dir, 'exfiltration')),
+        'Firmware Attacks': load_yaml_files(os.path.join(base_dir, 'firmware')),
+    }
+    return render_template('pages/attacks/list.html', section='attacks', sub_section='', current_page='attacks', categories=categories)
 
-# RECON
+def load_yaml_files(directory):
+    attacks = []
+    for filename in os.listdir(directory):
+        if filename.endswith('.yaml'):
+            with open(os.path.join(directory, filename), 'r') as file:
+                yaml_content = yaml.safe_load(file)
+                attacks.append({
+                    'title': yaml_content.get('title', 'No Title'),
+                    'link': f"/attacks/{os.path.basename(directory)}/{filename.replace('.yaml', '')}"
+                })
+    return attacks
 
-@main.route('/attacks/recon/wifi-analysis-cracking')
-def attacks_recon_wifi_analysis_cracking():
-    return render_template('pages/attacks/recon/wifi-analysis-cracking.html', section='attacks', sub_section='recon', current_page='wifi-analysis-cracking')
+def convert_code_blocks(text):
+    if isinstance(text, str):
+        # Replace triple backticks with <pre><code> to preserve new lines
+        text = re.sub(r'```(.*?)```', r'<code class="code mb-3 mt-3">\1</code>', text, flags=re.DOTALL)
+        text = re.sub(r'`([^`]+)`', r'<code>\1</code>', text)
+    return text
 
-@main.route('/attacks/recon/drone-discovery')
-def attacks_recon_drone_discovery():
-    return render_template('pages/attacks/recon/drone-discovery.html', section='attacks', sub_section='recon', current_page='drone-discovery')
+@main.route('/attacks/<tactic>/<filename>')
+def render_yaml(tactic, filename):
+    # Ensure the filename ends with .yaml
+    if not filename.endswith('.yaml'):
+        filename += '.yaml'
+    
+    # Define the directory where YAML files are stored
+    yaml_dir = 'templates/pages/attacks/{}/'.format(tactic)
+    
+    # Construct the full path to the YAML file
+    file_path = os.path.join(yaml_dir, filename)
+    
+    # Check if the file exists
+    if not os.path.exists(file_path):
+        abort(404)  # Return a 404 error if the file does not exist
+    
+    # Read the YAML file content
+    with open(file_path, 'r') as file:
+        yaml_content = yaml.safe_load(file)
+    
+    # Extract data from YAML
+    title = yaml_content.get('title', 'No Title')
+    description = yaml_content.get('description', '')
+    breadcrumb = yaml_content.get('breadcrumb', [])
+    sections = yaml_content.get('sections', [])
 
-@main.route('/attacks/recon/packet-sniffing')
-def attacks_recon_packet_sniffing():
-    return render_template('pages/attacks/recon/packet-sniffing.html', section='attacks', sub_section='recon', current_page='packet-sniffing')
+    # Convert code blocks in sections
+    for section in sections:
+        if 'content' in section and isinstance(section['content'], str):
+            section['content'] = convert_code_blocks(section['content'])
+        if 'steps' in section:
+            for step in section['steps']:
+                if isinstance(step['description'], str):
+                    step['description'] = convert_code_blocks(step['description'])
 
-@main.route('/attacks/recon/protocol-fingerprinting')
-def attacks_recon_protocol_fingerprinting():
-    return render_template('pages/attacks/recon/protocol-fingerprinting.html', section='attacks', sub_section='recon', current_page='protocol-fingerprinting')
-
-@main.route('/attacks/recon/gps-telemetry-analysis')
-def attacks_recon_gps_telemetry_analysis():
-    return render_template('pages/attacks/recon/gps-telemetry-analysis.html', section='attacks', sub_section='recon', current_page='gps-telemetry-analysis')
-
-@main.route('/attacks/recon/payload-detection')
-def attacks_recon_payload_detection():
-    return render_template('pages/attacks/recon/payload-detection.html', section='attacks', sub_section='recon', current_page='payload-detection')
-
-@main.route('/attacks/recon/companion-computer-discovery')
-def attacks_recon_companion_computer_discovery():
-    return render_template('pages/attacks/recon/companion-computer-discovery.html', section='attacks', sub_section='recon', current_page='companion-computer-discovery')
-
-@main.route('/attacks/recon/ground-control-station-discovery')
-def attacks_recon_ground_control_station_discovery():
-    return render_template('pages/attacks/recon/ground-control-station-discovery.html', section='attacks', sub_section='recon', current_page='ground-control-station-discovery')
-
-
-# PROTOCOL TAMPERING
-
-@main.route('/attacks/tampering/telemetry-spoofing')
-def attacks_tampering_telemetry_spoofing():
-    return render_template('pages/attacks/tampering/telemetry-spoofing.html', section='attacks', sub_section='tampering', current_page='telemetry-spoofing')
-
-@main.route('/attacks/tampering/flight-mode-spoofing')
-def attacks_tampering_flight_mode_spoofing():
-    return render_template('pages/attacks/tampering/flight-mode-spoofing.html', section='attacks', sub_section='tampering', current_page='flight-mode-spoofing')
-
-@main.route('/attacks/tampering/drone-state-spoofing')
-def attacks_tampering_drone_state_spoofing():
-    return render_template('pages/attacks/tampering/drone-state-spoofing.html', section='attacks', sub_section='tampering', current_page='drone-state-spoofing')
-
-@main.route('/attacks/tampering/gps-spoofing')
-def attacks_tampering_gps_spoofing():
-    return render_template('pages/attacks/tampering/gps-spoofing.html', section='attacks', sub_section='tampering', current_page='gps-spoofing')
-
-
-# DENAIL OF SERVICE
-
-@main.route('/attacks/dos/battery-drain-attack')
-def attacks_dos_battery_drain_attack():
-    return render_template('pages/attacks/dos/battery-drain-attack.html', section='attacks', sub_section='dos', current_page='battery-drain-attack')
-
-@main.route('/attacks/dos/communication-link-flooding')
-def attacks_dos_communication_link_flooding():
-    return render_template('pages/attacks/dos/communication-link-flooding.html', section='attacks', sub_section='dos', current_page='communication-link-flooding')
-
-@main.route('/attacks/dos/denial-of-takeoff')
-def attacks_dos_denial_of_takeoff():
-    return render_template('pages/attacks/dos/denial-of-takeoff.html', section='attacks', sub_section='dos', current_page='denial-of-takeoff')
-
-@main.route('/attacks/dos/geo-squeezing')
-def attacks_dos_geo_squeezing():
-    return render_template('pages/attacks/dos/geo-squeezing.html', section='attacks', sub_section='dos', current_page='geo-squeezing')
-
-@main.route('/attacks/dos/altitude-limiting')
-def attacks_dos_altitude_limiting():
-    return render_template('pages/attacks/dos/altitude-limiting.html', section='attacks', sub_section='dos', current_page='altitude-limiting')
-
-@main.route('/attacks/dos/camera-feed-disruption')
-def attacks_dos_camera_feed_disruption():
-    return render_template('pages/attacks/dos/camera-feed-disruption.html', section='attacks', sub_section='dos', current_page='camera-feed-disruption')
-
-@main.route('/attacks/dos/gps-jamming')
-def attacks_dos_gps_jamming():
-    return render_template('pages/attacks/dos/gps-jamming.html', section='attacks', sub_section='dos', current_page='gps-jamming')
-
-@main.route('/attacks/dos/wireless-deauthentication')
-def attacks_dos_wireless_deauthentication():
-    return render_template('pages/attacks/dos/wireless-deauthentication.html', section='attacks', sub_section='dos', current_page='wireless-deauthentication')
-
-
-
-# INJECTION & HIJACKING
-
-@main.route('/attacks/injection/mavlink-command-injection')
-def attacks_injection_mavlink_command_injection():
-    return render_template('pages/attacks/injection/mavlink-command-injection.html', section='attacks', sub_section='injection', current_page='mavlink-command-injection')
-
-@main.route('/attacks/injection/camera-gimbal-takeover')
-def attacks_injection_camera_gimbal_takeover():
-    return render_template('pages/attacks/injection/camera-gimbal-takeover.html', section='attacks', sub_section='injection', current_page='camera-gimbal-command-injection')
-
-@main.route('/attacks/injection/return-to-home-override')
-def attacks_injection_return_to_home_takeover():
-    return render_template('pages/attacks/injection/return-to-home-override.html', section='attacks', sub_section='injection', current_page='return-to-home-override')
-
-@main.route('/attacks/injection/waypoint-injection')
-def attacks_injection_waypoint_injection():
-    return render_template('pages/attacks/injection/waypoint-injection.html', section='attacks', sub_section='injection', current_page='waypoint-injection')
-
-@main.route('/attacks/injection/sensor-data-injection')
-def attacks_injection_sensor_data_injection():
-    return render_template('pages/attacks/injection/sensor-data-injection.html', section='attacks', sub_section='injection', current_page='sensor-data-injection')
-
-@main.route('/attacks/injection/flight-mode-injection')
-def attacks_injection_flight_mode_injection():
-    return render_template('pages/attacks/injection/flight-mode-injection.html', section='attacks', sub_section='injection', current_page='flight-mode-injection')
-
-@main.route('/attacks/injection/ground-control-station-takeover')
-def attacks_injection_ground_control_station_hijacking():
-    return render_template('pages/attacks/injection/ground-control-station-hijacking.html', section='attacks', sub_section='injection', current_page='ground-control-station-hijacking')
-
-@main.route('/attacks/injection/companion-computer-takeover')
-def attacks_injection_gps_jamming():
-    return render_template('pages/attacks/injection/companion-computer-exploitation.html', section='attacks', sub_section='injection', current_page='companion-computer-exploitation')
-
-
-# DATA EXFILTRATION
-
-@main.route('/attacks/exfiltration/flight-log-extraction')
-def attacks_exfiltration_flight_log_extraction():
-    return render_template('pages/attacks/exfiltration/flight-log-extraction.html', section='attacks', sub_section='exfiltration', current_page='flight-log-collection')
-
-@main.route('/attacks/exfiltration/mission-extraction')
-def attacks_exfiltration_mission_extraction():
-    return render_template('pages/attacks/exfiltration/mission-extraction.html', section='attacks', sub_section='exfiltration', current_page='mission-plan-extraction')
-
-@main.route('/attacks/exfiltration/parameter-extraction')
-def attacks_exfiltration_parameter_exfiltration():
-    return render_template('pages/attacks/exfiltration/parameter-extraction.html', section='attacks', sub_section='exfiltration', current_page='ardupilot-parameter-collection')
-
-@main.route('/attacks/exfiltration/ftp-eavesdropping')
-def attacks_exfiltration_sensor_data_injection():
-    return render_template('pages/attacks/exfiltration/ftp-eavesdropping.html', section='attacks', sub_section='exfiltration', current_page='ftp-eavesdropping')
-
-@main.route('/attacks/exfiltration/camera-feed-eavesdropping')
-def attacks_exfiltration_camera_feed_eavesdropping():
-    return render_template('pages/attacks/exfiltration/camera-feed-eavesdropping.html', section='attacks', sub_section='exfiltration', current_page='camera-feed-eavesdropping')
-
-@main.route('/attacks/exfiltration/wifi-client-data-leak')
-def attacks_exfiltration_wireless_client_data_leak():
-    return render_template('pages/attacks/exfiltration/wifi-client-data-leak.html', section='attacks', sub_section='exfiltration', current_page='wireless-client-data-leakage')
-
-
-# FIRMWARE ATTACKS
-
-@main.route('/attacks/firmware/firmware-decompile')
-def attacks_firmware_firmware_decompile():
-    return render_template('pages/attacks/firmware/firmware-decompile.html', section='attacks', sub_section='firmware', current_page='firmware-decompiling')
-
-@main.route('/attacks/firmware/firmware-modding')
-def attacks_firmware_firmware_modding():
-    return render_template('pages/attacks/firmware/firmware-modding.html', section='attacks', sub_section='firmware', current_page='firmware-modding')
+    # Render the HTML content within the template
+    return render_template('pages/attacks/template.html', title=title, description=description, breadcrumb=breadcrumb, sections=sections)
 
 
 ###############################

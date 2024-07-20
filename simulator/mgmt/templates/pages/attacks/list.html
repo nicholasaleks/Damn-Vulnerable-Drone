@@ -24,166 +24,68 @@
                 <tr>
                     <td style="border: none; padding: 0px;">
                         <table class="table table-bordered table-sm">
-                            <tr>
-                                <td class="ripple-gray bg-danger-light">
-                                    <a class="link" href="/attacks/recon/wifi-analysis-cracking">Wifi Analysis & Cracking</a>
-                                </td>
-                            </tr>
+                            {% for attack in categories['Reconnaissance'] %}
                             <tr>
                                 <td class="ripple-gray">
-                                    <a class="link" href="/attacks/recon/drone-discovery">Drone Discovery</a>
+                                    <a class="link" href="{{ attack.link }}">{{ attack.title }}</a>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/recon/packet-sniffing">Packet Sniffing</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/recon/protocol-fingerprinting">Protocol Fingerprinting</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/recon/gps-telemetry-analysis">GPS & Telemetry Analysis</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/recon/payload-detection">Payload Detection</a>
-                                </td>
-                            </tr>
+                            {% endfor %}
                         </table>
                     </td>
                     <td style="border: none; padding: 0px;">
                         <table class="table table-bordered table-sm">
+                            {% for attack in categories['Protocol Tampering'] %}
                             <tr>
                                 <td class="ripple-gray">
-                                    <a class="link" href="/attacks/tampering/telemetry-spoofing">Telemetry Spoofing</a>
+                                    <a class="link" href="{{ attack.link }}">{{ attack.title }}</a>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/tampering/flight-mode-spoofing">Flight Mode Spoofing</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/tampering/drone-state-spoofing">Drone State Spoofing</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/tampering/gps-spoofing">GPS Spoofing</a>
-                                </td>
-                            </tr>
+                            {% endfor %}
                         </table>
                     </td>
                     <td style="border: none; padding: 0px;">
                         <table class="table table-bordered table-sm">
+                            {% for attack in categories['Denial of Service'] %}
                             <tr>
                                 <td class="ripple-gray">
-                                    <a class="link" href="/attacks/dos/battery-drain-attack">Battery Drain Attack</a>
+                                    <a class="link" href="{{ attack.link }}">{{ attack.title }}</a>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/dos/communication-link-flooding">Communication Link Flooding</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/dos/denial-of-takeoff">Denial-of-Takeoff</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/dos/geo-squeezing">Geo-Squeezing</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/dos/altitude-limiting">Altitude Limiting</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/dos/gps-jamming">GPS Jamming</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray bg-danger-light">
-                                    <a class="link" href="/attacks/dos/wireless-deauthentication">Wifi Deauthentication</a>
-                                </td>
-                            </tr>
+                            {% endfor %}
                         </table>
                     </td>
                     <td style="border: none; padding: 0px;">
                         <table class="table table-bordered table-sm">
+                            {% for attack in categories['Injection'] %}
                             <tr>
                                 <td class="ripple-gray">
-                                    <a class="link" href="/attacks/injection/mavlink-command-injection">MAVLink Command Injection</a>
+                                    <a class="link" href="{{ attack.link }}">{{ attack.title }}</a>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/injection/return-to-home-override">Return-to-Home Override</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/injection/waypoint-injection">Waypoint Injection</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/injection/sensor-data-injection">Sensor Data Injection</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/injection/flight-mode-injection">Flight Mode Injection</a>
-                                </td>
-                            </tr>
+                            {% endfor %}
                         </table>
                     </td>
                     <td style="border: none; padding: 0px;">
                         <table class="table table-bordered table-sm">
+                            {% for attack in categories['Exfiltration'] %}
                             <tr>
                                 <td class="ripple-gray">
-                                    <a class="link" href="/attacks/exfiltration/flight-log-extraction">Flight Log Extraction</a>
+                                    <a class="link" href="{{ attack.link }}">{{ attack.title }}</a>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/exfiltration/parameter-extraction">Parameter Extraction</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/exfiltration/mission-extraction">Mission Extraction</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/exfiltration/ftp-eavesdropping">FTP Eavesdropping</a>
-                                </td>
-                            </tr>
+                            {% endfor %}
                         </table>
                     </td>
                     <td style="border: none; padding: 0px;">
                         <table class="table table-bordered table-sm">
+                            {% for attack in categories['Firmware Attacks'] %}
                             <tr>
                                 <td class="ripple-gray">
-                                    <a class="link" href="/attacks/firmware/firmware-decompile">Firmware Decompile</a>
+                                    <a class="link" href="{{ attack.link }}">{{ attack.title }}</a>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="ripple-gray">
-                                    <a class="link" href="/attacks/firmware/firmware-modding">Firmware Modding</a>
-                                </td>
-                            </tr>
+                            {% endfor %}
                         </table>
                     </td>
                 </tr>

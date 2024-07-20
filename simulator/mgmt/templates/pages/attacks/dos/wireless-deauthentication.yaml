@@ -1,0 +1,22 @@
+title: Wireless Deauthentication
+description: Scenario Under development
+breadcrumb:
+  - text: Attack Scenarios
+    link: /attacks
+  - text: Denial of Service
+  - text: Wireless Deauthentication
+
+sections:
+  - title: Description
+    content: |
+      Scenario Under development
+
+  - title: Resources
+    content: []
+
+  - title: Solution Guide
+    collapsible: true
+    steps:
+      - title: Reveal Solution (Spoiler Alert)
+        description: |
+          <!-- TODO -->
