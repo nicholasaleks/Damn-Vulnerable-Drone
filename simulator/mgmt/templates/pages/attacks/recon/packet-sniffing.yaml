@@ -1,0 +1,60 @@
+title: Packet Sniffing
+description: Capturing MAVLink packets transmitted over the air to analyze drone communications.
+breadcrumb:
+  - text: Attack Scenarios
+    link: /attacks
+  - text: Reconnaissance
+  - text: Packet Sniffing
+
+sections:
+  - title: Description
+    content: |
+      MAVLink packet sniffing involves intercepting the MAVLink messages exchanged between UAVs
+      (Unmanned Aerial Vehicles) and ground control stations or between UAVs in a network.
+      
+      This technique is crucial for developers, security researchers, and enthusiasts to
+      understand the operational dynamics of MAVLink communication, perform security audits,
+      and develop or improve MAVLink-based systems. By analyzing the captured packets, one can
+      gain insights into the drone's operational status, commands being sent or received, and
+      how the system handles various data types, which is invaluable for both educational and
+      security-enhancing purposes.
+
+  - title: Resources
+    content:
+      - text: Wireshark
+        link: https://www.wireshark.org/
+
+  - title: Solution
+    collapsible: true
+    steps:
+      - title: Step 1
+        description: |
+          We will be using Wireshark to analyze the real-time MavLink traffic. This should already be installed with your Kali Linux distribution. If not, you can install it by following the documentation here: https://www.wireshark.org/download.html
+      - title: Step 2
+        description: |
+          Install MAVLink on Kali (following the guide here: https://mavlink.io/en/getting_started/installation.html)
+          ```
+          sudo apt install python3 python3-pip
+          git clone https://github.com/mavlink/mavlink.git --recursive
+          cd mavlink
+          python3 -m pip install -r pymavlink/requirements.txt
+          ```
+      - title: Step 3
+        description: |
+          Build libraries for your target dialect, specifying WLua as the target language. This process is described in the topic Generate MAVLink Libraries.
+          ```
+          python3 -m pymavlink.tools.mavgen --lang=WLua --wire-protocol=2.0 --output=mavlink_2_common message_definitions/v1.0/common.xml
+          ```
+      - title: Step 4
+        description: |
+          Update the plugin with correct ports (it should be configured correctly). The last few lines of the plugin file specify the ports to be monitored.
+          ```
+          -- bind protocol dissector to port 14550 and 14580
+          local udp_dissector_table = DissectorTable.get("udp.port")
+          udp_dissector_table:add(14550, mavlink_proto)
+          udp_dissector_table:add(14580, mavlink_proto)
+          udp_dissector_table:add(18570, mavlink_proto)
+          ```
+      - title: Step 5
+        description: |
+          Start Wireshark and select the correct interface to monitor. You should see the MAVLink packets being captured in real-time.

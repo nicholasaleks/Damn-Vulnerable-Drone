@@ -1,0 +1,22 @@
+title: Camera Feed Disruption
+description: Scenario Under development
+breadcrumb:
+  - text: Attack Scenarios
+    link: /attacks
+  - text: Denial of Service
+  - text: Camera Feed Disruption
+
+sections:
+  - title: Description
+    content: |
+      Scenario Under development
+
+  - title: Resources
+    content: []
+
+  - title: Solution Guide
+    collapsible: true
+    steps:
+      - title: Reveal Solution (Spoiler Alert)
+        description: |
+          <!-- TODO -->

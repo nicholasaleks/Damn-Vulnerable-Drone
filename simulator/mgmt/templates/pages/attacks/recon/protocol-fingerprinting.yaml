@@ -1,0 +1,19 @@
+title: Protocol Fingerprinting
+description: Scenario Under development
+breadcrumb:
+  - text: Attack Scenarios
+    link: /attacks
+  - text: Reconnaissance
+  - text: Protocol Fingerprinting
+
+sections:
+  - title: Description
+    content: |
+      <span class="alert-warning">🚧 Scenario Under development</span>
+
+  - title: Resources
+    content: []
+
+  - title: Solution Guide
+    collapsible: true
+    steps: []

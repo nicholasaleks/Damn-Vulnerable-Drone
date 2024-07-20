@@ -1,0 +1,22 @@
+title: FTP Eavesdropping
+description: Scenario Under development
+breadcrumb:
+  - text: Attack Scenarios
+    link: /attacks
+  - text: Exfiltration
+  - text: FTP Eavesdropping
+
+sections:
+  - title: Description
+    content: |
+      Scenario Under development
+
+  - title: Resources
+    content: []
+
+  - title: Solution Guide
+    collapsible: true
+    steps:
+      - title: Reveal Solution (Spoiler Alert)
+        description: |
+          <!-- TODO -->

@@ -1,0 +1,19 @@
+title: Camera Gimbal Takeover
+description: Scenario Under development
+breadcrumb:
+  - text: Attack Scenarios
+    link: /attacks
+  - text: Injection
+  - text: Camera Gimbal Takeover
+
+sections:
+  - title: Description
+    content: |
+      <span class="alert-warning">🚧 Scenario Under development</span>
+
+  - title: Resources
+    content: []
+
+  - title: Solution Guide
+    collapsible: true
+    steps: []

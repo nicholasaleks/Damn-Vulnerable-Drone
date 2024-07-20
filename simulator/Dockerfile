@@ -85,7 +85,7 @@ RUN /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy -- -m loca
 
 
 # Install Damn Vulnerable Drone Sim Mgmt Web App
-RUN pip3 install flask docker flask-cors Flask-SQLAlchemy
+RUN pip3 install flask docker flask-cors Flask-SQLAlchemy markdown
 COPY simulator/mgmt /Simulator/mgmt
 
 RUN rm -rf /Simulator/mgmt/instance/stages.db
