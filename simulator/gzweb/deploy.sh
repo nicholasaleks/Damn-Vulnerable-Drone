@@ -66,7 +66,7 @@ cd $DIR
 npm install
 
 # Assemble javascript files
-$DIR/node_modules/.bin/grunt build
+$DIR/node_modules/.bin/grunt build --force
 
 # build the c++ server component
 rm -rf build

@@ -69,8 +69,13 @@ ENV GAZEBO_PLUGIN_PATH /Simulator/ardupilot_gazebo/build:/usr/lib/aarch64-linux-
 ENV GAZEBO_MODEL_DATABASE_URI ''
 ENV DISPLAY :100
 
-RUN npm install -g n
-RUN n 8.14.0
+# Install nvm, node 10, and npm 6
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash \
+    && export NVM_DIR="$HOME/.nvm" \
+    && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" \
+    && nvm install 10 \
+    && nvm use 10 \
+    && npm install -g npm@6
 
 # Ignore git warnings
 RUN git config --global advice.detachedHead false
@@ -80,12 +85,12 @@ COPY simulator/gzweb /Simulator/gzweb
 WORKDIR /Simulator/gzweb
 RUN apt-get update && apt-get install -y dos2unix
 RUN find . -type f -exec dos2unix {} \; && chmod +x deploy.sh
+RUN npm install v8flags grunt-cli
 RUN npm install
 RUN /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy -- -m local"
 
-
 # Install Damn Vulnerable Drone Sim Mgmt Web App
-RUN pip3 install flask docker flask-cors Flask-SQLAlchemy markdown
+RUN pip3 install flask docker flask-cors Flask-SQLAlchemy
 COPY simulator/mgmt /Simulator/mgmt
 
 RUN rm -rf /Simulator/mgmt/instance/stages.db
