@@ -134,8 +134,7 @@ Each of the attack scenarios has documentation which outlines what the attack sc
 # Installation
 
 To support a wide variety of users and use cases the Damn Vulnerable Drone can be deployed in two modes. 
-
-Note: Both installation modes require internet access.
+Note: Building Damn Vulnerable Drones containers from source can take about 30 minutes, both installation modes will require internet access.
 
 ## Full-Deploy Mode Installation 
 
