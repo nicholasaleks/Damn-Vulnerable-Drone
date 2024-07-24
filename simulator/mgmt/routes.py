@@ -114,7 +114,7 @@ def stage1():
     client = docker.from_env()
     container = client.containers.get('flight-controller')
     logging.info('Triggering Stage 1...')
-    command = "Tools/autotest/sim_vehicle.py -v ArduCopter --location Kingaroy -f gazebo-iris --no-rebuild --no-mavproxy --sim-address=10.13.0.5 -A '--serial0=uart:/dev/ttyACM0:57600'"
+    command = "Tools/autotest/sim_vehicle.py -v ArduCopter --custom-location 37.241861,-115.796917,0,0 -f gazebo-iris --no-rebuild --no-mavproxy --sim-address=10.13.0.5 -A '--serial0=uart:/dev/ttyACM0:57600'"
     
     # Log the command before executing it
     logging.info("Executing command: %s", command)
