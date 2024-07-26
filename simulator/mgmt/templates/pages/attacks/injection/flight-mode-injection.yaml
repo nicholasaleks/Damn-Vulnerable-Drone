@@ -1,5 +1,5 @@
 title: Flight Mode Injection
-description: Scenario Under development
+description: Changing the flight mode of the drone through a commmand injection
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
@@ -9,11 +9,51 @@ breadcrumb:
 sections:
   - title: Description
     content: |
-      <span class="alert-warning">🚧 Scenario Under development</span>
+      Changing the flight mode of a drone using MAVProxy involves sending commands to the drone to switch between different modes like Stabilize, Guided, Auto, and others. 
+      This process is also referred to as flight mode injection, where a new flight mode command is injected into the control system to alter the drone's behavior.
 
   - title: Resources
-    content: []
+    content: 
+     - text: MAVProxy
+     - link: https://github.com/ArduPilot/MAVProxy
 
   - title: Solution Guide
     collapsible: true
-    steps: []
+    steps:
+    - title: Step 1
+      description: | 
+      Install MAVProxy
+      ```
+      sudo apt-get install python3-dev python3-opencv python3-wxgtk4.0 python3-pip python3-matplotlib python3-lxml python3-pygame
+      pip3 install PyYAML mavproxy --user
+      echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.bashrc
+
+      ```
+    - title: Step 2
+      description: | 
+       Launch MAVProxy and connect to the drone. You need to specify the
+        connection string for 
+      examples:
+        - Serial Connection:
+            Command: mavproxy.py --master=/dev/ttyUSB0 --baudrate 57600 --aircraft MyAircraft
+        - UDP Connection:
+            Command: mavproxy.py --master=udp:127.0.0.1:14550
+    - title: Step 3
+      description: | 
+        To see the list of available flight modes for your drone, use the `mode` command without any arguments.
+      
+      command: mode
+    
+    -title: Step 4
+      description: | 
+         Use the `mode` command followed by the desired mode name to change the flight mode.
+      Example_Commands:
+        - Stabilize Mode: mode stabilize
+        - Acro Mode: mode acro
+        - Alt_Hold Mode: mode alt_hold
+        - Auto Mode: mode auto
+        - Guided Mode: mode guided
+        - Loiter Mode: mode loiter
+        - RTL Mode: mode rtl
+        - Land Mode: mode land
+
