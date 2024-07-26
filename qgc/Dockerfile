@@ -71,8 +71,6 @@ RUN \
     && useradd -ms /bin/bash user -g user \
     && usermod -a -G dialout user
 
-COPY ./qgc/config /home/user/.config/QGroundControl.org
-
 RUN \
     wget -P /home/user https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl.AppImage \
     && chmod +x /home/user/QGroundControl.AppImage \
@@ -89,6 +87,8 @@ COPY --chown=user:user ./qgc/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN \
     mkdir /home/user/scripts \
     && ln -s /usr/local/bin/entrypoint.sh /home/user/scripts/entrypoint.sh
+
+COPY ./qgc/config /home/user/.config/QGroundControl.org
 
 #ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 CMD tail -f /dev/null
