@@ -22,13 +22,13 @@ sections:
     steps:
     - title: Step 1
       description: | 
-      Install MAVProxy
-      ```
-      sudo apt-get install python3-dev python3-opencv python3-wxgtk4.0 python3-pip python3-matplotlib python3-lxml python3-pygame
-      pip3 install PyYAML mavproxy --user
-      echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.bashrc
+        Install MAVProxy
+        ```
+        sudo apt-get install python3-dev python3-opencv python3-wxgtk4.0 python3-pip python3-matplotlib python3-lxml python3-pygame
+        pip3 install PyYAML mavproxy --user
+        echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.bashrc
 
-      ```
+        ```
     - title: Step 2
       description: | 
        Launch MAVProxy and connect to the drone. You need to specify the
@@ -41,13 +41,14 @@ sections:
     - title: Step 3
       description: | 
         To see the list of available flight modes for your drone, use the `mode` command without any arguments.
-      
-      command: mode
+        ```      
+        mode
+        ```
     
-    -title: Step 4
+    - title: Step 4
       description: | 
-         Use the `mode` command followed by the desired mode name to change the flight mode.
-      Example_Commands:
+        Use the `mode` command followed by the desired mode name to change the flight mode.
+
         - Stabilize Mode: mode stabilize
         - Acro Mode: mode acro
         - Alt_Hold Mode: mode alt_hold
