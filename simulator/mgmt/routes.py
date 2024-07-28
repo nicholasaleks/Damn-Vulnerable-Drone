@@ -399,7 +399,9 @@ def load_yaml_files(directory):
 def convert_code_blocks(text):
     if isinstance(text, str):
         # Replace triple backticks with <pre><code> to preserve new lines
-        text = re.sub(r'```(.*?)```', r'<code class="code mb-3 mt-3">\1</code>', text, flags=re.DOTALL)
+        # Replace triple backticks with <pre><code> to preserve new lines
+        text = re.sub(r'```(.*?)```', r'<pre><code class="code mb-3 mt-3">\1</code></pre>', text, flags=re.DOTALL)
+        # Replace single backticks with <code> for inline code
         text = re.sub(r'`([^`]+)`', r'<code>\1</code>', text)
     return text
 
