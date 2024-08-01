@@ -1,5 +1,5 @@
 title: GPS & Telemetry Analysis
-description: Scenario Under development
+description: Viewing GPS & Telemtry Data via Wireshark
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
@@ -9,11 +9,55 @@ breadcrumb:
 sections:
   - title: Description
     content: |
-      <span class="alert-warning">🚧 Scenario Under development</span>
+      Capturing GPS data poses significant risks due to the potential for privacy invasion, security threats, operational risks, and vulnerabilities in critical infrastructure. 
+      The misuse of GPS data can lead to targeted attacks, unauthorized surveillance, and disruption of essential services, highlighting the need for robust security measures to protect this sensitive information.
 
   - title: Resources
-    content: []
+    content: 
+     - text: Wireshark
+       link: https://www.wireshark.org/
 
   - title: Solution Guide
     collapsible: true
-    steps: []
+    steps:
+    - title: Step 1
+      description: |
+        We will be using Wireshark to analyze the real-time MavLink traffic. This should already be installed with your Kali Linux distribution. If not, you can install it by following the documentation here: https://www.wireshark.org/download.html
+    - title: Step 2
+      description: |
+        Install MAVLink on Kali (following the guide here: https://mavlink.io/en/getting_started/installation.html)
+        ```
+        sudo apt install python3 python3-pip
+        git clone https://github.com/mavlink/mavlink.git --recursive
+        cd mavlink
+        python3 -m pip install -r pymavlink/requirements.txt
+        ```
+    - title: Step 3
+      description: |
+        Build libraries for your target dialect, specifying WLua as the target language. This process is described in the topic Generate MAVLink Libraries.
+        ```
+        python3 -m pymavlink.tools.mavgen --lang=WLua --wire-protocol=2.0 --output=mavlink_2_common message_definitions/v1.0/common.xml
+        ```
+    - title: Step 4
+      description: |
+        Update the plugin with correct ports (it should be configured correctly). The last few lines of the plugin file specify the ports to be monitored.
+        ```
+        -- bind protocol dissector to port 14550 and 14580
+        local udp_dissector_table = DissectorTable.get("udp.port")
+        udp_dissector_table:add(14550, mavlink_proto)
+        udp_dissector_table:add(14580, mavlink_proto)
+        udp_dissector_table:add(18570, mavlink_proto)
+        ```
+    - title: Step 5
+      description: |
+        Start Wireshark and select the correct interface to monitor. You should see the MAVLink packets being captured in real-time.
+
+    - title: Step 6 
+      description: |
+        Stop the capture. Apply display filter to only sho MavLink packets. 
+        ```
+        udp.port == 14550
+        ```
+    - title: Step 7
+      description: | 
+        Look for GLOBAL_POSITION_INT or GPS_RAW_INT

