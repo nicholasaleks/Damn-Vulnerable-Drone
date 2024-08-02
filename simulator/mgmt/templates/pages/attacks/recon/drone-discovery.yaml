@@ -21,13 +21,11 @@ sections:
       - text: GNU Radio
         link: https://www.gnuradio.org/
 
-  - title: Solution Guide
+  - title: Solution Guide (Non-Wifi-Mode "Half-Baked")
     collapsible: true
     steps:
-      - title: Non-Wifi-Mode (Half-Baked)
+      - title: Step 1. Ensure Docker Bridge Connection
         description: |
-          **Step 1. Ensure Docker Bridge Connection**
-
           Verify you are connected to the Docker bridge network, you can do this by running the following command:
 
           ```ip addr show
@@ -35,8 +33,8 @@ sections:
 
           You should have a bridge network with an IP address within the range of 10.13.0.0/24.
 
-          **Step 2. Host Discovery**
-
+      - title: Step 2. Host Discovery
+        description: |
           Use Nmap to scan the network range. (Excluding the IP address of the attacker machine and the simulator machine.)
 
           ```nmap -sn 10.13.0.0/24 --exclude 10.13.0.1,10.13.0.5
@@ -44,8 +42,8 @@ sections:
 
           After running this scan you should be able to identify the IP address of hosts on the network.
 
-          **Step 3. MAVLink Port Scan**
-
+      - title: Step 3. MAVLink Port Scan
+        description: |
           Use Nmap to scan the specific network ports of each host to identify UAV or MAVLink-compatible services. (Excluding the IP address of the attacker machine and the simulator machine.)
 
           ```nmap 10.13.0.0/24 -p 1-16000 --exclude 10.13.0.1,10.13.0.5
@@ -53,28 +51,27 @@ sections:
 
           After running this scan you should be able to identify the open ports and active services on the drone and the ground control station.
 
-      - title: Wifi-Mode (Full-Deploy)
+  - title: Solution Guide (Wifi-Mode "Fully Deployed")
+    collapsible: true
+    steps:
+      - title: Step 1. Connect to Wifi Network
         description: |
-          **Step 1. Connect to Wifi Network**
-
           Use your access gained from: <a href="/attacks/recon/wifi-analysis-cracking">Wireless Analysis & Cracking</a>
 
-          **Step 2. Host Discovery**
-
+      - title: Step 2. Host Discovery
+        description: |
           Use Nmap to scan the network range. (Excluding the IP address of the attacker machine.)
 
-          ```
-          nmap -sn 192.168.13.0/24 --exclude 192.168.13.10
+          ```nmap -sn 192.168.13.0/24 --exclude 192.168.13.10
           ```
 
           After running this scan you should be able to identify the IP address of hosts on the network.
 
-          **Step 3. MAVLink Port Scan**
-
+      - title: Step 3. MAVLink Port Scan
+        description: |
           Use Nmap to scan a wide range of network ports of each host to identify UAV or MAVLink-compatible services. (Excluding the IP address of the attacker machine.)
 
-          ```
-          nmap 192.168.13.0/24 -p 1-16000 --exclude 192.168.13.10
+          ```nmap 192.168.13.0/24 -p 1-16000 --exclude 192.168.13.10
           ```
 
           After running this scan you should be able to identify the open ports and active services on the drone and the ground control station.
