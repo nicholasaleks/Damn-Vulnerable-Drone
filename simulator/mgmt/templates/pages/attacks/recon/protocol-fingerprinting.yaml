@@ -10,11 +10,42 @@ breadcrumb:
 sections:
   - title: Description
     content: |
-      <span class="alert-warning">🚧 Scenario Under development</span>
+      In this scenario, the attacker aims to identify various MAVLink protocol parameters such as the version, system ID, component ID, and whether packet signing is enabled. By leveraging MAVLink protocol analysis, the attacker can fingerprint the MAVLink communication to gather critical information about the drone system.
 
   - title: Resources
-    content: []
+    content:
+      - text: MAVLink Version Guide
+        link: https://mavlink.io/en/guide/mavlink_version.html
+      - text: MAVLink Message Signing Guide
+        link: https://mavlink.io/en/guide/message_signing.html
+      - text: MAVLink Serialization Guide
+        link: https://mavlink.io/en/guide/serialization.html
+      - text: Wireshark
+        link: https://www.wireshark.org/
+
 
   - title: Solution Guide
     collapsible: true
-    steps: []
+    steps:
+      - title: Step 1
+        description: |
+          Use Wireshark to capture MAVLink packets. Follow the setup guide from the [Packet Sniffing](https://yourdomain.com/attacks/recon/packet-sniffing) scenario to configure Wireshark to listen to the MAVLink packets. Install Wireshark if it's not already installed:
+          ```sudo apt install wireshark
+          ```
+      - title: Step 2
+        description: |
+          Configure Wireshark to filter MAVLink traffic. You can set up a filter using the MAVLink protocol's magic bytes:
+          ```(mavlink_proto.magic == 0xFE) || (mavlink_proto.magic == 0xFD)
+          ```
+          Additionally, use the MAVLink plugin to filter by the “MAVLink 2.0” string:
+          ```mavlink_proto.magic == "MAVLink 2.0"
+          ```
+      - title: Step 3
+        description: |
+          Analyze the captured MAVLink packets in Wireshark. Look for the version information in the MAVLink header as described in the [MAVLink Version Guide](https://mavlink.io/en/guide/mavlink_version.html#determining-protocolmessage-version).
+      - title: Step 4
+        description: |
+          Identify the System ID and Component ID from the MAVLink headers. The System ID indicates the unique ID of the drone or ground control station (GCS), while the Component ID indicates the specific component within the system.
+      - title: Step 5
+        description: |
+          Check if packet signing is enabled by inspecting the MAVLink messages for the presence of signature fields. Refer to the [MAVLink Message Signing Guide](https://mavlink.io/en/guide/message_signing.html) for details on detecting message signing.

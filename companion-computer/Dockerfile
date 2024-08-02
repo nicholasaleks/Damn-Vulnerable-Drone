@@ -3,7 +3,7 @@ FROM ubuntu:20.04
 # Avoid prompts during package installations
 ENV DEBIAN_FRONTEND=noninteractive
 
-EXPOSE 3000 5000
+EXPOSE 3000 5000 22
 
 RUN apt-get update && apt-get install -y \
     apt-utils \
@@ -33,6 +33,7 @@ RUN apt-get update && apt-get install -y \
     libnl-genl-3-dev \
     python3 \
     python3-pip \
+    openssh-server \
     && pip3 install future pymavlink MAVProxy \
     && rm -rf /var/lib/apt/lists/*
 
@@ -72,8 +73,6 @@ RUN ARCH=$(uname -m) && \
 RUN mkdir -p /etc/mavlink-router
 COPY companion-computer/conf/mavlink-router.conf /etc/mavlink-router/main.conf
 
-#RUN /usr/bin/mavlink-routerd &
-
 # Web Interface Setup
 ###########################
 RUN pip3 install flask docker flask-cors Flask-SQLAlchemy flask-socketio opencv-python-headless Flask-Login
@@ -84,4 +83,23 @@ COPY companion-computer/start-companion.sh /start-companion.sh
 RUN chmod +x /start-companion.sh
 RUN mkdir -p /logs
 
-CMD ["/start-companion.sh"]
+# SSH Setup
+###########################
+RUN apt-get update && apt-get install -y openssh-server
+RUN mkdir /var/run/sshd
+RUN useradd -m admin && echo "admin:cyberdrone" | chpasswd && adduser admin sudo
+RUN echo 'root:cyberdrone' | chpasswd
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -i 's/Port 22/Port 3000/' /etc/ssh/sshd_config
+RUN mkdir -p /home/admin/.ssh && chmod 700 /home/admin/.ssh
+COPY companion-computer/conf/sshd_config /etc/ssh/sshd_config
+
+# Generate SSH host keys
+RUN ssh-keygen -A
+
+# Create a script to run both the SSH server and the companion script
+RUN echo '#!/bin/bash\n/usr/sbin/sshd &\n/start-companion.sh' > /start.sh
+RUN chmod +x /start.sh
+
+# Use the script as the CMD
+CMD ["/start.sh"]
