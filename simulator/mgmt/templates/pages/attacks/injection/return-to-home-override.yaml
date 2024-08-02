@@ -23,16 +23,14 @@ sections:
         description: | 
           Install pymavlink.
 
-          ```bash
-          pip install pymavlink
+          ```pip install pymavlink
           ```
 
       - title: Step 2
         description: | 
           Create a Python script to set the new home position. Replace `connection_string`, `latitude`, `longitude`, and `altitude` with appropriate values.
 
-          ```python
-          from pymavlink import mavutil
+          ```from pymavlink import mavutil
 
           # Replace with your connection string
           connection_string = 'udp:127.0.0.1:14550'

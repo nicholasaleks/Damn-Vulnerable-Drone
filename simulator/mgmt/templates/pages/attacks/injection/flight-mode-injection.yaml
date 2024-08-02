@@ -22,8 +22,7 @@ sections:
         description: | 
           Install MAVProxy
 
-          ```
-          sudo apt-get install python3-dev python3-opencv python3-wxgtk4.0 python3-pip python3-matplotlib python3-lxml python3-pygame
+          ```sudo apt-get install python3-dev python3-opencv python3-wxgtk4.0 python3-pip python3-matplotlib python3-lxml python3-pygame
           pip3 install PyYAML mavproxy --user
           echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.bashrc
           ```
@@ -31,25 +30,21 @@ sections:
         description: | 
           Launch MAVProxy and connect to the drone. You need to specify the connection string for serial or UDP.
 
-          ```
-          mavproxy.py --master=/dev/ttyUSB0 --baudrate 57600 --aircraft MyAircraft
+          ```mavproxy.py --master=/dev/ttyUSB0 --baudrate 57600 --aircraft MyAircraft
           ```
 
-          ```
-          mavproxy.py --master=udp:127.0.0.1:14550
+          ```mavproxy.py --master=udp:127.0.0.1:14550
           ```
       - title: Step 3
         description: | 
           To see the list of available flight modes for your drone, use the `mode` command without any arguments.
 
-          ```
-          mode
+          ```mode
           ```
       - title: Step 4
         description: |
           Use the `mode` command followed by the desired mode name to change the flight mode.      
-          ```
-          # Stabilize Mode: 
+          ```# Stabilize Mode: 
           mode stabilize
           # Acro Mode: 
           mode acro

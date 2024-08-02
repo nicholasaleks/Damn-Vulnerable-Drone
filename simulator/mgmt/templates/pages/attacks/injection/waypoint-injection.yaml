@@ -23,16 +23,14 @@ sections:
         description: | 
           Install pymavlink.
 
-          ```
-          pip install pymavlink
+          ```pip install pymavlink
           ```
 
       - title: Step 2
         description: | 
           Create a Python script to add a new waypoint. Replace `connection_string`, `latitude`, `longitude`, `altitude`, and other parameters with appropriate values.
 
-          ```
-          from pymavlink import mavutil
+          ```from pymavlink import mavutil
 
           # Replace with your connection string
           connection_string = 'udp:127.0.0.1:14550'

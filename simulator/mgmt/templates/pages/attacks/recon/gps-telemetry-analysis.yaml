@@ -32,84 +32,84 @@ sections:
       - title: HEARTBEAT (ID #0)
         description: |
           Indicates the presence of a component and its operational status.
-          ```wireshark
+          ```
           (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "HEARTBEAT")
           ```
 
       - title: SYS_STATUS (ID #1)
         description: |
           Provides a quick overview of the system's status, including battery status, load, and communication health.
-          ```wireshark
+          ```
           (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "SYS_STATUS")
           ```
 
       - title: GPS_RAW_INT (ID #24)
         description: |
           Contains raw GPS data such as latitude, longitude, altitude, and satellite information.
-          ```wireshark
+          ```
           (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "GPS_RAW_INT")
           ```
 
       - title: GLOBAL_POSITION_INT (ID #33)
         description: |
           Provides the global position of the drone, including latitude, longitude, and altitude. It is more processed and generally more reliable than raw GPS data.
-          ```wireshark
+          ```
           (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "GLOBAL_POSITION_INT")
           ```
 
       - title: ATTITUDE (ID #30)
         description: |
           Provides information on the drone's orientation, including pitch, roll, and yaw angles.
-          ```wireshark
+          ```
           (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "ATTITUDE")
           ```
 
       - title: ALTITUDE (ID #141)
         description: |
           Includes information about altitude and altitude change rates.
-          ```wireshark
+          ```
           (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "ALTITUDE")
           ```
 
       - title: BATTERY_STATUS (ID #147)
         description: |
           Provides information about battery voltage, current, remaining power, and battery temperature.
-          ```wireshark
+          ```
           (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "BATTERY_STATUS")
           ```
 
       - title: VFR_HUD (ID #74)
         description: |
           Contains essential flight information for piloting the drone, such as airspeed, ground speed, heading, throttle, and climb rate.
-          ```wireshark
+          ```
           (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "VFR_HUD")
           ```
 
       - title: STATUSTEXT (ID #253)
         description: |
           General status information and error messages.
-          ```wireshark
+          ```
           (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "STATUSTEXT")
           ```
 
       - title: MISSION_CURRENT (ID #42)
         description: |
           Indicates the current waypoint in the drone's mission plan.
-          ```wireshark
+          ```
           (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "MISSION_CURRENT")
           ```
 
       - title: NAV_CONTROLLER_OUTPUT (ID #62)
         description: |
           Shows navigation controller's outputs, useful to analyze how the drone is performing against its waypoints.
-          ```wireshark
+          ```
           (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "NAV_CONTROLLER_OUTPUT")
           ```
 
       - title: RADIO_STATUS (ID #109)
         description: |
           Provides information about the signal quality of the radio link.
-          ```wireshark
+          ```
           (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "RADIO_STATUS")
           ```
 
