@@ -13,12 +13,9 @@ sections:
       MAVLink packet sniffing involves intercepting the MAVLink messages exchanged between UAVs
       (Unmanned Aerial Vehicles) and ground control stations or between UAVs in a network.
       
-      This technique is crucial for developers, security researchers, and enthusiasts to
-      understand the operational dynamics of MAVLink communication, perform security audits,
-      and develop or improve MAVLink-based systems. By analyzing the captured packets, one can
+      By analyzing the captured packets, you can
       gain insights into the drone's operational status, commands being sent or received, and
-      how the system handles various data types, which is invaluable for both educational and
-      security-enhancing purposes.
+      how the system handles various data types.
 
   - title: Resources
     content:
@@ -53,5 +50,14 @@ sections:
           udp_dissector_table:add(18570, mavlink_proto)
           ```
       - title: Step 5
+        description: |
+          To import the plugin into Wireshark:
+          - Copy the plugin file into the wireshare plugins directory.
+          - On Linux systems this might be: /usr/lib/x86_64-linux-gnu/wireshark or /usr/lib/aarch64-linux-gnu/wireshark or ~/.local/lib/wireshark/plugins or ~/.wireshark/plugins. Note that users will need to be added to the wireshark group to use the tool.)
+          - Open Wireshark and follow the menu: Help > About Wireshark > Plugins
+
+          You should find the plugin in the list. For example, with the plugin created in the previous section you would see mavlink_2_common.lua
+
+      - title: Step 6
         description: |
           Start Wireshark and select the correct interface to monitor. You should see the MAVLink packets being captured in real-time.
