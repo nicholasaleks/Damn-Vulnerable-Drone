@@ -29,7 +29,7 @@ sections:
     steps:
       - title: Step 1
         description: |
-          Use Wireshark to capture MAVLink packets. Follow the setup guide from the [Packet Sniffing](https://yourdomain.com/attacks/recon/packet-sniffing) scenario to configure Wireshark to listen to the MAVLink packets. Install Wireshark if it's not already installed:
+          Use Wireshark to capture MAVLink packets. Follow the setup guide from the [Packet Sniffing](/attacks/recon/packet-sniffing) scenario to configure Wireshark to listen to the MAVLink packets. Install Wireshark if it's not already installed:
           ```sudo apt install wireshark
           ```
       - title: Step 2
