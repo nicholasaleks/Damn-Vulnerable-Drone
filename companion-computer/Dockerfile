@@ -70,7 +70,7 @@ RUN ARCH=$(uname -m) && \
 
 # Get Conf file
 RUN mkdir -p /etc/mavlink-router
-#COPY companion-computer/conf/mavlink-router.conf /etc/mavlink-router/main.conf
+COPY companion-computer/conf/mavlink-router.conf /etc/mavlink-router/main.conf
 
 #RUN /usr/bin/mavlink-routerd &
 

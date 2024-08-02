@@ -1,5 +1,6 @@
 title: Drone Discovery
 description: Identifying the presence and type of drones in an area using signal detection.
+order: 2
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
@@ -29,8 +30,7 @@ sections:
 
           Verify you are connected to the Docker bridge network, you can do this by running the following command:
 
-          ```
-          ifconfig
+          ```ip addr show
           ```
 
           You should have a bridge network with an IP address within the range of 10.13.0.0/24.
@@ -39,8 +39,7 @@ sections:
 
           Use Nmap to scan the network range. (Excluding the IP address of the attacker machine and the simulator machine.)
 
-          ```
-          nmap -sn 10.13.0.0/24 --exclude 10.13.0.1,10.13.0.5
+          ```nmap -sn 10.13.0.0/24 --exclude 10.13.0.1,10.13.0.5
           ```
 
           After running this scan you should be able to identify the IP address of hosts on the network.
@@ -49,8 +48,7 @@ sections:
 
           Use Nmap to scan the specific network ports of each host to identify UAV or MAVLink-compatible services. (Excluding the IP address of the attacker machine and the simulator machine.)
 
-          ```
-          nmap 10.13.0.0/24 -p 1-16000 --exclude 10.13.0.1,10.13.0.5
+          ```nmap 10.13.0.0/24 -p 1-16000 --exclude 10.13.0.1,10.13.0.5
           ```
 
           After running this scan you should be able to identify the open ports and active services on the drone and the ground control station.

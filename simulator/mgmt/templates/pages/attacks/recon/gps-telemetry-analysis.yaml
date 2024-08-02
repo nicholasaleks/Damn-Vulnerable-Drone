@@ -1,4 +1,5 @@
 title: GPS & Telemetry Analysis
+order: 7
 description: Viewing GPS & Telemtry Data via Wireshark
 breadcrumb:
   - text: Attack Scenarios
@@ -26,8 +27,7 @@ sections:
     - title: Step 2
       description: |
         Install MAVLink on Kali (following the guide here: https://mavlink.io/en/getting_started/installation.html)
-        ```
-        sudo apt install python3 python3-pip
+        ```sudo apt install python3 python3-pip
         git clone https://github.com/mavlink/mavlink.git --recursive
         cd mavlink
         python3 -m pip install -r pymavlink/requirements.txt
@@ -41,9 +41,7 @@ sections:
     - title: Step 4
       description: |
         Update the plugin with correct ports (it should be configured correctly). The last few lines of the plugin file specify the ports to be monitored.
-        ```
-        -- bind protocol dissector to port 14550 and 14580
-        local udp_dissector_table = DissectorTable.get("udp.port")
+        ```local udp_dissector_table = DissectorTable.get("udp.port")
         udp_dissector_table:add(14550, mavlink_proto)
         udp_dissector_table:add(14580, mavlink_proto)
         udp_dissector_table:add(18570, mavlink_proto)
@@ -55,8 +53,7 @@ sections:
     - title: Step 6 
       description: |
         Stop the capture. Apply display filter to only sho MavLink packets. 
-        ```
-        udp.port == 14550
+        ```udp.port == 14550
         ```
     - title: Step 7
       description: | 

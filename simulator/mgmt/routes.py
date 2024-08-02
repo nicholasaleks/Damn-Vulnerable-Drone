@@ -386,14 +386,24 @@ def attacks_index():
 
 def load_yaml_files(directory):
     attacks = []
+    
+    # List and load files
     for filename in os.listdir(directory):
         if filename.endswith('.yaml'):
             with open(os.path.join(directory, filename), 'r') as file:
                 yaml_content = yaml.safe_load(file)
+                # Read the order number
+                order = yaml_content.get('order', float('inf'))
+                # Append the file content and order number
                 attacks.append({
+                    'order': order,
                     'title': yaml_content.get('title', 'No Title'),
                     'link': f"/attacks/{os.path.basename(directory)}/{filename.replace('.yaml', '')}"
                 })
+    
+    # Sort the attacks list by the order number
+    attacks.sort(key=lambda x: x['order'])
+    
     return attacks
 
 def convert_code_blocks(text):

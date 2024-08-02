@@ -140,7 +140,7 @@ def add_default_user():
     if not default_user:
         # Create and add the default user
         new_user = User(username='admin')
-        new_user.set_password('defaultpassword')
+        new_user.set_password('cyberdrone')
         db.session.add(new_user)
         db.session.commit()
         print('Added default user')

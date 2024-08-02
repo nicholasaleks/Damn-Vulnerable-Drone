@@ -195,6 +195,20 @@ if [ -z "$wifi_simulation" ]; then
     fi
 fi
 
+# Get Version from version.txt file
+get_version() {
+    local version_file="$(dirname "$0")/version.txt"
+    if [ -f "$version_file" ]; then
+        local version=$(cat "$version_file")
+        echo "$version"
+    else
+        echo "Version file not found"
+    fi
+}
+
+# Example usage
+version=$(get_version)
+
 if [ "$wifi_simulation" = "y" ]; then
     # Make sure we are running as root
     WIFI_ENABLED="True"
@@ -210,6 +224,7 @@ if [ "$wifi_simulation" = "y" ]; then
     LOG_FILE="dvd.log"
 
     {
+        
 
         # Start Docker Compose
         echo -e "${CYAN}[+] Starting Docker Pull...${NC}"
@@ -404,6 +419,7 @@ echo """
     """
         echo -e "${CYAN}------------------------------------------------------"
         echo -e "${CYAN}[+] Build Complete."
+        echo -e "${CYAN}[+] Version: ${version}"
         echo -e "${CYAN}------------------------------------------------------"
         echo -e "${CYAN}[+] - Virtual interface ${first_virtual_card_name}mon put into monitoring mode."
         echo -e "${CYAN}[+] - Virtual interface ${kali_interface} is available for regular wifi networking."
@@ -463,6 +479,7 @@ elif [ "$wifi_simulation" = "n" ]; then
     """
         echo -e "${CYAN}------------------------------------------------------"
         echo -e "${CYAN}[+] Build Complete."
+        echo -e "${CYAN}[+] Version: ${version}"
         echo -e "${CYAN}------------------------------------------------------"
         echo -e "${CYAN}[+] Damn Vulnerable Drone Lab Environment is running..."
         echo -e "${CYAN}[+] Log file: dvd.log"
