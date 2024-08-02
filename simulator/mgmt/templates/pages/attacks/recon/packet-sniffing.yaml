@@ -52,8 +52,11 @@ sections:
       - title: Step 5
         description: |
           To import the plugin into Wireshark:
-          - Copy the plugin file into the wireshare plugins directory.
+
+          - Copy the plugin file (mavlink_2_common.lua) into the wireshare plugins directory.
+
           - On Linux systems this might be: /usr/lib/x86_64-linux-gnu/wireshark or /usr/lib/aarch64-linux-gnu/wireshark or ~/.local/lib/wireshark/plugins or ~/.wireshark/plugins. Note that users will need to be added to the wireshark group to use the tool.)
+          
           - Open Wireshark and follow the menu: Help > About Wireshark > Plugins
 
           You should find the plugin in the list. For example, with the plugin created in the previous section you would see mavlink_2_common.lua

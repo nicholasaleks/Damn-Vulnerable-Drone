@@ -1,60 +1,194 @@
-title: GPS & Telemetry Analysis
-order: 7
-description: Viewing GPS & Telemtry Data via Wireshark
+title: Drone GPS & Telemetry Detection
+description: Scenario Under development
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
-  - text: Reconnaissance
-  - text: GPS & Telemetry Analysis
+  - text: Detection
+  - text: Drone GPS & Telemetry Detection
 
 sections:
   - title: Description
     content: |
-      Capturing GPS data poses significant risks due to the potential for privacy invasion, security threats, operational risks, and vulnerabilities in critical infrastructure. 
-      The misuse of GPS data can lead to targeted attacks, unauthorized surveillance, and disruption of essential services, highlighting the need for robust security measures to protect this sensitive information.
+      In this scenario, the attacker aims to detect and analyze the GPS and telemetry data of a drone. By leveraging MAVLink protocol analysis and Wireshark filters, the attacker can identify various telemetry messages and gain insights into the drone's status and location.
 
   - title: Resources
-    content: 
-     - text: Wireshark
-       link: https://www.wireshark.org/
+    content:
+      - text: MAVLink Common Message Definitions
+        link: https://mavlink.io/en/messages/common.html
+      - text: Google Docs Guide
+        link: https://docs.google.com/document/d/1nhkMXVP8JAzkTXGZeq02TNytRzK8eKLOwBiQUr6ntjg/edit
 
-  - title: Solution Guide
+  - title: Solution
     collapsible: true
     steps:
-    - title: Step 1
-      description: |
-        We will be using Wireshark to analyze the real-time MavLink traffic. This should already be installed with your Kali Linux distribution. If not, you can install it by following the documentation here: https://www.wireshark.org/download.html
-    - title: Step 2
-      description: |
-        Install MAVLink on Kali (following the guide here: https://mavlink.io/en/getting_started/installation.html)
-        ```sudo apt install python3 python3-pip
-        git clone https://github.com/mavlink/mavlink.git --recursive
-        cd mavlink
-        python3 -m pip install -r pymavlink/requirements.txt
-        ```
-    - title: Step 3
-      description: |
-        Build libraries for your target dialect, specifying WLua as the target language. This process is described in the topic Generate MAVLink Libraries.
-        ```
-        python3 -m pymavlink.tools.mavgen --lang=WLua --wire-protocol=2.0 --output=mavlink_2_common message_definitions/v1.0/common.xml
-        ```
-    - title: Step 4
-      description: |
-        Update the plugin with correct ports (it should be configured correctly). The last few lines of the plugin file specify the ports to be monitored.
-        ```local udp_dissector_table = DissectorTable.get("udp.port")
-        udp_dissector_table:add(14550, mavlink_proto)
-        udp_dissector_table:add(14580, mavlink_proto)
-        udp_dissector_table:add(18570, mavlink_proto)
-        ```
-    - title: Step 5
-      description: |
-        Start Wireshark and select the correct interface to monitor. You should see the MAVLink packets being captured in real-time.
+      - title: Step 1
+        description: |
+          Follow the initial setup steps provided in the [Google Docs Guide](https://docs.google.com/document/d/1nhkMXVP8JAzkTXGZeq02TNytRzK8eKLOwBiQUr6ntjg/edit) to configure your environment for capturing MAVLink traffic.
 
-    - title: Step 6 
-      description: |
-        Stop the capture. Apply display filter to only sho MavLink packets. 
-        ```udp.port == 14550
-        ```
-    - title: Step 7
-      description: | 
-        Look for GLOBAL_POSITION_INT or GPS_RAW_INT
+      - title: Step 2
+        description: |
+          Apply the following Wireshark filters to detect and analyze the specific telemetry messages you are interested in:
+
+      - title: HEARTBEAT (ID #0)
+        description: |
+          Indicates the presence of a component and its operational status.
+          ```wireshark
+          (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "HEARTBEAT")
+          ```
+
+      - title: SYS_STATUS (ID #1)
+        description: |
+          Provides a quick overview of the system's status, including battery status, load, and communication health.
+          ```wireshark
+          (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "SYS_STATUS")
+          ```
+
+      - title: GPS_RAW_INT (ID #24)
+        description: |
+          Contains raw GPS data such as latitude, longitude, altitude, and satellite information.
+          ```wireshark
+          (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "GPS_RAW_INT")
+          ```
+
+      - title: GLOBAL_POSITION_INT (ID #33)
+        description: |
+          Provides the global position of the drone, including latitude, longitude, and altitude. It is more processed and generally more reliable than raw GPS data.
+          ```wireshark
+          (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "GLOBAL_POSITION_INT")
+          ```
+
+      - title: ATTITUDE (ID #30)
+        description: |
+          Provides information on the drone's orientation, including pitch, roll, and yaw angles.
+          ```wireshark
+          (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "ATTITUDE")
+          ```
+
+      - title: ALTITUDE (ID #141)
+        description: |
+          Includes information about altitude and altitude change rates.
+          ```wireshark
+          (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "ALTITUDE")
+          ```
+
+      - title: BATTERY_STATUS (ID #147)
+        description: |
+          Provides information about battery voltage, current, remaining power, and battery temperature.
+          ```wireshark
+          (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "BATTERY_STATUS")
+          ```
+
+      - title: VFR_HUD (ID #74)
+        description: |
+          Contains essential flight information for piloting the drone, such as airspeed, ground speed, heading, throttle, and climb rate.
+          ```wireshark
+          (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "VFR_HUD")
+          ```
+
+      - title: STATUSTEXT (ID #253)
+        description: |
+          General status information and error messages.
+          ```wireshark
+          (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "STATUSTEXT")
+          ```
+
+      - title: MISSION_CURRENT (ID #42)
+        description: |
+          Indicates the current waypoint in the drone's mission plan.
+          ```wireshark
+          (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "MISSION_CURRENT")
+          ```
+
+      - title: NAV_CONTROLLER_OUTPUT (ID #62)
+        description: |
+          Shows navigation controller's outputs, useful to analyze how the drone is performing against its waypoints.
+          ```wireshark
+          (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "NAV_CONTROLLER_OUTPUT")
+          ```
+
+      - title: RADIO_STATUS (ID #109)
+        description: |
+          Provides information about the signal quality of the radio link.
+          ```wireshark
+          (ip.src == 10.13.0.3) && (mavlink_proto.msgid == "RADIO_STATUS")
+          ```
+
+      - title: Connect all of the telemetry gathering into a single PYMAVLINK script
+        description: |
+          Try running this script to view all some of the drone telemetry in real-time
+          ```import time
+          import curses
+          from pymavlink import mavutil
+
+          # Establish connection to the MAVLink device
+          connection = mavutil.mavlink_connection('tcp:10.13.0.3:5760')
+
+          # Wait for the first heartbeat to know the system ID
+          print("Waiting for heartbeat...")
+          connection.wait_heartbeat()
+          print("Heartbeat received from system (system %u component %u)" % (connection.target_system, connection.target_component))
+
+          # Function to initialize curses and create a window
+          def init_curses():
+              stdscr = curses.initscr()
+              curses.noecho()
+              curses.cbreak()
+              stdscr.keypad(True)
+              return stdscr
+
+          # Function to print telemetry messages on the screen
+          def print_telemetry(stdscr, telemetry_data):
+              stdscr.clear()
+              for i, (key, value) in enumerate(telemetry_data.items()):
+                  stdscr.addstr(i, 0, f"{key}: {value}")
+              stdscr.refresh()
+
+          # Main function to capture and display telemetry data
+          def main(stdscr):
+              telemetry_data = {
+                  "HEARTBEAT": "N/A",
+                  "SYS_STATUS": "N/A",
+                  "GPS_RAW_INT": "N/A",
+                  "GLOBAL_POSITION_INT": "N/A",
+                  "ATTITUDE": "N/A",
+                  "ALTITUDE": "N/A",
+                  "BATTERY_STATUS": "N/A",
+                  "VFR_HUD": "N/A",
+                  "STATUSTEXT": "N/A",
+                  "MISSION_CURRENT": "N/A",
+                  "NAV_CONTROLLER_OUTPUT": "N/A",
+                  "RADIO_STATUS": "N/A",
+              }
+
+              while True:
+                  msg = connection.recv_match(blocking=True)
+                  if msg:
+                      if msg.get_type() == 'HEARTBEAT':
+                          telemetry_data["HEARTBEAT"] = f"Type: {msg.type}, Autopilot: {msg.autopilot}, Base mode: {msg.base_mode}, System status: {msg.system_status}"
+                      elif msg.get_type() == 'SYS_STATUS':
+                          telemetry_data["SYS_STATUS"] = f"Battery voltage: {msg.voltage_battery}, Battery current: {msg.current_battery}, Battery remaining: {msg.battery_remaining}"
+                      elif msg.get_type() == 'GPS_RAW_INT':
+                          telemetry_data["GPS_RAW_INT"] = f"Lat: {msg.lat}, Lon: {msg.lon}, Alt: {msg.alt}, Satellites visible: {msg.satellites_visible}"
+                      elif msg.get_type() == 'GLOBAL_POSITION_INT':
+                          telemetry_data["GLOBAL_POSITION_INT"] = f"Lat: {msg.lat}, Lon: {msg.lon}, Alt: {msg.alt}, Relative Alt: {msg.relative_alt}"
+                          telemetry_data["ALTITUDE"] = f"Alt: {msg.alt}, Relative Alt: {msg.relative_alt}"
+                      elif msg.get_type() == 'ATTITUDE':
+                          telemetry_data["ATTITUDE"] = f"Roll: {msg.roll}, Pitch: {msg.pitch}, Yaw: {msg.yaw}"
+                      elif msg.get_type() == 'BATTERY_STATUS':
+                          telemetry_data["BATTERY_STATUS"] = f"Battery voltage: {msg.voltages[0]}, Battery current: {msg.current_battery}"
+                      elif msg.get_type() == 'VFR_HUD':
+                          telemetry_data["VFR_HUD"] = f"Airspeed: {msg.airspeed}, Groundspeed: {msg.groundspeed}, Heading: {msg.heading}"
+                      elif msg.get_type() == 'STATUSTEXT':
+                          telemetry_data["STATUSTEXT"] = f"Text: {msg.text}"
+                      elif msg.get_type() == 'MISSION_CURRENT':
+                          telemetry_data["MISSION_CURRENT"] = f"Seq: {msg.seq}"
+                      elif msg.get_type() == 'NAV_CONTROLLER_OUTPUT':
+                          telemetry_data["NAV_CONTROLLER_OUTPUT"] = f"Nav bearing: {msg.nav_bearing}, Target bearing: {msg.target_bearing}, Wp dist: {msg.wp_dist}"
+                      elif msg.get_type() == 'RADIO_STATUS':
+                          telemetry_data["RADIO_STATUS"] = f"RSSI: {msg.rssi}, Rem RSSI: {msg.remrssi}, Noise: {msg.noise}, Rem noise: {msg.remnoise}"
+
+                      print_telemetry(stdscr, telemetry_data)
+
+          # Initialize curses and start the main function
+          curses.wrapper(main)
+          ```
