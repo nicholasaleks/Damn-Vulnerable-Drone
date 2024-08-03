@@ -78,6 +78,7 @@ services:
       - "8000:8000" # simulator mgmt
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./simulator/mgmt:/Simulator/mgmt
     environment:
       - WIFI_ENABLED
     networks:

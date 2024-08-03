@@ -1,6 +1,6 @@
 title: Companion Computer Detection
 order: 3
-description: Scenario Under development
+description: Finding companion computers attached to UAVs that provide additional processing capabilities.
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
@@ -10,11 +10,87 @@ breadcrumb:
 sections:
   - title: Description
     content: |
-      <span class="alert-warning">🚧 Scenario Under development</span>
+      The companion computer is on the 10.13.0.0/24 network if you are running in non-Wi-Fi mode and 192.168.13.1 in Wi-Fi mode. Typically companion computers may have common services such as SSH, RTSP and maybe even an HTTP server running on them, making them prime targets for hacking into drone systems.
 
   - title: Resources
     content: []
 
-  - title: Solution Guide
+  - title: Solution Guide (Non-Wifi-Mode)
     collapsible: true
-    steps: []
+    steps:
+      - title: Step 1. Ensure Docker Bridge Connection
+        description: |
+          Verify you are connected to the Docker bridge network. You can do this by running the following command:
+
+          ```ip addr show
+          ```
+
+          You should have a bridge network with an IP address within the range of 10.13.0.0/24.
+
+      - title: Step 2. Host Discovery
+        description: |
+          Use Nmap to scan the network range, excluding the IP addresses of the attacker machine and the simulator machine.
+
+          ```nmap -sn 10.13.0.0/24 --exclude 10.13.0.1,10.13.0.5
+          ```
+
+          After running this scan, you should be able to identify the IP address of hosts on the network.
+
+      - title: Step 3. Companion Computer Port Scan
+        description: |
+          Use Nmap to scan the specific network ports of the companion computer to identify enabled services.
+
+          ```nmap 10.13.0.3
+          ```
+
+          After running this scan, you should be able to identify the open ports and active services on the companion computer.
+
+          ```Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-08-02 19:00 EDT
+          Nmap scan report for 10.13.0.3
+          Host is up (0.000066s latency).
+          Not shown: 997 closed tcp ports (conn-refused)
+          PORT     STATE SERVICE
+          22/tcp   open  ssh
+          554/tcp  open  rtsp
+          3000/tcp open  ppp
+
+          Nmap done: 1 IP address (1 host up) scanned in 0.07 seconds
+          ```
+
+  - title: Solution Guide (Wifi-Mode)
+    collapsible: true
+    steps:
+      - title: Step 1. Connect to Wi-Fi Network
+        description: |
+          Use your access gained from: <a href="/attacks/recon/wifi-analysis-cracking">Wireless Analysis & Cracking</a>.
+
+      - title: Step 2. Host Discovery
+        description: |
+          Use Nmap to scan the network range, excluding the IP address of the attacker machine.
+
+          ```nmap -sn 192.168.13.0/24 --exclude 192.168.13.10
+          ```
+
+          After running this scan, you should be able to identify the IP address of hosts on the network.
+
+      - title: Step 3. Companion Computer Port Scan
+        description: |
+          Use Nmap to scan a wide range of network ports of the companion computer to identify enabled services.
+
+          ```nmap 192.168.13.1
+          ```
+
+          After running this scan, you should be able to identify the open ports and active services on the companion computer.
+
+          ```Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-08-02 19:00 EDT
+          Nmap scan report for 192.168.13.1
+          Host is up (0.000066s latency).
+          Not shown: 997 closed tcp ports (conn-refused)
+          PORT     STATE SERVICE
+          22/tcp   open  ssh
+          554/tcp  open  rtsp
+          3000/tcp open  ppp
+
+          Nmap done: 1 IP address (1 host up) scanned in 0.07 seconds
+          ```
+

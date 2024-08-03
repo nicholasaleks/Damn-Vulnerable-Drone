@@ -11,7 +11,7 @@ sections:
   - title: Description
     content: |
       MAVLink packet sniffing involves intercepting the MAVLink messages exchanged between UAVs
-      (Unmanned Aerial Vehicles) and ground control stations or between UAVs in a network.
+      (Unmanned Aerial Vehicles) and ground control stations or between UAVs in a network.<br><br>
       
       By analyzing the captured packets, you can
       gain insights into the drone's operational status, commands being sent or received, and
@@ -22,45 +22,131 @@ sections:
       - text: Wireshark
         link: https://www.wireshark.org/
 
-  - title: Solution
+  - title: Solution Guide (Non-Wifi-Mode)
     collapsible: true
     steps:
-      - title: Step 1
+      - title: Step 1. Install Wireshark
         description: |
-          We will be using Wireshark to analyze the real-time MavLink traffic. This should already be installed with your Kali Linux distribution. If not, you can install it by following the documentation here: https://www.wireshark.org/download.html
-      - title: Step 2
+          We will be using Wireshark to analyze the real-time MAVLink traffic. This should already be installed with your Kali Linux distribution. If not, you can install it by following the documentation here: <a href="https://www.wireshark.org/download.html">https://www.wireshark.org/download.html</a>
+
+      - title: Step 2. Install MAVLink on Kali
         description: |
-          Install MAVLink on Kali (following the guide here: https://mavlink.io/en/getting_started/installation.html)
+          Install MAVLink on Kali (following the guide here: <a href="https://mavlink.io/en/getting_started/installation.html">https://mavlink.io/en/getting_started/installation.html</a>)
           ```sudo apt install python3 python3-pip
           git clone https://github.com/mavlink/mavlink.git --recursive
           cd mavlink
           python3 -m pip install -r pymavlink/requirements.txt
           ```
-      - title: Step 3
+
+      - title: Step 3. Build MAVLink Libraries
         description: |
           Build libraries for your target dialect, specifying WLua as the target language. This process is described in the topic Generate MAVLink Libraries.
           ```python3 -m pymavlink.tools.mavgen --lang=WLua --wire-protocol=2.0 --output=mavlink_2_common message_definitions/v1.0/ardupilotmega.xml
           ```
-      - title: Step 4
+
+      - title: Step 4. Update Wireshark Plugin
         description: |
-          Update the plugin with correct ports (it should be configured correctly). The last few lines of the plugin file specify the ports to be monitored.
+          Update the plugin with correct ports. The last few lines of the plugin file specify the ports to be monitored.
           ```local udp_dissector_table = DissectorTable.get("udp.port")
           udp_dissector_table:add(14550, mavlink_proto)
           udp_dissector_table:add(14580, mavlink_proto)
           udp_dissector_table:add(18570, mavlink_proto)
           ```
-      - title: Step 5
+
+      - title: Step 5. Import Plugin into Wireshark
         description: |
-          To import the plugin into Wireshark:
+          To import the plugin into Wireshark: Copy the plugin file (`mavlink_2_common.lua`) into the Wireshark plugins directory.<br><br>
 
-          - Copy the plugin file (mavlink_2_common.lua) into the wireshare plugins directory.
+          On Linux systems this might be:
+          ```/usr/lib/x86_64-linux-gnu/wireshark
+          ```
+          or
+          ```/usr/lib/aarch64-linux-gnu/wireshark
+          ```
+          or
+          ```~/.local/lib/wireshark/plugins
+          ```
+          or
+          ```~/.wireshark/plugins
+          ```
 
-          - On Linux systems this might be: /usr/lib/x86_64-linux-gnu/wireshark or /usr/lib/aarch64-linux-gnu/wireshark or ~/.local/lib/wireshark/plugins or ~/.wireshark/plugins. Note that users will need to be added to the wireshark group to use the tool.)
-          
-          - Open Wireshark and follow the menu: Help > About Wireshark > Plugins
+          Open Wireshark and follow the menu: Help > About Wireshark > Plugins<br><br>
 
           You should find the plugin in the list. For example, with the plugin created in the previous section you would see mavlink_2_common.lua
 
-      - title: Step 6
+      - title: Step 6. Start Wireshark
         description: |
           Start Wireshark and select the correct interface to monitor. You should see the MAVLink packets being captured in real-time.
+
+  - title: Solution Guide (Wi-Fi Mode)
+    collapsible: true
+    steps:
+      - title: Step 1. Obtain WEP Password
+        description: |
+          Use your access gained from: <a href="/attacks/recon/wifi-analysis-cracking">Wireless Analysis & Cracking</a> to obtain the WEP password.
+
+      - title: Step 2. Install Wireshark
+        description: |
+          We will be using Wireshark to analyze the real-time MAVLink traffic. This should already be installed with your Kali Linux distribution. If not, you can install it by following the documentation here: <a href="https://www.wireshark.org/download.html">https://www.wireshark.org/download.html</a>
+
+      - title: Step 3. Install MAVLink on Kali
+        description: |
+          Install MAVLink on Kali (following the guide here: <a href="https://mavlink.io/en/getting_started/installation.html">https://mavlink.io/en/getting_started/installation.html</a>)
+          ```sudo apt install python3 python3-pip
+          git clone https://github.com/mavlink/mavlink.git --recursive
+          cd mavlink
+          python3 -m pip install -r pymavlink/requirements.txt
+          ```
+
+      - title: Step 4. Build MAVLink Libraries
+        description: |
+          Build libraries for your target dialect, specifying WLua as the target language. This process is described in the topic Generate MAVLink Libraries.
+          ```python3 -m pymavlink.tools.mavgen --lang=WLua --wire-protocol=2.0 --output=mavlink_2_common message_definitions/v1.0/ardupilotmega.xml
+          ```
+
+      - title: Step 5. Update Wireshark Plugin
+        description: |
+          Update the plugin with correct ports. The last few lines of the plugin file specify the ports to be monitored.
+          ```local udp_dissector_table = DissectorTable.get("udp.port")
+          udp_dissector_table:add(14550, mavlink_proto)
+          udp_dissector_table:add(14580, mavlink_proto)
+          udp_dissector_table:add(18570, mavlink_proto)
+          ```
+
+      - title: Step 6. Import Plugin into Wireshark
+        description: |
+          To import the plugin into Wireshark: Copy the plugin file (`mavlink_2_common.lua`) into the Wireshark plugins directory.<br><br>
+
+          On Linux systems this might be:
+          ```/usr/lib/x86_64-linux-gnu/wireshark
+          ```
+          or
+          ```/usr/lib/aarch64-linux-gnu/wireshark
+          ```
+          or
+          ```~/.local/lib/wireshark/plugins
+          ```
+          or
+          ```~/.wireshark/plugins
+          ```
+
+          Open Wireshark and follow the menu: Help > About Wireshark > Plugins<br><br>
+
+          You should find the plugin in the list. For example, with the plugin created in the previous section you would see mavlink_2_common.lua
+
+      - title: Step 7. Start Wireshark
+        description: |
+          Start Wireshark and select the correct interface to monitor. You should see the MAVLink packets being captured in real-time.
+
+      - title: Step 8. Apply Decryption Settings
+        description: |
+          Use the WEP password obtained earlier to decrypt the MAVLink packets in Wireshark. Follow these steps:<br><br>
+
+          1. Open Wireshark.<br>
+          2. Go to `Edit` > `Preferences`. <br>
+          3. In the Preferences window, expand `Protocols` and find `IEEE 802.11`. <br>
+          4. Click on `IEEE 802.11` and then click on the `Decryption Keys` tab. <br>
+          5. Click `Edit...` next to `Key #1`. <br>
+          6. Enter the WEP key as `1234567890`. <br>
+          7. Click `OK` to save the settings. <br>
+          8. Start capturing packets and Wireshark will use the WEP key to decrypt the MAVLink packets.

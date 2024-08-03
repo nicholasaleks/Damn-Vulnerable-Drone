@@ -1,6 +1,6 @@
 title: Protocol Fingerprinting
 order: 6
-description: Scenario Under development
+description: Determining the MAVLink protocol version to exploit specific vulnerabilities.
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
@@ -10,7 +10,10 @@ breadcrumb:
 sections:
   - title: Description
     content: |
-      In this scenario, the attacker aims to identify various MAVLink protocol parameters such as the version, system ID, component ID, and whether packet signing is enabled. By leveraging MAVLink protocol analysis, the attacker can fingerprint the MAVLink communication to gather critical information about the drone system.
+      In this scenario, the attacker aims to identify various MAVLink protocol parameters 
+      such as the version, system ID, component ID, and whether packet signing is enabled. 
+      By leveraging MAVLink protocol analysis, the attacker can fingerprint the MAVLink 
+      communication to gather critical information about the drone system.
 
   - title: Resources
     content:

@@ -10,9 +10,16 @@ breadcrumb:
 sections:
   - title: Description
     content: |
-      To penetrate and analyze the security of wireless networks by identifying vulnerabilities in Wi-Fi encryption and authentication mechanisms. This involves capturing network traffic to crack the network's password and gain unauthorized access to the network's data and devices connected to it.
+      To penetrate and analyze the security of wireless networks by identifying vulnerabilities 
+      in Wi-Fi encryption and authentication mechanisms. This involves capturing network traffic 
+      to crack the network's password and gain unauthorized access to the network's data and devices 
+      connected to it. <br><br>
 
-      Wi-Fi Analysis and Cracking entails the use of specialized software tools to monitor, capture, and analyze Wi-Fi network traffic. This scenario typically begins with the identification of available Wi-Fi networks and the gathering of information such as the network's SSID (Service Set Identifier), BSSID (Basic Service Set Identifier), and the type of encryption used (WPA, WPA2, WEP, etc.).
+      Wi-Fi Analysis and Cracking entails the use of specialized software tools to monitor, capture, 
+      and analyze Wi-Fi network traffic. This scenario typically begins with the identification of 
+      available Wi-Fi networks and the gathering of information such as the network's SSID (Service 
+      Set Identifier), BSSID (Basic Service Set Identifier), and the type of encryption used (WPA, 
+      WPA2, WEP, etc.).
 
   - title: Resources
     content:

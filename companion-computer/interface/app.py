@@ -163,6 +163,11 @@ def initialize_udp_destinations():
             gcs_destination = UdpDestination(ip='10.13.0.4', port=14550)
 
         db.session.add(gcs_destination)
+
+        # Add default connection to QGC
+        qgc_destination = UdpDestination(ip='10.13.0.6', port=14550)
+        db.session.add(qgc_destination)
+
         db.session.commit()
 
 
