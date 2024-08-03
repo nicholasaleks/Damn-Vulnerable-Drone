@@ -7,3 +7,4 @@ mav.parm
 *.cap
 *.csv
 *.netxml
+*.pyc
