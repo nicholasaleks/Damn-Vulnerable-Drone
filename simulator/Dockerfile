@@ -104,6 +104,6 @@ COPY simulator/damn-vulnerable-drone.launch /Simulator/damn-vulnerable-drone.lau
 CMD rm -rf /tmp/.X100-lock; \
     Xvfb :100 -screen 0 1600x1200x16 & \
     bash -c "source /opt/ros/noetic/setup.bash && \
-             roslaunch /Simulator/damn-vulnerable-drone.launch & \
+             gzserver --verbose /Simulator/ardupilot_gazebo/worlds/damn-vulnerable-drone.world & \
              cd /Simulator/gzweb && sleep 15 && npm start > /dev/null 2>&1 & \
              cd /Simulator/mgmt && sleep 15 && python3 app.py"
