@@ -20,7 +20,7 @@ sections:
       - text: MAVLink Protocol
         link: https://mavlink.io/en/
       - text: PyMAVLink Documentation
-        link: https://www.ardusub.com/developers/pymavlink.html
+        link: https://mavlink.io/en/mavgen_python/
 
   - title: Solution Guide
     collapsible: true

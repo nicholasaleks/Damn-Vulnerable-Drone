@@ -1,5 +1,5 @@
 title: Flight Log Extraction
-description: Scenario Under development
+description: Collecting and converting flight logs from an ArduPilot/MAVLink drone using MAVProxy and pymavlink, and then converting these logs to CSV format for analysis.
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
@@ -9,11 +9,439 @@ breadcrumb:
 sections:
   - title: Description
     content: |
-      <span class="alert-warning">🚧 Scenario Under development</span>
+      The flight log extraction process involves collecting binary logs (BIN files) from an 
+      ArduPilot/MAVLink drone. This can be achieved using tools like MAVProxy or pymavlink scripts. 
+      After collecting the logs, they can be converted to a CSV format using pybinlog for easy viewing 
+      and analysis.
 
   - title: Resources
-    content: []
+    content:
+      - text: MAVLink Protocol
+        link: https://mavlink.io/en/
+      - text: MAVProxy
+        link: https://ardupilot.github.io/MAVProxy/html/
+      - text: pymavlink
+        link: https://mavlink.io/en/mavgen_python/
+      - text: pybinlog
+        link: https://pypi.org/project/pybinlog/
 
   - title: Solution Guide
     collapsible: true
-    steps: []
+    steps:
+      - title: Step 1. Setup MAVProxy
+        description: |
+          Ensure you have MAVProxy installed:
+          ```sudo apt-get update
+          sudo apt-get install python3-pip
+          pip3 install mavproxy
+          ```
+
+      - title: Step 2. Collect Logs Using MAVProxy
+        description: |
+          Connect to the drone and download the logs using MAVProxy:
+          ```mavproxy.py --master=tcp:10.13.0.3:5760
+          ```
+          
+          List available logs:
+          ```mavproxy> log list
+          ```
+
+          Download a specific log by its index:
+          ```bash
+          mavproxy> log download <log_index>
+          ```
+          The logs will be saved in the `logs` directory within your aircraft directory.
+
+      - title: Step 3. Setup pymavlink
+        description: |
+          Ensure you have pymavlink installed:
+          ```sudo apt-get update
+          sudo apt-get install python3 python3-pip
+          pip3 install pymavlink scapy
+          ```
+
+      - title: Step 4. Collect Logs Using pymavlink Script
+        description: |
+          Create a Python script named `log-extract.py` to collect logs:
+          ```import sys
+          from pymavlink import mavutil
+
+          def list_logs(connection):
+              connection.mav.log_request_list_send(
+                  connection.target_system, 
+                  connection.target_component, 
+                  0, 0xffff
+              )
+
+              logs = []
+              while True:
+                  msg = connection.recv_match(type=['LOG_ENTRY'], blocking=True, timeout=5)
+                  if msg is None:
+                      break
+                  logs.append(msg)
+              
+              return logs
+
+          def download_log(connection, log_id, log_size, filename):
+              with open(filename, 'wb') as file:
+                  bytes_received = 0
+                  ofs = 0  # Offset for log request
+                  while bytes_received < log_size:
+                      connection.mav.log_request_data_send(
+                          connection.target_system,
+                          connection.target_component,
+                          log_id,
+                          ofs,
+                          90  # Number of bytes to request per message
+                      )
+                      while True:
+                          msg = connection.recv_match(type=['LOG_DATA'], blocking=True, timeout=5)
+                          if msg is None:
+                              break
+                          if msg.id != log_id or msg.ofs != ofs:
+                              continue
+                          data = bytes(msg.data)  # Convert list to bytes
+                          file.write(data)
+                          bytes_received += len(data)
+                          ofs += len(data)
+                          print(f"Received {bytes_received}/{log_size} bytes")
+                          break  # Move to the next offset
+
+          if __name__ == "__main__":
+              if len(sys.argv) != 3:
+                  print("Usage: python log-extract.py <connection_string> <log_id>")
+                  sys.exit(1)
+
+              connection_string = sys.argv[1]
+              log_id = int(sys.argv[2])
+
+              connection = mavutil.mavlink_connection(connection_string)
+              connection.wait_heartbeat()
+
+              logs = list_logs(connection)
+              for log in logs:
+                  print(f"Log ID: {log.id}, Size: {log.size}, Time: {log.time_utc}")
+
+              log_to_download = next((log for log in logs if log.id == log_id), None)
+              if log_to_download:
+                  download_log(connection, log_to_download.id, log_to_download.size, f"log_{log_id}.bin")
+                  print(f"Log {log_id} downloaded successfully.")
+              else:
+                  print(f"Log ID {log_id} not found.")
+                                                        
+          ```
+
+          Run the script to download logs:
+          ```python log-extract.py tcp:10.13.0.3:5760 1
+          ```
+
+      - title: Step 5. Convert BIN Logs to CSV Using pybinlog
+        description: |
+          Ensure you have pybinlog installed:
+          ```pip3 install pybinlog
+          ```
+
+          Use pybinlog to convert the BIN file to a CSV file:
+          ```bin2csv -o output_directory input_log.bin
+          ```
+
+          For example:
+          ```bin2csv -o logs_csv log_1.bin
+          ```
+
+          This will convert `log_1.bin` to CSV format and save it in the `logs_csv` directory.
+
+      - title: Step 6. Analyze the CSV Logs
+        description: |
+          Open the generated CSV files to view and analyze the flight log data using any spreadsheet software or data analysis tool.<br><br>
+          
+          Below is a table with a breakdown for the different type of logs you can find:
+
+          <table border="1">
+            <thead>
+              <tr>
+                <th>File Name</th>
+                <th>Significance</th>
+                <th>Type of Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>AHR2-log1.csv</td>
+                <td>Attitude and Heading Reference System</td>
+                <td>Attitude data including roll, pitch, yaw, and their rates</td>
+              </tr>
+              <tr>
+                <td>ARM-log1.csv</td>
+                <td>Arming Status</td>
+                <td>Information about the arming status of the drone</td>
+              </tr>
+              <tr>
+                <td>ATT-log1.csv</td>
+                <td>Attitude</td>
+                <td>Attitude data including roll, pitch, yaw, and their respective desired values</td>
+              </tr>
+              <tr>
+                <td>BARO-log1.csv</td>
+                <td>Barometer</td>
+                <td>Barometric pressure and altitude data</td>
+              </tr>
+              <tr>
+                <td>BAT-log1.csv</td>
+                <td>Battery</td>
+                <td>Battery voltage, current, and consumption</td>
+              </tr>
+              <tr>
+                <td>CTRL-log1.csv</td>
+                <td>Control</td>
+                <td>Control input and output data</td>
+              </tr>
+              <tr>
+                <td>CTUN-log1.csv</td>
+                <td>Control Tuning</td>
+                <td>Control loop tuning data</td>
+              </tr>
+              <tr>
+                <td>DSF-log1.csv</td>
+                <td>Data Storage Format</td>
+                <td>Format information for data storage</td>
+              </tr>
+              <tr>
+                <td>DU32-log1.csv</td>
+                <td>Debug</td>
+                <td>Debugging information and data</td>
+              </tr>
+              <tr>
+                <td>EV-log1.csv</td>
+                <td>Event</td>
+                <td>Events that occur during the flight</td>
+              </tr>
+              <tr>
+                <td>FILE-log1.csv</td>
+                <td>File Transfer</td>
+                <td>Data related to file transfers</td>
+              </tr>
+              <tr>
+                <td>FMT-log1.csv</td>
+                <td>Format</td>
+                <td>Format of the log data</td>
+              </tr>
+              <tr>
+                <td>FMTU-log1.csv</td>
+                <td>Format Update</td>
+                <td>Updates to the log data format</td>
+              </tr>
+              <tr>
+                <td>GPA-log1.csv</td>
+                <td>GPS Accuracy</td>
+                <td>Accuracy of the GPS data</td>
+              </tr>
+              <tr>
+                <td>GPS-log1.csv</td>
+                <td>GPS</td>
+                <td>GPS data including latitude, longitude, altitude, speed, and number of satellites</td>
+              </tr>
+              <tr>
+                <td>IMU0-log1.csv</td>
+                <td>IMU (Inertial Measurement Unit)</td>
+                <td>Accelerometer and gyroscope data from the first IMU</td>
+              </tr>
+              <tr>
+                <td>IMU1-log1.csv</td>
+                <td>IMU (Inertial Measurement Unit)</td>
+                <td>Accelerometer and gyroscope data from the second IMU</td>
+              </tr>
+              <tr>
+                <td>MAG0-log1.csv</td>
+                <td>Magnetometer</td>
+                <td>Magnetometer data from the first unit</td>
+              </tr>
+              <tr>
+                <td>MAG1-log1.csv</td>
+                <td>Magnetometer</td>
+                <td>Magnetometer data from the second unit</td>
+              </tr>
+              <tr>
+                <td>MAG2-log1.csv</td>
+                <td>Magnetometer</td>
+                <td>Magnetometer data from the third unit</td>
+              </tr>
+              <tr>
+                <td>MAV-log1.csv</td>
+                <td>MAVLink</td>
+                <td>MAVLink message data</td>
+              </tr>
+              <tr>
+                <td>MAVC-log1.csv</td>
+                <td>MAVLink Control</td>
+                <td>Control data for MAVLink messages</td>
+              </tr>
+              <tr>
+                <td>MODE-log1.csv</td>
+                <td>Mode</td>
+                <td>Flight mode changes</td>
+              </tr>
+              <tr>
+                <td>MOTB-log1.csv</td>
+                <td>Motor Balance</td>
+                <td>Data on motor balance and performance</td>
+              </tr>
+              <tr>
+                <td>MSG-log1.csv</td>
+                <td>Message</td>
+                <td>System messages and alerts</td>
+              </tr>
+              <tr>
+                <td>MULT-log1.csv</td>
+                <td>Multiplexer</td>
+                <td>Multiplexer settings and data</td>
+              </tr>
+              <tr>
+                <td>ORGN-log1.csv</td>
+                <td>Origin</td>
+                <td>Original settings and configurations</td>
+              </tr>
+              <tr>
+                <td>PARM-log1.csv</td>
+                <td>Parameters</td>
+                <td>Parameter settings of the drone</td>
+              </tr>
+              <tr>
+                <td>PL-log1.csv</td>
+                <td>Payload</td>
+                <td>Data related to payload operations</td>
+              </tr>
+              <tr>
+                <td>PM-log1.csv</td>
+                <td>Power Management</td>
+                <td>Power management and consumption data</td>
+              </tr>
+              <tr>
+                <td>POS-log1.csv</td>
+                <td>Position</td>
+                <td>Position data including latitude, longitude, altitude, and velocity</td>
+              </tr>
+              <tr>
+                <td>PSCD-log1.csv</td>
+                <td>Position Control</td>
+                <td>Position control data and commands</td>
+              </tr>
+              <tr>
+                <td>PSCE-log1.csv</td>
+                <td>Position Control Extended</td>
+                <td>Extended position control data</td>
+              </tr>
+              <tr>
+                <td>PSCN-log1.csv</td>
+                <td>Position Control Navigation</td>
+                <td>Navigation data for position control</td>
+              </tr>
+              <tr>
+                <td>RATE-log1.csv</td>
+                <td>Rate Control</td>
+                <td>Rate control data for roll, pitch, and yaw</td>
+              </tr>
+              <tr>
+                <td>RCIN-log1.csv</td>
+                <td>RC Input</td>
+                <td>Remote control input channels</td>
+              </tr>
+              <tr>
+                <td>RCO2-log1.csv</td>
+                <td>RC Output 2</td>
+                <td>Additional remote control output channels</td>
+              </tr>
+              <tr>
+                <td>RCOU-log1.csv</td>
+                <td>RC Output</td>
+                <td>Remote control output channels</td>
+              </tr>
+              <tr>
+                <td>RFND-log1.csv</td>
+                <td>Range Finder</td>
+                <td>Range finder data</td>
+              </tr>
+              <tr>
+                <td>SIM2-log1.csv</td>
+                <td>Simulation 2</td>
+                <td>Additional simulation data</td>
+              </tr>
+              <tr>
+                <td>SIM-log1.csv</td>
+                <td>Simulation</td>
+                <td>Simulation data</td>
+              </tr>
+              <tr>
+                <td>SRTL-log1.csv</td>
+                <td>Smart RTL</td>
+                <td>Data for Smart Return-To-Launch functionality</td>
+              </tr>
+              <tr>
+                <td>TERR-log1.csv</td>
+                <td>Terrain</td>
+                <td>Terrain data</td>
+              </tr>
+              <tr>
+                <td>UNIT-log1.csv</td>
+                <td>Unit</td>
+                <td>Data on various units and measurements</td>
+              </tr>
+              <tr>
+                <td>VER-log1.csv</td>
+                <td>Version</td>
+                <td>Firmware and hardware version information</td>
+              </tr>
+              <tr>
+                <td>VIBE-log1.csv</td>
+                <td>Vibration</td>
+                <td>Vibration levels on the drone</td>
+              </tr>
+              <tr>
+                <td>XKF1-log1.csv</td>
+                <td>Extended Kalman Filter 1</td>
+                <td>Data from the first EKF instance</td>
+              </tr>
+              <tr>
+                <td>XKF2-log1.csv</td>
+                <td>Extended Kalman Filter 2</td>
+                <td>Data from the second EKF instance</td>
+              </tr>
+              <tr>
+                <td>XKF3-log1.csv</td>
+                <td>Extended Kalman Filter 3</td>
+                <td>Data from the third EKF instance</td>
+              </tr>
+              <tr>
+                <td>XKF4-log1.csv</td>
+                <td>Extended Kalman Filter 4</td>
+                <td>Data from the fourth EKF instance</td>
+              </tr>
+              <tr>
+                <td>XKF5-log1.csv</td>
+                <td>Extended Kalman Filter 5</td>
+                <td>Data from the fifth EKF instance</td>
+              </tr>
+              <tr>
+                <td>XXK1-log1.csv</td>
+                <td>Custom EKF 1</td>
+                <td>Custom data from the first EKF instance</td>
+              </tr>
+              <tr>
+                <td>XXK2-log1.csv</td>
+                <td>Custom EKF 2</td>
+                <td>Custom data from the second EKF instance</td>
+              </tr>
+              <tr>
+                <td>XXKYO-log1.csv</td>
+                <td>Custom EKF YO</td>
+                <td>Custom data from the YO EKF instance</td>
+              </tr>
+              <tr>
+                <td>XXY1-log1.csv</td>
+                <td>Custom EKF Y1</td>
+                <td>Custom data from the first Y EKF instance</td>
+              </tr>
+            </tbody>
+          </table>
+
+

