@@ -40,9 +40,9 @@ RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pk
 RUN ln -s /usr/bin/python2.7 /usr/bin/python
 
 # Install ROS
-RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -
-RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros-latest.list'
-RUN apt update -y && apt install -y ros-noetic-ros-base ros-noetic-gazebo-ros-pkgs ros-noetic-image-transport
+# RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -
+# RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros-latest.list'
+# RUN apt update -y && apt install -y ros-noetic-ros-base ros-noetic-gazebo-ros-pkgs ros-noetic-image-transport
 
 # Install ArduPilot Gazebo Plugin
 WORKDIR /Simulator
@@ -90,7 +90,7 @@ RUN npm install
 RUN /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy -- -m local"
 
 # Install Damn Vulnerable Drone Sim Mgmt Web App
-RUN pip3 install flask docker flask-cors Flask-SQLAlchemy
+RUN pip3 install flask docker flask-cors Flask-SQLAlchemy pyyaml
 COPY simulator/mgmt /Simulator/mgmt
 
 RUN rm -rf /Simulator/mgmt/instance/stages.db
@@ -103,7 +103,6 @@ COPY simulator/damn-vulnerable-drone.launch /Simulator/damn-vulnerable-drone.lau
 
 CMD rm -rf /tmp/.X100-lock; \
     Xvfb :100 -screen 0 1600x1200x16 & \
-    bash -c "source /opt/ros/noetic/setup.bash && \
-             gzserver --verbose /Simulator/ardupilot_gazebo/worlds/damn-vulnerable-drone.world & \
+    bash -c "gzserver --verbose /Simulator/ardupilot_gazebo/worlds/damn-vulnerable-drone.world & \
              cd /Simulator/gzweb && sleep 15 && npm start > /dev/null 2>&1 & \
              cd /Simulator/mgmt && sleep 15 && python3 app.py"

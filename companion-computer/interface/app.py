@@ -15,7 +15,7 @@ from mavlink_connection import listen_to_mavlink, initialize_socketio
 import logging
 from logging.handlers import RotatingFileHandler
 import os
-import rospy
+# import rospy
 from flask_login import LoginManager
 from flask_login import current_user, login_user, logout_user, login_required
 from flask import request, redirect, url_for, flash, make_response
@@ -44,7 +44,7 @@ def create_app():
     app = Flask(__name__)
     app.secret_key = 'supersecretkey'
     login_manager.init_app(app)
-    rospy.init_node('camera_display_node', anonymous=True)
+    # rospy.init_node('camera_display_node', anonymous=True)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///telemetry.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
