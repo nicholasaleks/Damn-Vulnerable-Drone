@@ -145,6 +145,7 @@ The system requirements to run "Full-Deploy Mode" a Kali VM with the following m
   * 8-16 GB RAM
   * 2-4 Processor Cores
   * 100 GB Disk Storage
+  * 10-12 GB Swap
   * Docker
   * Docker Compose
 
