@@ -70,6 +70,10 @@ services:
   simulator:
     container_name: simulator
     privileged: true
+    ulimits:
+      nofile:
+        soft: 1024
+        hard: 524288
     build:
       context: .
       dockerfile: ./simulator/Dockerfile
