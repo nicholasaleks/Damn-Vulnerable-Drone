@@ -4,7 +4,7 @@ description: Disrupting the communication between the Ground Control Station (GC
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
-  - text: Network
+  - text: Denial of Service
   - text: Wifi Deauth Attack
 
 sections:

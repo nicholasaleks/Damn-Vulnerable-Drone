@@ -4,7 +4,7 @@ description: ARP spoofing the Ground Control Station (GCS) to intercept and cont
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
-  - text: Network
+  - text: Injection
   - text: Ground Control ARP Spoofing
 
 sections:

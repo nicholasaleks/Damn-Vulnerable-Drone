@@ -4,7 +4,7 @@ description: Manipulating MAVLink messages to alter the geofencing parameters of
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
-  - text: Denial-of-Service
+  - text: Denial of Service
   - text: Geofencing Attack
 
 sections:

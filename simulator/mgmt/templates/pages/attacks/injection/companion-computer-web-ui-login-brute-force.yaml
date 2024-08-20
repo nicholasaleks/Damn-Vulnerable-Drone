@@ -1,0 +1,53 @@
+title: Companion Computer Web UI Login Brute Force
+description: Exeucting password brute force attacks on the companion computer web UI.
+breadcrumb:
+  - text: Attack Scenarios
+    link: /attacks
+  - text: Injection
+  - text: Companion Computer Web UI Login Brute Force
+
+sections:
+  - title: Description
+    content: |
+      This scenario involves using Hydra, a popular brute-force tool, to crack the login credentials for the Companion Computer's 
+      Web UI located at <a href="http://localhost:3000">http://localhost:3000</a>. By following this guide, you will learn how to perform a password attack on a web-based 
+      interface and understand the principles of brute-forcing.
+  - title: Resources
+    content:
+      - text: Hydra
+        link: https://github.com/vanhauser-thc/thc-hydra
+
+  - title: Solution Guide
+    collapsible: true
+    steps:
+      - title: Step 1
+        description: | 
+          Install Hydra if it isn't already installed on your system. (Kali should have it installed by default)
+
+          ```sudo apt-get install hydra
+          ```
+      - title: Step 2
+        description: | 
+          Identify the login form on the Companion Computer's Web UI at <a href="http://localhost:3000">http://localhost:3000</a>. Use your browser's developer tools to inspect the form network action and find the username and password field names.
+
+
+      - title: Step 3
+        description: | 
+          Prepare your wordlists. You'll need a list of potential passwords. You can use pre-built wordlists or create your own. There is a list of common passwords available here: <a href="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/tree/master/simulator/mgmt/templates/pages/attacks/injection/passwords.txt">https://github.com/nicholasaleks/Damn-Vulnerable-Drone/tree/master/simulator/mgmt/templates/pages/attacks/injection/passwords.txt</a>
+
+      - title: Step 4
+        description: |
+          Run Hydra to perform the brute-force attack. We will assume the userame is `admin` and use our downloaded passwords.txt file to brute force the form field at http://localhost:3000/login.
+
+          ```hydra -l admin -P passwords.txt http-post-form "/login:username=^USER^&password=^PASS^:Invalid" -s 3000
+          ```
+
+      - title: Step 5
+        description: |
+          Review the results. Hydra will show you the correct username and password combination if it successfully cracks the login.
+
+          If successfully you should get the following output
+
+          ```[3000][http-post-form] host: localhost   login: admin   password: cyberdrone
+          ```
+      
