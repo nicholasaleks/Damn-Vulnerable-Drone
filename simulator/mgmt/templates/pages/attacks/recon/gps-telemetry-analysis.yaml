@@ -15,15 +15,13 @@ sections:
     content:
       - text: MAVLink Common Message Definitions
         link: https://mavlink.io/en/messages/common.html
-      - text: Google Docs Guide
-        link: https://docs.google.com/document/d/1nhkMXVP8JAzkTXGZeq02TNytRzK8eKLOwBiQUr6ntjg/edit
 
   - title: Solution
     collapsible: true
     steps:
       - title: Step 1
         description: |
-          Follow the initial setup steps provided in the [Google Docs Guide](https://docs.google.com/document/d/1nhkMXVP8JAzkTXGZeq02TNytRzK8eKLOwBiQUr6ntjg/edit) to configure your environment for capturing MAVLink traffic.
+          Follow the initial packet capture steps provided in the <a href="/attacks/recon/packet-sniffing">/attacks/recon/packet-sniffing</a> to configure your environment for capturing MAVLink traffic.
 
       - title: Step 2
         description: |
