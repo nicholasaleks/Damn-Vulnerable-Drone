@@ -156,9 +156,9 @@ sections:
       - title: Step 3. Run the Script
         description: |
           Execute the script with sudo and the target GCS IP and port:
-          ```sudo python gps-spoofing.py <ip:port>
+          ```sudo python gps-spoofing.py (GCS_IP:PORT)
           ```
-          Replace `<ip:port>` with the actual IP address and port of the QGroundControl App using `10.13.0.6:14550` or the GCS (MAVProxy) using `192.168.13.14:14550`/`10.13.0.4:14550`.
+          Replace `(GCS_IP:PORT)` with the actual IP address and port of the QGroundControl App using `10.13.0.6:14550` or the GCS (MAVProxy) using `192.168.13.14:14550`/`10.13.0.4:14550`
 
       - title: Step 4. Monitor the Effects
         description: |
