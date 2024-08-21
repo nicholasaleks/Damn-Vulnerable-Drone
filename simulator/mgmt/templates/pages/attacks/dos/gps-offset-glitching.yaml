@@ -4,7 +4,7 @@ description: Inducing a GPS glitch by skewing GPS position offsets to force the 
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
-  - text: Navigation Disruption
+  - text: Denial of Service
   - text: GPS Offset Attack
 
 sections:

