@@ -4,7 +4,7 @@ description: Spoofing the VFR HUD (Vertical Flight Reference Heads-Up Display) d
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
-  - text: Reconnaissance
+  - text: Protocol Tampering
   - text: VFR HUD Spoofing
 
 sections:

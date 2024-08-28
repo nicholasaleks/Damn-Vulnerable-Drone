@@ -4,7 +4,7 @@ description: Spoofing critical error messages to mislead the Ground Control Stat
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
-  - text: Reconnaissance
+  - text: Protocol Tampering
   - text: Critical Error Spoofing
 
 sections:

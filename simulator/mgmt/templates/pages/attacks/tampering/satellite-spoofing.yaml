@@ -4,7 +4,7 @@ description: Spoofing the number of satellites visible to the drone to mislead t
 breadcrumb:
   - text: Attack Scenarios
     link: /attacks
-  - text: Reconnaissance
+  - text: Protocol Tampering
   - text: Satellite Spoofing
 
 sections:
