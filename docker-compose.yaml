@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   qgc:
     privileged: true
@@ -13,7 +11,7 @@ services:
       # -----------DEFAULT VALUE DO NOT MODIFY-----------
       - DISPLAY=${DISPLAY}
       - QT_NO_MITSHM=1
-      - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR}
+      - XDG_RUNTIME_DIR=/tmp
       - HEADLESS=0
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix

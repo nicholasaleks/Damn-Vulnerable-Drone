@@ -71,7 +71,7 @@ describe('Sdf Parser tests', function() {
       var sdfLight, obj3D;
 
       sdfLight = '<?xml version="1.0" ?>'+
-      '<sdf version="1.5">'+
+      '<sdf version="1.6">'+
         '<light type="directional" name="sun">'+
           '<cast_shadows>true</cast_shadows>'+
           '<pose>0 0 10 0 0 0</pose>'+
