@@ -1,8 +1,6 @@
-
-ARG BASEIMAGE
-ARG BASETAG
-
-FROM ${BASEIMAGE}:${BASETAG} as stage_apt
+ARG BASEIMAGE=ubuntu
+ARG BASETAG=22.04
+FROM ${BASEIMAGE}:${BASETAG} AS stage_apt
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -27,50 +25,56 @@ RUN \
 RUN \
     add-apt-repository ppa:kisak/kisak-mesa -y
 
-
-
-FROM ${BASEIMAGE}:${BASETAG} as stage_final
+# ------------------------------------------------------------------------- #
+# FINAL STAGE
+# ------------------------------------------------------------------------- #
+FROM ${BASEIMAGE}:${BASETAG} AS stage_final
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# 1) Set up environment variables
 ENV \
     DEBIAN_FRONTEND=noninteractive \
     LANG=en_US.UTF-8 \
-    LC_ALL=en_US.UTF-8
+    LC_ALL=en_US.UTF-8 \
+    LANGUAGE=en_US:en
 
-RUN \
-    sed -i 's/archive.ubuntu.com/mirror.kakao.com/g' /etc/apt/sources.list
+# 2) Adjust apt sources
+RUN sed -i 's/archive.ubuntu.com/mirror.kakao.com/g' /etc/apt/sources.list
 
+# 3) Copy your aptDeps
 COPY ./qgc/aptDeps.txt /tmp/aptDeps.txt
 
-# UPGRADE THE BASIC ENVIRONMENT FIRST
+# 4) Upgrade environment, install locales, generate en_US.UTF-8
 RUN \
     --mount=type=cache,target=/var/cache/apt,from=stage_apt,source=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt,from=stage_apt,source=/var/lib/apt \
     --mount=type=cache,target=/etc/apt/sources.list.d,from=stage_apt,source=/etc/apt/sources.list.d \
-    apt-get upgrade -y
+    apt-get update && apt-get upgrade -y && \
+    apt-get install --no-install-recommends -y locales && \
+    locale-gen en_US.UTF-8
 
-# INSTALL ca-certificates TO AVOID CERTIFICATE ERROR FOR KISAK MESA DRIVERS
+# 5) Install ca-certificates 
 RUN \
     --mount=type=cache,target=/var/cache/apt,from=stage_apt,source=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt,from=stage_apt,source=/var/lib/apt \
     --mount=type=cache,target=/etc/apt/sources.list.d,from=stage_apt,source=/etc/apt/sources.list.d \
-    apt-get install --no-install-recommends -y \
-        ca-certificates
+    apt-get install --no-install-recommends -y ca-certificates
 
-# INSTALL PACKAGES AVAILABLE BY APT REPOSITORY
+# 6) Install everything in aptDeps.txt
 RUN \
     --mount=type=cache,target=/var/cache/apt,from=stage_apt,source=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt,from=stage_apt,source=/var/lib/apt \
     --mount=type=cache,target=/etc/apt/sources.list.d,from=stage_apt,source=/etc/apt/sources.list.d \
-    apt-get install --no-install-recommends -y $(cat /tmp/aptDeps.txt) \
-    && rm -rf /tmp/*
+    apt-get install --no-install-recommends -y $(cat /tmp/aptDeps.txt) && \
+    rm -rf /tmp/*
 
-RUN \
-    groupadd user \
-    && useradd -ms /bin/bash user -g user \
-    && usermod -a -G dialout user
+# 7) Create user and groups
+RUN groupadd user \
+ && useradd -ms /bin/bash user -g user \
+ && usermod -a -G dialout user
 
+# 8) Download QGroundControl
 RUN \
     wget -P /home/user https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl.AppImage \
     && chmod +x /home/user/QGroundControl.AppImage \
@@ -79,16 +83,13 @@ RUN \
 USER user
 WORKDIR /home/user
 
-# ENTRYPOINT SCRIPT
-# SET PERMISSION SO THAT USER CAN EDIT INSIDE THE CONTAINER
+# 9) Entry-point scripts
 COPY --chown=user:user ./qgc/entrypoint.sh /usr/local/bin/entrypoint.sh
-
-# CREATE SYMBOLIC LINK FOR QUICK ACCESS
 RUN \
     mkdir /home/user/scripts \
     && ln -s /usr/local/bin/entrypoint.sh /home/user/scripts/entrypoint.sh
 
+# 10) QGC config
 COPY ./qgc/config /home/user/.config/QGroundControl.org
 
-#ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 CMD tail -f /dev/null
