@@ -1,6 +1,6 @@
 # Damn Vulnerable Drone
 
-The Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator based on the popular ArduPilot/MAVLink architecture, providing a realistic environment for hands-on drone hacking.
+The Damn Vulnerable Drone is an intentionally vulnerable drone hacking simulator, supporting both ArduPilot & PX4 architectures, providing a realistic environment for hands-on drone hacking.
 
 <p align="center">
   <img src="https://github.com/nicholasaleks/Damn-Vulnerable-Drone/blob/master/simulator/mgmt/static/images/Damn-Vulnerable-Drone-Banner.png?raw=true" alt="Damn Vulnerable Drone Logo"/>
