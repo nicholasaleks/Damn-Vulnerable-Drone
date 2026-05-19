@@ -325,7 +325,7 @@ if [[ "$wifi_simulation" == "y" ]]; then
       pkill -x wpa_supplicant 2>/dev/null || true;
       wpa_supplicant -B -i '$gcs_interface' -c /etc/wpa_supplicant/wpa_supplicant.conf -D nl80211 || true;
       ip addr replace 192.168.13.14/24 dev '$gcs_interface';
-      ip route replace default via 192.168.13.1 dev '$gcs_interface';
+      ip route replace 192.168.13.0/24 dev '$gcs_interface';
     " || true
 
     echo -e "${CYAN}"
