@@ -278,6 +278,7 @@ if [[ "$wifi_simulation" == "y" ]]; then
     echo -e "${CYAN}[+] Moving interfaces to Docker containers...${NC}"
     companion_computer_interface="$(increment_interface_number "$first_virtual_card_name")"
     gcs_interface="$(increment_interface_number "$companion_computer_interface")"
+    kali_interface="$(increment_interface_number "$gcs_interface")"
 
     # Get PIDs using container IDs
     CC_PID="$(docker inspect --format '{{ .State.Pid }}' "$CC_CID")"
@@ -329,6 +330,9 @@ if [[ "$wifi_simulation" == "y" ]]; then
     echo -e "${CYAN}[+] Build Complete."
     echo -e "${CYAN}[+] Version: ${version}"
     echo -e "${CYAN}[+] Mode: ${sim_mode^^}"
+    echo -e "${CYAN}------------------------------------------------------"
+    echo -e "${CYAN}[+] - Virtual interface ${first_virtual_card_name}mon put into monitoring mode."
+    echo -e "${CYAN}[+] - Virtual interface ${kali_interface} is available for regular wifi networking."
     echo -e "${CYAN}------------------------------------------------------"
     echo -e "${CYAN}[+] Damn Vulnerable Drone Lab Environment is running..."
     echo -e "${CYAN}[+] Log file: dvd.log"
