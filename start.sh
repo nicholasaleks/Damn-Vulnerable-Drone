@@ -20,6 +20,10 @@ print_banner() {
   [[ -f "$SCRIPT_DIR/banner.txt" ]] && cat "$SCRIPT_DIR/banner.txt"
 }
 
+print_text_banner() {
+  [[ -f "$SCRIPT_DIR/banner.txt" ]] && tail -n 5 "$SCRIPT_DIR/banner.txt"
+}
+
 show_help() {
   print_banner
   cat <<EOF
@@ -324,6 +328,9 @@ if [[ "$wifi_simulation" == "y" ]]; then
       ip route replace default via 192.168.13.1 dev '$gcs_interface';
     " || true
 
+    echo -e "${CYAN}"
+    print_text_banner
+    echo -e "${NC}"
     echo -e "${CYAN}------------------------------------------------------"
     echo -e "${CYAN}[+] Build Complete."
     echo -e "${CYAN}[+] Version: ${version}"
@@ -349,6 +356,9 @@ elif [[ "$wifi_simulation" == "n" ]]; then
     echo -e "${CYAN}[+] Starting Docker Compose (mode: ${sim_mode})...${NC}"
     compose up -d --build
 
+    echo -e "${CYAN}"
+    print_text_banner
+    echo -e "${NC}"
     echo -e "${CYAN}------------------------------------------------------"
     echo -e "${CYAN}[+] Build Complete."
     echo -e "${CYAN}[+] Version: ${version}"
