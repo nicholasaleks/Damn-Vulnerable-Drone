@@ -318,10 +318,11 @@ if [[ "$wifi_simulation" == "y" ]]; then
 
     echo -e "${CYAN}[+] Setting up Ground Control Station Wi-Fi client...${NC}"
     docker exec "$GCS_CID" sh -c "
-      wpa_supplicant -B -i '$gcs_interface' -c /etc/wpa_supplicant/wpa_supplicant.conf -D nl80211;
-      ip addr add 192.168.13.14/24 dev '$gcs_interface';
-      ip route add default via 192.168.13.1 dev '$gcs_interface';
-    "
+      pkill -x wpa_supplicant 2>/dev/null || true;
+      wpa_supplicant -B -i '$gcs_interface' -c /etc/wpa_supplicant/wpa_supplicant.conf -D nl80211 || true;
+      ip addr replace 192.168.13.14/24 dev '$gcs_interface';
+      ip route replace default via 192.168.13.1 dev '$gcs_interface';
+    " || true
 
     echo -e "${CYAN}------------------------------------------------------"
     echo -e "${CYAN}[+] Build Complete."
