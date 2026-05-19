@@ -242,9 +242,6 @@ if [[ "$wifi_simulation" == "y" ]]; then
     GCS_CID="$(compose ps -q "$GCS_SVC" || true)"
     [[ -n "$CC_CID" && -n "$GCS_CID" ]] || { echo "Containers not up yet."; }
 
-    echo -e "${CYAN}[+] Fetching Docker Compose logs...${NC}"
-    compose logs -f "$SIM_SVC" "$CC_SVC" "$GCS_SVC" &
-
     # Readiness
     MAX_RETRIES=100; RETRY_INTERVAL=10; RETRY_COUNT=0
     while [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; do
@@ -338,6 +335,9 @@ if [[ "$wifi_simulation" == "y" ]]; then
     echo -e "${CYAN}[+] Log file: dvd.log"
     echo -e "${CYAN}[+] Simulator: http://localhost:8000"
     echo -e "${CYAN}------------------------------------------------------${NC}"
+
+    echo -e "${CYAN}[+] Fetching Docker Compose logs...${NC}"
+    compose logs -f "$SIM_SVC" "$CC_SVC" "$GCS_SVC"
   } 2>&1 | tee -a "$LOG_FILE"
 
 elif [[ "$wifi_simulation" == "n" ]]; then
@@ -348,8 +348,6 @@ elif [[ "$wifi_simulation" == "n" ]]; then
     echo -e "${CYAN}[+] Starting Docker Compose (mode: ${sim_mode})...${NC}"
     compose up -d --build
 
-    compose logs -f "$SIM_SVC" "$CC_SVC" "$GCS_SVC" &
-
     echo -e "${CYAN}------------------------------------------------------"
     echo -e "${CYAN}[+] Build Complete."
     echo -e "${CYAN}[+] Version: ${version}"
@@ -358,7 +356,10 @@ elif [[ "$wifi_simulation" == "n" ]]; then
     echo -e "${CYAN}[+] Damn Vulnerable Drone Lab Environment is running..."
     echo -e "${CYAN}[+] Log file: dvd.log"
     echo -e "${CYAN}[+] Simulator: http://localhost:8000"
-    echo -e "${CYAN}------------------------------------------------------"
+    echo -e "${CYAN}------------------------------------------------------${NC}"
+
+    echo -e "${CYAN}[+] Fetching Docker Compose logs...${NC}"
+    compose logs -f "$SIM_SVC" "$CC_SVC" "$GCS_SVC"
   } 2>&1 | tee -a "$LOG_FILE"
 else
   echo "Invalid input for Wi-Fi selection."
