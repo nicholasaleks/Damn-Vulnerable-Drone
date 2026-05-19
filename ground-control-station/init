@@ -1,6 +1,6 @@
 #!/usr/bin/expect
 
-spawn mavproxy.py --master=udp:0.0.0.0:14550
+spawn mavproxy.py --master=udp:0.0.0.0:14550 --source-system=254
 # Interact with MAVProxy as needed
 set timeout -1
 expect "xxxxx"
