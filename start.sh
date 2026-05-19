@@ -20,6 +20,10 @@ print_banner() {
   [[ -f "$SCRIPT_DIR/banner.txt" ]] && cat "$SCRIPT_DIR/banner.txt"
 }
 
+print_text_banner() {
+  [[ -f "$SCRIPT_DIR/banner.txt" ]] && tail -n 5 "$SCRIPT_DIR/banner.txt"
+}
+
 show_help() {
   print_banner
   cat <<EOF
@@ -230,6 +234,29 @@ if [[ "$wifi_simulation" == "y" ]]; then
   {
     echo -e "${CYAN}[+] Starting Docker Lab Environment - $(date)${NC}"
 
+    # Build/pull Docker images BEFORE touching the host wireless stack.
+    # airmon-ng below kills NetworkManager/wpa_supplicant/dhclient, which
+    # breaks DNS and any in-flight image pulls.
+    stop_all_stacks
+    echo -e "${CYAN}[+] Starting Docker Compose (mode: ${sim_mode})...${NC}"
+    compose up -d --build
+
+    # Container IDs via compose (robust even without container_name)
+    CC_CID="$(compose ps -q "$CC_SVC" || true)"
+    GCS_CID="$(compose ps -q "$GCS_SVC" || true)"
+    [[ -n "$CC_CID" && -n "$GCS_CID" ]] || { echo "Containers not up yet."; }
+
+    # Readiness
+    MAX_RETRIES=100; RETRY_INTERVAL=10; RETRY_COUNT=0
+    while [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; do
+      echo -e "${CYAN}[+] Checking containers ready (attempt $((RETRY_COUNT+1))/$MAX_RETRIES)...${NC}"
+      if compose ps | grep -q "$CC_SVC" && compose ps | grep -q "$GCS_SVC"; then
+        echo -e "${CYAN}[+] Docker containers are ready.${NC}"; break
+      fi
+      ((RETRY_COUNT++)); sleep "$RETRY_INTERVAL"
+    done
+    [[ $RETRY_COUNT -eq $MAX_RETRIES ]] && { echo -e "${RED}Containers not ready in time.${NC}"; exit 1; }
+
     echo -e "${CYAN}[+] Loading kernel modules...${NC}"
     modprobe mac80211_hwsim radios=4
 
@@ -246,36 +273,13 @@ if [[ "$wifi_simulation" == "y" ]]; then
       echo "Killing process $pid"; kill "$pid" || true
     done < <(echo "$output" | grep -oP '^\s*\K[0-9]+(?=\s+\S)')
 
-    # Start stack
-    stop_all_stacks
-    echo -e "${CYAN}[+] Starting Docker Compose (mode: ${sim_mode})...${NC}"
-    compose up -d --build
-
-    # Container IDs via compose (robust even without container_name)
-    CC_CID="$(compose ps -q "$CC_SVC" || true)"
-    GCS_CID="$(compose ps -q "$GCS_SVC" || true)"
-    [[ -n "$CC_CID" && -n "$GCS_CID" ]] || { echo "Containers not up yet."; }
-
-    echo -e "${CYAN}[+] Fetching Docker Compose logs...${NC}"
-    compose logs -f "$SIM_SVC" "$CC_SVC" "$GCS_SVC" &
-
-    # Readiness
-    MAX_RETRIES=100; RETRY_INTERVAL=10; RETRY_COUNT=0
-    while [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; do
-      echo -e "${CYAN}[+] Checking containers ready (attempt $((RETRY_COUNT+1))/$MAX_RETRIES)...${NC}"
-      if compose ps | grep -q "$CC_SVC" && compose ps | grep -q "$GCS_SVC"; then
-        echo -e "${CYAN}[+] Docker containers are ready.${NC}"; break
-      fi
-      ((RETRY_COUNT++)); sleep "$RETRY_INTERVAL"
-    done
-    [[ $RETRY_COUNT -eq $MAX_RETRIES ]] && { echo -e "${RED}Containers not ready in time.${NC}"; exit 1; }
-
     DOCKER_BRIDGE_IP="$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+' || true)"
     echo -e "${CYAN}[+] Docker bridge IP: ${DOCKER_BRIDGE_IP:-unknown}${NC}"
 
     echo -e "${CYAN}[+] Moving interfaces to Docker containers...${NC}"
     companion_computer_interface="$(increment_interface_number "$first_virtual_card_name")"
     gcs_interface="$(increment_interface_number "$companion_computer_interface")"
+    kali_interface="$(increment_interface_number "$gcs_interface")"
 
     # Get PIDs using container IDs
     CC_PID="$(docker inspect --format '{{ .State.Pid }}' "$CC_CID")"
@@ -318,20 +322,30 @@ if [[ "$wifi_simulation" == "y" ]]; then
 
     echo -e "${CYAN}[+] Setting up Ground Control Station Wi-Fi client...${NC}"
     docker exec "$GCS_CID" sh -c "
-      wpa_supplicant -B -i '$gcs_interface' -c /etc/wpa_supplicant/wpa_supplicant.conf -D nl80211;
-      ip addr add 192.168.13.14/24 dev '$gcs_interface';
-      ip route add default via 192.168.13.1 dev '$gcs_interface';
-    "
+      pkill -x wpa_supplicant 2>/dev/null || true;
+      wpa_supplicant -B -i '$gcs_interface' -c /etc/wpa_supplicant/wpa_supplicant.conf -D nl80211 || true;
+      ip addr replace 192.168.13.14/24 dev '$gcs_interface';
+      ip route replace 192.168.13.0/24 dev '$gcs_interface';
+    " || true
 
+    echo -e "${CYAN}"
+    print_text_banner
+    echo -e "${NC}"
     echo -e "${CYAN}------------------------------------------------------"
     echo -e "${CYAN}[+] Build Complete."
     echo -e "${CYAN}[+] Version: ${version}"
     echo -e "${CYAN}[+] Mode: ${sim_mode^^}"
     echo -e "${CYAN}------------------------------------------------------"
+    echo -e "${CYAN}[+] - Virtual interface ${first_virtual_card_name}mon put into monitoring mode."
+    echo -e "${CYAN}[+] - Virtual interface ${kali_interface} is available for regular wifi networking."
+    echo -e "${CYAN}------------------------------------------------------"
     echo -e "${CYAN}[+] Damn Vulnerable Drone Lab Environment is running..."
     echo -e "${CYAN}[+] Log file: dvd.log"
     echo -e "${CYAN}[+] Simulator: http://localhost:8000"
     echo -e "${CYAN}------------------------------------------------------${NC}"
+
+    echo -e "${CYAN}[+] Fetching Docker Compose logs...${NC}"
+    compose logs -f "$SIM_SVC" "$CC_SVC" "$GCS_SVC"
   } 2>&1 | tee -a "$LOG_FILE"
 
 elif [[ "$wifi_simulation" == "n" ]]; then
@@ -342,8 +356,9 @@ elif [[ "$wifi_simulation" == "n" ]]; then
     echo -e "${CYAN}[+] Starting Docker Compose (mode: ${sim_mode})...${NC}"
     compose up -d --build
 
-    compose logs -f "$SIM_SVC" "$CC_SVC" "$GCS_SVC" &
-
+    echo -e "${CYAN}"
+    print_text_banner
+    echo -e "${NC}"
     echo -e "${CYAN}------------------------------------------------------"
     echo -e "${CYAN}[+] Build Complete."
     echo -e "${CYAN}[+] Version: ${version}"
@@ -352,7 +367,10 @@ elif [[ "$wifi_simulation" == "n" ]]; then
     echo -e "${CYAN}[+] Damn Vulnerable Drone Lab Environment is running..."
     echo -e "${CYAN}[+] Log file: dvd.log"
     echo -e "${CYAN}[+] Simulator: http://localhost:8000"
-    echo -e "${CYAN}------------------------------------------------------"
+    echo -e "${CYAN}------------------------------------------------------${NC}"
+
+    echo -e "${CYAN}[+] Fetching Docker Compose logs...${NC}"
+    compose logs -f "$SIM_SVC" "$CC_SVC" "$GCS_SVC"
   } 2>&1 | tee -a "$LOG_FILE"
 else
   echo "Invalid input for Wi-Fi selection."
