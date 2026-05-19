@@ -230,23 +230,9 @@ if [[ "$wifi_simulation" == "y" ]]; then
   {
     echo -e "${CYAN}[+] Starting Docker Lab Environment - $(date)${NC}"
 
-    echo -e "${CYAN}[+] Loading kernel modules...${NC}"
-    modprobe mac80211_hwsim radios=4
-
-    first_virtual_card_name="$(first_virtual_card || true)"
-    echo "First virtual card: ${first_virtual_card_name:-<none>}"
-    if [[ -z "$first_virtual_card_name" ]]; then
-      echo "Error: No virtual card found. Is 'mac80211_hwsim' available?"
-      exit 1
-    fi
-
-    # Put first card in monitor mode & kill interfering PIDs
-    output="$(airmon-ng start "$first_virtual_card_name" 2>&1 || true)"
-    while read -r pid; do
-      echo "Killing process $pid"; kill "$pid" || true
-    done < <(echo "$output" | grep -oP '^\s*\K[0-9]+(?=\s+\S)')
-
-    # Start stack
+    # Build/pull Docker images BEFORE touching the host wireless stack.
+    # airmon-ng below kills NetworkManager/wpa_supplicant/dhclient, which
+    # breaks DNS and any in-flight image pulls.
     stop_all_stacks
     echo -e "${CYAN}[+] Starting Docker Compose (mode: ${sim_mode})...${NC}"
     compose up -d --build
@@ -269,6 +255,22 @@ if [[ "$wifi_simulation" == "y" ]]; then
       ((RETRY_COUNT++)); sleep "$RETRY_INTERVAL"
     done
     [[ $RETRY_COUNT -eq $MAX_RETRIES ]] && { echo -e "${RED}Containers not ready in time.${NC}"; exit 1; }
+
+    echo -e "${CYAN}[+] Loading kernel modules...${NC}"
+    modprobe mac80211_hwsim radios=4
+
+    first_virtual_card_name="$(first_virtual_card || true)"
+    echo "First virtual card: ${first_virtual_card_name:-<none>}"
+    if [[ -z "$first_virtual_card_name" ]]; then
+      echo "Error: No virtual card found. Is 'mac80211_hwsim' available?"
+      exit 1
+    fi
+
+    # Put first card in monitor mode & kill interfering PIDs
+    output="$(airmon-ng start "$first_virtual_card_name" 2>&1 || true)"
+    while read -r pid; do
+      echo "Killing process $pid"; kill "$pid" || true
+    done < <(echo "$output" | grep -oP '^\s*\K[0-9]+(?=\s+\S)')
 
     DOCKER_BRIDGE_IP="$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+' || true)"
     echo -e "${CYAN}[+] Docker bridge IP: ${DOCKER_BRIDGE_IP:-unknown}${NC}"
