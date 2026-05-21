@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Cyclone DDS configuration for the Damn Vulnerable Drone lab.
+
+  We deliberately disable multicast discovery because Docker bridge networks
+  do not reliably forward IGMP/multicast across containers. Instead, we
+  enumerate the static IPs of every container that runs a ROS 2 node as
+  explicit unicast peers.
+
+  Static IPs (kept identical to the pre-migration master branch):
+    10.13.0.3  companion-computer
+    10.13.0.5  simulator
+
+  The flight-controller (10.13.0.2) and ground-control-station (10.13.0.4)
+  do not run ROS 2 nodes (they speak MAVLink), so they are not listed here.
+-->
+<CycloneDDS xmlns="https://cdds.io/config"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="https://cdds.io/config
+                                https://raw.githubusercontent.com/eclipse-cyclonedds/cyclonedds/master/etc/cyclonedds.xsd">
+  <Domain id="any">
+    <General>
+      <Interfaces>
+        <NetworkInterface autodetermine="true" priority="default" multicast="default"/>
+      </Interfaces>
+      <AllowMulticast>false</AllowMulticast>
+    </General>
+    <Discovery>
+      <Peers>
+        <Peer address="10.13.0.3"/>
+        <Peer address="10.13.0.5"/>
+      </Peers>
+      <ParticipantIndex>auto</ParticipantIndex>
+    </Discovery>
+  </Domain>
+</CycloneDDS>
