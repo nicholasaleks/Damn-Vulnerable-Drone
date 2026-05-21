@@ -65,6 +65,11 @@ services:
   simulator:
     image: n1ckaleks/damn-vulnerable-drone-simulator:latest
     container_name: simulator
+    # Pinned to linux/amd64 because Gazebo Classic 11 has no apt-
+    # accessible arm64 build for Jammy (OSRF dropped arm64 around EOL;
+    # Ubuntu universe is amd64-only). On Apple Silicon hosts this runs
+    # under Docker Desktop's Rosetta 2 amd64 emulation.
+    platform: linux/amd64
     privileged: true
     ulimits:
       nofile:
@@ -73,6 +78,8 @@ services:
     build:
       context: .
       dockerfile: ./simulator/Dockerfile
+      platforms:
+        - linux/amd64
     ports:
       - "8080:8080" # gzweb
       - "8000:8000" # simulator mgmt

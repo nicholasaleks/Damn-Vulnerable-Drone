@@ -26,25 +26,27 @@ RUN apt update -y && apt install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # ---------------------------------------------------------------------------
-# Gazebo Classic 11 from Ubuntu universe (multi-arch).
+# Gazebo Classic 11 from OSRF (Jammy / amd64).
 #
-# We deliberately do NOT use the OSRF apt source
-# (packages.osrfoundation.org) here. OSRF stopped publishing arm64 builds
-# of Gazebo Classic 11 for Jammy, so a Docker build on an Apple Silicon
-# host (default platform linux/arm64) fails with
-#     "Package 'gazebo11' has no installation candidate".
-# Ubuntu's own universe repo ships gazebo 11.10.2 for both amd64 and
-# arm64 on Jammy, and this is the same gazebo that ros-humble-gazebo-
-# ros-pkgs is built against — so using it is the canonical install path
-# for ROS 2 Humble + Gazebo Classic on Jammy regardless of architecture.
+# IMPORTANT: this container is pinned to linux/amd64 in docker-compose
+# (see docker-compose.yaml `simulator.platform`). There is no apt-
+# accessible Gazebo Classic 11 build for arm64/Jammy from any source:
+# OSRF stopped publishing arm64 packages around Gazebo Classic 11 EOL,
+# Ubuntu's own universe build is amd64-only on Jammy, and Noble has
+# dropped Classic entirely in favour of Gazebo Sim. On Apple Silicon
+# hosts the container runs under Docker Desktop's Rosetta 2 amd64
+# emulation, which is fast enough for the simulator workload.
 #
-# Package names: on Jammy, `gazebo` IS gazebo11 (the binary package),
-# `libgazebo-dev` is a transitional alias for `libgazebo11-dev`. We
-# install both names so the GAZEBO_PLUGIN_PATH below (which references
-# the .../gazebo-11/plugins dir) keeps working unchanged.
+# We use OSRF rather than Ubuntu universe so that the gazebo version
+# (11.10.x via OSRF vs 11.10.2 via Ubuntu) matches the version
+# ros-humble-gazebo-ros-pkgs targets in OSRF's reference packaging.
 # ---------------------------------------------------------------------------
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        gazebo libgazebo-dev libgazebo11-dev \
+RUN wget https://packages.osrfoundation.org/gazebo.gpg \
+        -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" \
+        | tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null && \
+    apt update -y && apt install -y --no-install-recommends \
+        gazebo11 libgazebo11-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # ---------------------------------------------------------------------------
