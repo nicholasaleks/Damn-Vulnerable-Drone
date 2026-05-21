@@ -1,20 +1,6 @@
 <?xml version="1.0" ?>
 <sdf version="1.6">
   <world name="default">
-    <!--
-      ROS 2 world-level joint controller (NEW on ros2-migration). Listens
-      on /gimbal/set_joint_trajectory for trajectory_msgs/JointTrajectory
-      messages and sets the named joints instantaneously. Used by the
-      companion-computer's gimbal bridge to move the iris_demo gimbal in
-      response to web-UI direction-button clicks and MAVLink mount commands.
-    -->
-    <plugin name="gimbal_joint_controller" filename="libgazebo_ros_joint_pose_trajectory.so">
-      <ros>
-        <namespace>/gimbal</namespace>
-      </ros>
-      <update_rate>50</update_rate>
-    </plugin>
-
     <gui>
       <camera name="user_camera">
         <pose>-5 0 1 0 0.2 0</pose>

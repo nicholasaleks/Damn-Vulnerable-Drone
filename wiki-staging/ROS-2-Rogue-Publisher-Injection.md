@@ -154,7 +154,7 @@ The same technique applies, unchanged, to:
 
 ## Bonus target — `/gimbal/cmd` (steer the camera by injection)
 
-The `ros2-migration` branch wires the companion-computer's web-UI gimbal direction buttons through a ROS 2 topic before they reach Gazebo. Each click POSTs to `/camera/gimbal/<direction>` on the companion's Flask app, which publishes a `geometry_msgs/msg/Vector3` to `/gimbal/cmd` (x = tilt delta in degrees, y = pan delta in degrees). The on-board bridge node subscribes to that topic and translates it into a Gazebo `JointTrajectory` (which actually moves the gimbal joints) plus a `MAV_CMD_DO_MOUNT_CONTROL` MAVLink frame (which goes on the wire for ArduPilot).
+The `ros2-migration` branch wires the companion-computer's web-UI gimbal direction buttons through a ROS 2 topic before they reach the flight controller. Each click POSTs to `/camera/gimbal/<direction>` on the companion's Flask app, which publishes a `geometry_msgs/msg/Vector3` to `/gimbal/cmd` (x = tilt delta in degrees, y = pan delta in degrees). The on-board bridge node subscribes to that topic, accumulates the targets, and sends a `MAV_CMD_DO_MOUNT_CONTROL` MAVLink frame to ArduPilot. ArduPilot's mount controller (`MNT1_TYPE=1`, `MAVLink_Targeting` mode) processes the command, emits servo PWM on `SERVO9`/`SERVO10` (functions `Mount1Yaw` / `Mount1Pitch`), and `libArduPilotPlugin` reads those PWM values and runs a PID against the Gazebo pan/tilt joints.
 
 From the same attacker container set up above, you can publish directly to `/gimbal/cmd` and steer the camera — bypassing the web UI entirely, and without ever authenticating to the companion's `/login`:
 
@@ -165,7 +165,8 @@ ros2 topic pub --once /gimbal/cmd geometry_msgs/msg/Vector3 \
 
 That single message tilts the gimbal 45° down and pans 30° right. While a legitimate operator watches the RTSP feed, an attacker can sweep the camera at will.
 
-Two things make this pedagogically interesting:
+Three things make this pedagogically interesting:
 
 - The Flask gimbal route is gated behind `/login` (it uses `@login_required`). The ROS topic is not — there is no authentication on the data plane. The login control was effectively decorative.
 - Defenders can't tell the difference between web-UI clicks and rogue-publisher injection because the bridge subscriber sees the same `Vector3` either way.
+- This attack rides the **real ArduPilot mount path**. Sniffing the MAVLink router on the companion (`10.13.0.3:14550`) shows the rogue `MAV_CMD_DO_MOUNT_CONTROL` frames going to the flight controller, indistinguishable from frames a legitimate GCS would send. If the defender drops `/gimbal/cmd`, the attacker can still send mount commands directly over MAVLink — see the MAVLink Injection Attack scenario for that variant.

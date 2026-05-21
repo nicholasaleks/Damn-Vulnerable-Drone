@@ -8,43 +8,46 @@ represents a delta in degrees:
 
 On each message the bridge:
   1. Accumulates the delta into running pan / tilt targets, clamped to
-     the joint limits declared in the gimbal SDF (pan +/-90 deg, tilt
-     -5.7 .. 180 deg).
-  2. Publishes a trajectory_msgs/msg/JointTrajectory to
-     /gimbal/set_joint_trajectory. The libgazebo_ros_joint_pose_trajectory
-     world plugin (declared in damn-vulnerable-drone.world) listens on
-     that topic and instantly sets the named joints. This is what
-     actually moves the gimbal visually.
-  3. Sends a MAV_CMD_DO_MOUNT_CONTROL MAVLink command on the shared
-     pymavlink connection. ArduPilot's mount type isn't configured for
-     this gimbal (flight-controller is intentionally untouched per the
-     migration constraints), so ArduPilot does not act on the command —
-     but the frame is on the wire, visible to packet sniffers, and
-     injectable by attackers, which is exactly the surface the lab wants
-     to teach.
+     ArduPilot's mount limits (MNT1_PITCH_MIN/MAX, MNT1_YAW_MIN/MAX in
+     drone.parm: +/-90 deg).
+  2. Sends a MAV_CMD_DO_MOUNT_CONTROL MAVLink command on the shared
+     pymavlink connection.
+
+That single MAVLink command is the canonical control path on this branch:
+ArduPilot's mount controller (MNT1_TYPE=1, MAVLink_Targeting mode)
+processes it, ArduPilot computes servo PWM on SERVO9 (Mount1Yaw) and
+SERVO10 (Mount1Pitch), libArduPilotPlugin reads those PWM values from
+the FDM link, and runs a per-joint PID on gimbal_small_2d's pan_joint
+and tilt_joint. The gimbal moves end-to-end through the real ArduPilot
+servo path.
+
+This is also what makes /gimbal/cmd a meaningful attack surface in the
+lab: any participant on ROS_DOMAIN_ID=42 can publish to it and the
+companion will dutifully translate to MAV_CMD_DO_MOUNT_CONTROL —
+bypassing the Flask @login_required gate on /camera/gimbal/<direction>.
 
 The bridge runs on a daemon thread inside the Flask app process so it
-can share the existing mav_connection without fighting for the UDP
-socket on :14540.
+can share the existing pymavlink connection without fighting for the
+UDP socket on :14540.
 """
 import threading
 import math
-from typing import Callable, Optional
+from typing import Callable
 
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Vector3
-from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
-from builtin_interfaces.msg import Duration
 
 from pymavlink import mavutil
 
 
-# Joint limits in radians, mirroring gimbal_small_2d/model.sdf.
-PAN_MIN_RAD = -math.pi / 2.0
-PAN_MAX_RAD = math.pi / 2.0
-TILT_MIN_RAD = -0.1
-TILT_MAX_RAD = math.pi
+# Mount limits, mirroring MNT1_PITCH_MIN/MAX and MNT1_YAW_MIN/MAX in
+# flight-controller/drone.parm. Bridge clamps locally so we never send a
+# target ArduPilot would silently truncate.
+PAN_MIN_DEG = -90.0
+PAN_MAX_DEG = 90.0
+TILT_MIN_DEG = -90.0
+TILT_MAX_DEG = 90.0
 
 
 def _clamp(value: float, lo: float, hi: float) -> float:
@@ -54,58 +57,37 @@ def _clamp(value: float, lo: float, hi: float) -> float:
 class GimbalBridge(Node):
     def __init__(self, get_mav_connection: Callable[[], object]):
         super().__init__('gimbal_bridge')
-        # We resolve the MAVLink connection lazily on every command because
-        # the connection is established by listen_to_mavlink() in a separate
-        # thread and may not exist yet at the moment the bridge is started.
+        # Lazy connection: resolved on every command because the MAVLink
+        # listener thread may not have completed its first handshake yet
+        # when the bridge starts.
         self._get_mav = get_mav_connection
-        self._pan_rad = 0.0
-        self._tilt_rad = 0.0
+        self._pan_deg = 0.0
+        self._tilt_deg = 0.0
 
         self._sub = self.create_subscription(
             Vector3, '/gimbal/cmd', self._on_cmd, 10
         )
-        self._traj_pub = self.create_publisher(
-            JointTrajectory, '/gimbal/set_joint_trajectory', 10
-        )
         self.get_logger().info(
-            'Gimbal bridge up: /gimbal/cmd -> JointTrajectory + MAVLink mount control'
+            'Gimbal bridge up: /gimbal/cmd -> MAV_CMD_DO_MOUNT_CONTROL'
         )
 
     def _on_cmd(self, msg: Vector3) -> None:
-        tilt_delta_rad = math.radians(msg.x)
-        pan_delta_rad = math.radians(msg.y)
+        self._tilt_deg = _clamp(self._tilt_deg + msg.x, TILT_MIN_DEG, TILT_MAX_DEG)
+        self._pan_deg = _clamp(self._pan_deg + msg.y, PAN_MIN_DEG, PAN_MAX_DEG)
 
-        self._tilt_rad = _clamp(self._tilt_rad + tilt_delta_rad, TILT_MIN_RAD, TILT_MAX_RAD)
-        self._pan_rad = _clamp(self._pan_rad + pan_delta_rad, PAN_MIN_RAD, PAN_MAX_RAD)
-
-        self._publish_joint_trajectory()
         self._send_mavlink_mount_control()
 
         self.get_logger().info(
             f'cmd dx={msg.x:+.1f} dy={msg.y:+.1f} -> '
-            f'pan={math.degrees(self._pan_rad):+.1f}deg '
-            f'tilt={math.degrees(self._tilt_rad):+.1f}deg'
+            f'pan={self._pan_deg:+.1f}deg tilt={self._tilt_deg:+.1f}deg'
         )
-
-    def _publish_joint_trajectory(self) -> None:
-        msg = JointTrajectory()
-        msg.header.stamp = self.get_clock().now().to_msg()
-        # Empty frame_id tells the plugin to search every model in the
-        # world for the named joints. The gimbal joints have unique names
-        # in this world so an unqualified lookup is unambiguous.
-        msg.header.frame_id = ''
-        msg.joint_names = ['pan_joint', 'tilt_joint']
-
-        point = JointTrajectoryPoint()
-        point.positions = [self._pan_rad, self._tilt_rad]
-        point.time_from_start = Duration(sec=0, nanosec=0)
-        msg.points = [point]
-
-        self._traj_pub.publish(msg)
 
     def _send_mavlink_mount_control(self) -> None:
         mav = self._get_mav()
         if mav is None:
+            self.get_logger().warn(
+                'MAVLink connection not yet established; skipping mount command'
+            )
             return
         try:
             mav.mav.command_long_send(
@@ -113,9 +95,9 @@ class GimbalBridge(Node):
                 mav.target_component,
                 mavutil.mavlink.MAV_CMD_DO_MOUNT_CONTROL,
                 0,                                              # confirmation
-                math.degrees(self._tilt_rad),                   # param1: pitch deg
+                self._tilt_deg,                                 # param1: pitch deg
                 0.0,                                            # param2: roll deg
-                math.degrees(self._pan_rad),                    # param3: yaw deg
+                self._pan_deg,                                  # param3: yaw deg
                 0.0, 0.0, 0.0,                                  # params 4-6 unused
                 mavutil.mavlink.MAV_MOUNT_MODE_MAVLINK_TARGETING,  # param7: mode
             )
@@ -123,8 +105,8 @@ class GimbalBridge(Node):
             self.get_logger().warn(f'MAV_CMD_DO_MOUNT_CONTROL send failed: {e}')
 
 
-_node: Optional[GimbalBridge] = None
-_thread: Optional[threading.Thread] = None
+_node: GimbalBridge = None
+_thread: threading.Thread = None
 
 
 def start_gimbal_bridge(get_mav_connection: Callable[[], object]) -> GimbalBridge:
@@ -134,9 +116,6 @@ def start_gimbal_bridge(get_mav_connection: Callable[[], object]) -> GimbalBridg
     connection (or None if not yet established). It is resolved lazily on
     every command, so the bridge can be started before the MAVLink
     listener has finished its first handshake.
-
-    Returns the GimbalBridge node. Reuses the same rclpy context that
-    video.py already initialised.
     """
     global _node, _thread
     if _node is not None:

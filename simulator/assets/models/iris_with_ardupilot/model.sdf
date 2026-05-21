@@ -593,6 +593,53 @@
         <multiplier>-838</multiplier>
         <controlVelocitySlowdownSim>1</controlVelocitySlowdownSim>
       </control>
+
+      <!--
+        Gimbal pan (channel 8 == ArduPilot SERVO9, function 7 = Mount1Yaw)
+        and gimbal tilt (channel 9 == ArduPilot SERVO10, function 8 =
+        Mount1Pitch). POSITION control type means libArduPilotPlugin runs
+        a per-joint PID that drives joint position toward
+            target_rad = (pwm_norm - offset) * multiplier
+        where pwm_norm = (servo_pwm - 1000) / 1000 in [0, 1].
+
+        With offset=0.5 and multiplier=PI, PWM 1000 -> -PI/2 rad (-90 deg),
+        PWM 1500 (trim) -> 0 rad, PWM 2000 -> +PI/2 rad (+90 deg). This
+        matches the gimbal_small_2d joint limits of +/-90 deg and ArduPilot's
+        MNT1_PITCH_MIN/MAX and MNT1_YAW_MIN/MAX (also +/-90 deg in
+        drone.parm).
+
+        If the gimbal moves the wrong way for a given button click, flip the
+        multiplier sign here (or set SERVO9_REVERSED / SERVO10_REVERSED in
+        drone.parm). The Gazebo joint-axis convention can clash with
+        ArduPilot's mount frame depending on the model's <pose> rotation.
+      -->
+      <control channel="8">
+        <type>POSITION</type>
+        <offset>0.5</offset>
+        <p_gain>5.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.2</d_gain>
+        <i_max>1.0</i_max>
+        <i_min>-1.0</i_min>
+        <cmd_max>10.0</cmd_max>
+        <cmd_min>-10.0</cmd_min>
+        <jointName>gimbal_small_2d::pan_joint</jointName>
+        <multiplier>3.14159265</multiplier>
+      </control>
+
+      <control channel="9">
+        <type>POSITION</type>
+        <offset>0.5</offset>
+        <p_gain>5.0</p_gain>
+        <i_gain>0.0</i_gain>
+        <d_gain>0.2</d_gain>
+        <i_max>1.0</i_max>
+        <i_min>-1.0</i_min>
+        <cmd_max>10.0</cmd_max>
+        <cmd_min>-10.0</cmd_min>
+        <jointName>gimbal_small_2d::tilt_joint</jointName>
+        <multiplier>3.14159265</multiplier>
+      </control>
     </plugin>
 
   </model>
