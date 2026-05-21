@@ -132,7 +132,25 @@
         </geometry>
      </collision>
 
-      <sensor name="camera" type="camera">
+      <!--
+        Sensor name is "webcam" (not "camera") deliberately. The ROS 2
+        gazebo_ros_camera plugin constructs its node namespace as
+        <ros><namespace> + sensor_name, then publishes topics relative
+        to that namespace. With an empty <namespace> and sensor name
+        "webcam", topics land at:
+            /webcam/image_raw      (sensor_msgs/msg/Image)
+            /webcam/camera_info    (sensor_msgs/msg/CameraInfo)
+        which matches what the ROS 1 plugin produced on master, so the
+        companion-computer subscribers and every attack walkthrough that
+        targets /webcam/image_raw keep working unmodified.
+
+        Earlier on this branch we set <namespace>/webcam</namespace>
+        with sensor name "camera" — but that produced
+        /webcam/camera/image_raw because the plugin appends the sensor
+        name to the namespace. Renaming the sensor is the simpler fix
+        than remapping every published topic.
+      -->
+      <sensor name="webcam" type="camera">
         <pose>0 0 0 -1.57 -1.57 0</pose>
         <camera>
           <horizontal_fov>2.0</horizontal_fov>
@@ -148,26 +166,7 @@
         <always_on>1</always_on>
         <update_rate>10</update_rate>
         <visualize>1</visualize>
-        <!--
-          ROS 2 Humble gazebo_ros_pkgs camera plugin.
-
-          The legacy ROS 1 flat fields (<cameraName>, <imageTopicName>,
-          <frameName>, <hackBaseline>, <distortionK*>) have been replaced
-          by a <ros> sub-element plus snake_case keys.
-
-          With <namespace>/webcam</namespace>, the plugin publishes:
-            /webcam/image_raw      (sensor_msgs/msg/Image)
-            /webcam/camera_info    (sensor_msgs/msg/CameraInfo)
-
-          These topic names are intentionally identical to what the ROS 1
-          plugin produced on the master branch, so the companion-computer
-          subscribers and every attack walkthrough that targets
-          /webcam/image_raw keep working unmodified.
-        -->
         <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
-              <ros>
-                <namespace>/webcam</namespace>
-              </ros>
               <frame_name>camera_link</frame_name>
               <hack_baseline>0.07</hack_baseline>
               <distortion_k1>0.0</distortion_k1>
