@@ -74,9 +74,11 @@ RUN mkdir -p /etc/mavlink-router
 COPY companion-computer/conf/mavlink-router.conf /etc/mavlink-router/main.conf
 
 # ---------------------------------------------------------------------------
-# Web Interface (Flask) — unchanged
+# Web Interface (Flask)
+# numpy pinned to <2 for cv_bridge compatibility — see companion-computer/
+# Dockerfile for the full explanation.
 # ---------------------------------------------------------------------------
-RUN pip3 install flask docker flask-cors Flask-SQLAlchemy flask-socketio opencv-python-headless Flask-Login flask-sock simple-websocket
+RUN pip3 install "numpy<2" flask docker flask-cors Flask-SQLAlchemy flask-socketio opencv-python-headless Flask-Login flask-sock simple-websocket
 COPY companion-computer/interface /interface
 COPY companion-computer/interface/config.json /interface/config.json
 RUN mkdir -p /var/log/mavlink-router

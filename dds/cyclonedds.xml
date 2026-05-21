@@ -14,15 +14,24 @@
   The flight-controller (10.13.0.2) and ground-control-station (10.13.0.4)
   do not run ROS 2 nodes (they speak MAVLink), so they are not listed here.
 -->
+<!--
+  Schema note: we deliberately use the legacy <General> form (no
+  <Interfaces> block) because the simulator container runs ROS 2 Foxy,
+  which ships Cyclone DDS 0.7.x. The <Interfaces> element was added in
+  Cyclone DDS 0.9 and isn't understood by Foxy — using it causes
+  rmw_create_node to fail with "Interfaces: unknown element". Humble's
+  newer Cyclone DDS still parses the legacy form, so this config works
+  for both containers.
+
+  Cyclone defaults to auto-detecting the first non-loopback interface
+  when no <NetworkInterfaceAddress> is specified, so we just omit it.
+-->
 <CycloneDDS xmlns="https://cdds.io/config"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="https://cdds.io/config
                                 https://raw.githubusercontent.com/eclipse-cyclonedds/cyclonedds/master/etc/cyclonedds.xsd">
   <Domain id="any">
     <General>
-      <Interfaces>
-        <NetworkInterface autodetermine="true" priority="default" multicast="default"/>
-      </Interfaces>
       <AllowMulticast>false</AllowMulticast>
     </General>
     <Discovery>

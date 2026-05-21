@@ -81,9 +81,16 @@ RUN mkdir -p /etc/mavlink-router
 COPY companion-computer/conf/mavlink-router.conf /etc/mavlink-router/main.conf
 
 # ---------------------------------------------------------------------------
-# Web Interface (Flask) — unchanged
+# Web Interface (Flask)
+#
+# numpy is pinned to <2 because ros-humble-cv-bridge's native module
+# (cv_bridge_boost) is compiled against NumPy 1.x. With NumPy 2.x in
+# the environment, `from cv_bridge import CvBridge` fails at import
+# with `AttributeError: _ARRAY_API not found`, which kills rtsp.py and
+# the camera HTTP route. opencv-python-headless itself supports both
+# NumPy majors; cv_bridge is the limiter.
 # ---------------------------------------------------------------------------
-RUN pip3 install flask docker flask-cors Flask-SQLAlchemy flask-socketio opencv-python-headless Flask-Login flask-sock simple-websocket
+RUN pip3 install "numpy<2" flask docker flask-cors Flask-SQLAlchemy flask-socketio opencv-python-headless Flask-Login flask-sock simple-websocket
 COPY companion-computer/interface /interface
 COPY companion-computer/interface/config.json /interface/config.json
 RUN mkdir -p /var/log/mavlink-router
