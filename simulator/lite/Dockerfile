@@ -1,11 +1,16 @@
-# DVD Simulator (Lite): ROS + mgmt only (no Gazebo / no gzweb)
-FROM ubuntu:20.04
+# DVD Simulator (Lite): mgmt web app only — no Gazebo, no gz_web, no ROS.
+#
+# This branch drops the ROS install entirely. The master branch installed
+# ros-noetic-ros-base and ran roscore here, but lite mode has no Gazebo
+# (so no /webcam/image_raw publisher) and no ROS subscribers. The roscore
+# was a no-op. In ROS 2 there is no roscore concept either (DDS is
+# peer-to-peer), so this layer was removed.
+FROM ubuntu:22.04
 
 EXPOSE 8000
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
-    ROS_DISTRO=noetic \
     LC_ALL=C.UTF-8 \
     LANG=C.UTF-8 \
     LITE=1 \
@@ -13,17 +18,10 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 # Base OS + Python
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl gnupg2 lsb-release ca-certificates \
+    curl ca-certificates \
     python3 python3-pip python3-venv python3-setuptools \
     sqlite3 \
  && rm -rf /var/lib/apt/lists/*
-
-# Add ROS repo (NO Gazebo)
-RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - && \
-    sh -c "echo 'deb http://packages.ros.org/ros/ubuntu $(lsb_release -cs) main' > /etc/apt/sources.list.d/ros-latest.list" && \
-    apt-get update && apt-get install -y --no-install-recommends \
-      ros-noetic-ros-base \
-    && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --no-cache-dir \
     Flask \
@@ -34,8 +32,8 @@ RUN pip3 install --no-cache-dir \
     "python-socketio[client]==5.11.2" \
     docker
 
-# Copy ONLY the mgmt app from the full project
-# IMPORTANT: build context should be the repo root so this path is valid.
+# Copy ONLY the mgmt app from the full project.
+# IMPORTANT: build context is the repo root so this path is valid.
 WORKDIR /app
 COPY simulator/mgmt /app/simulator/mgmt
 
@@ -48,11 +46,4 @@ ENV FLASK_APP=simulator.mgmt.app \
     FLASK_RUN_HOST=0.0.0.0 \
     FLASK_RUN_PORT=8000
 
-# Start ROS core and then the mgmt app
-# If your mgmt uses docker CLI instead of Python SDK, install docker.io and mount /var/run/docker.sock.
-CMD bash -lc '\
-  source /opt/ros/${ROS_DISTRO}/setup.bash && \
-  roscore & \
-  sleep 2 && \
-  python3 /app/simulator/mgmt/app.py \
-'
+CMD ["python3", "/app/simulator/mgmt/app.py"]
