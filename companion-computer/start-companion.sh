@@ -1,6 +1,6 @@
 #!/bin/bash
-# Source the ROS environment
-source /opt/ros/noetic/setup.bash
+# Source the ROS environment (Humble on this branch)
+source /opt/ros/humble/setup.bash
 
 # Start the socat command in the background
 socat pty,link=/dev/ttyUSB0,raw,echo=0 unix-connect:/sockets/socket.sock &

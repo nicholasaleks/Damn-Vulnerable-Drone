@@ -1,16 +1,46 @@
-import rospy
+"""HTTP MJPEG video streamer used by /camera/video_feed.
+
+Ported from rospy to rclpy for the ROS 2 Humble migration. Two changes
+that aren't a straight 1:1 substitution:
+
+1. Singleton via get_streamer(). The pre-migration master branch
+   constructed a fresh VideoStreamer per HTTP request — under rclpy
+   that means creating a new Node + subscription per request, which
+   leaks rclpy resources and creates duplicate subscribers. We now
+   build one VideoStreamer per process and route every request to it.
+
+2. Explicit spin on a daemon thread. rospy dispatched callbacks
+   implicitly; rclpy requires you to spin an executor. We do that on
+   a daemon thread so the Flask request handlers (and the existing
+   socketio loop) are unaffected.
+
+Subscriber QoS is SensorData (KEEP_LAST, BEST_EFFORT) to match the
+Humble gazebo_ros_pkgs camera plugin's default profile.
+"""
+import threading
+import time
+
+import rclpy
+from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 import cv2
-from flask import Response
+
 
 class VideoStreamer:
     def __init__(self):
+        if not rclpy.ok():
+            rclpy.init()
+        self.node = rclpy.create_node('camera_video_streamer')
         self.bridge = CvBridge()
-        self.image_subscriber = rospy.Subscriber('/webcam/image_raw', Image, self.image_callback, queue_size=1)
         self.frame = None
+        self.subscription = self.node.create_subscription(
+            Image, '/webcam/image_raw', self._image_callback, qos_profile_sensor_data
+        )
+        self._spin_thread = threading.Thread(target=self._spin, daemon=True)
+        self._spin_thread.start()
 
-    def image_callback(self, msg):
+    def _image_callback(self, msg):
         try:
             cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
             ret, jpeg = cv2.imencode('.jpg', cv_image)
@@ -19,17 +49,41 @@ class VideoStreamer:
         except Exception as e:
             print(f"Error converting image: {e}")
 
+    def _spin(self):
+        try:
+            rclpy.spin(self.node)
+        except Exception:
+            pass
+
     def get_frame(self):
-        while not rospy.is_shutdown():
+        while rclpy.ok():
             if self.frame is not None:
                 yield (b'--frame\r\n'
                        b'Content-Type: image/jpeg\r\n\r\n' + self.frame + b'\r\n')
-            rospy.sleep(0.1)
+            time.sleep(0.1)
+
+
+_singleton = None
+_lock = threading.Lock()
+
+
+def get_streamer() -> VideoStreamer:
+    """Return the per-process VideoStreamer, constructing it on first call."""
+    global _singleton
+    with _lock:
+        if _singleton is None:
+            _singleton = VideoStreamer()
+    return _singleton
+
 
 def main():
-    rospy.init_node('camera_video_streamer', anonymous=True)
-    video_streamer = VideoStreamer()
-    rospy.spin()
+    get_streamer()
+    try:
+        while rclpy.ok():
+            time.sleep(1)
+    except KeyboardInterrupt:
+        pass
+
 
 if __name__ == '__main__':
     main()

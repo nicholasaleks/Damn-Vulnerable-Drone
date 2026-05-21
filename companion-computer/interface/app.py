@@ -11,7 +11,6 @@ from logging.handlers import RotatingFileHandler
 from typing import Optional
 import queue
 
-import rospy
 from flask import (
     Flask,
     flash,
@@ -147,7 +146,6 @@ def create_app() -> Flask:
     socketio.init_app(app, cors_allowed_origins="*")
     sock.init_app(app)  # <-- NEW (Flask-Sock)
     initialize_socketio(socketio)  # your existing pipeline that emits 'mavlink_message'
-    rospy.init_node("camera_display_node", anonymous=True)
 
     # DB
     app.config.update(

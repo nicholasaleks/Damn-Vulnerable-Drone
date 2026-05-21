@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, Response, render_template
 import logging
-from video import VideoStreamer
+from video import get_streamer
 from flask_login import login_required
 
 camera_bp = Blueprint('camera', __name__)
@@ -16,8 +16,7 @@ logger.addHandler(file_handler)
 
 @camera_bp.route('/video_feed')
 def video_feed():
-    video_streamer = VideoStreamer()  # Assumes this class is accessible/imported
-    return Response(video_streamer.get_frame(),
+    return Response(get_streamer().get_frame(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @camera_bp.route('/camera-stream')
