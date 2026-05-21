@@ -8,7 +8,19 @@
 # ArduPilot SITL still talks to Gazebo over the native libArduPilotPlugin
 # UDP channel (10.13.0.2 -> 10.13.0.5), not through ROS. That's why the
 # flight-controller container is untouched by this migration.
-FROM ubuntu:22.04
+#
+# PLATFORM PIN: this container is hard-pinned to linux/amd64 at the FROM
+# line because Gazebo Classic 11 has no apt-accessible build for arm64
+# on Jammy (OSRF dropped arm64, Ubuntu universe is amd64-only, Noble
+# replaced Classic with Gazebo Sim). We pin at the Dockerfile level
+# rather than only in docker-compose because `docker compose up --build`
+# does not reliably honour `build.platforms` from the compose file —
+# buildkit silently falls back to the host platform. The Dockerfile pin
+# is bulletproof: buildkit must pull the amd64 base image. On Apple
+# Silicon hosts the simulator then runs under Docker Desktop's Rosetta 2
+# emulation. The other three containers (companion-computer, GCS,
+# flight-controller) remain multi-arch so they run natively on arm64.
+FROM --platform=linux/amd64 ubuntu:22.04
 
 EXPOSE 8000 8080 9002
 
