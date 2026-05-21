@@ -161,3 +161,28 @@ sections:
             - `/imu/data` (`sensor_msgs/msg/Imu`) — induce bad attitude estimates
             - `/odom` (`nav_msgs/msg/Odometry`) — confuse localisation
             - Any custom command topic — issue motion commands the operator did not authorise
+
+      - title: Bonus target — /gimbal/cmd (steer the camera by injection)
+        description: |
+          The `ros2-migration` branch wires the companion-computer's web-UI gimbal direction buttons through a
+          ROS 2 topic before they reach Gazebo. Each click POSTs to `/camera/gimbal/<direction>` on the
+          companion's Flask app, which publishes a `geometry_msgs/msg/Vector3` to `/gimbal/cmd`
+          (x = tilt delta in degrees, y = pan delta in degrees). The on-board bridge node subscribes to
+          that topic and translates it into a Gazebo `JointTrajectory` (which actually moves the gimbal
+          joints) plus a `MAV_CMD_DO_MOUNT_CONTROL` MAVLink frame (which goes on the wire for ArduPilot).
+
+          From the same attacker container set up above, you can publish directly to `/gimbal/cmd` and
+          steer the camera — bypassing the web UI entirely, and without ever authenticating to the
+          companion's `/login`:
+          ```ros2 topic pub --once /gimbal/cmd geometry_msgs/msg/Vector3 \
+              "{x: -45.0, y: 30.0, z: 0.0}"
+          ```
+          That single message tilts the gimbal 45° down and pans 30° right. While a legitimate operator
+          watches the RTSP feed, an attacker can sweep the camera at will.
+
+          Two things make this pedagogically interesting:
+            - The Flask gimbal route is gated behind `/login` (it uses `@login_required`). The ROS topic
+              is not — there is no authentication on the data plane. The login control was effectively
+              decorative.
+            - Defenders can't tell the difference between web-UI clicks and rogue-publisher injection
+              because the bridge subscriber sees the same `Vector3` either way.

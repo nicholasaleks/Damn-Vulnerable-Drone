@@ -32,7 +32,9 @@ from flask_socketio import SocketIO, emit
 from flask_sock import Sock
 
 from extensions import db
+import mavlink_connection
 from mavlink_connection import initialize_socketio, listen_to_mavlink
+from gimbal_bridge import start_gimbal_bridge
 from models import TelemetryStatus, UdpDestination, User
 from routes.camera import camera_bp
 from routes.logs import logs_bp
@@ -340,6 +342,11 @@ if __name__ == "__main__":
         add_default_user()
         initialize_udp_destinations()
         threading.Thread(target=start_mavlink_thread, daemon=True).start()
+        # Bridge ROS 2 /gimbal/cmd <-> Gazebo JointTrajectory + MAVLink
+        # mount control. Lazy mav_connection getter because the MAVLink
+        # listener thread above hasn't necessarily finished its first
+        # handshake yet when we get here.
+        start_gimbal_bridge(lambda: mavlink_connection.mav_connection)
         app.logger.info("Application startup")
 
     socketio.run(app, debug=True, host="0.0.0.0", port=3000, allow_unsafe_werkzeug=True)

@@ -180,8 +180,51 @@
 
     </link>
 
+    <!--
+      Pan link (NEW on ros2-migration). Inserted between base_link and
+      tilt_link to give the gimbal a yaw axis. Minimal inertial because
+      it has no mass of its own; it exists purely to host the pan joint.
+    -->
+    <link name='pan_link'>
+      <inertial>
+        <mass>0.001</mass>
+        <inertia>
+          <ixx>1e-6</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1e-6</iyy>
+          <iyz>0</iyz>
+          <izz>1e-6</izz>
+        </inertia>
+      </inertial>
+    </link>
+
+    <!--
+      Pan joint (NEW). Rotates pan_link about Z relative to base_link.
+      Limits: +/-90 deg, matching typical small-gimbal pan range.
+    -->
+    <joint name='pan_joint' type='revolute'>
+      <parent>base_link</parent>
+      <child>pan_link</child>
+
+      <axis>
+        <xyz>0 0 1</xyz>
+        <dynamics>
+          <damping>0.5</damping>
+        </dynamics>
+        <use_parent_model_frame>1</use_parent_model_frame>
+        <limit>
+          <lower>-1.5707963</lower>
+          <upper>1.5707963</upper>
+          <effort>10</effort>
+          <velocity>-1</velocity>
+        </limit>
+      </axis>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+
     <joint name='tilt_joint' type='revolute'>
-       <parent>base_link</parent>
+       <parent>pan_link</parent>
        <child>tilt_link</child>
 
       <physics>
@@ -206,8 +249,15 @@
       <pose>0 0 0.02 0 0 0</pose>
     </joint>
 
-    <plugin name="gimbal_small_2d" filename="libGimbalSmall2dPlugin.so">
-      <joint>tilt_joint</joint>
-    </plugin>
+    <!--
+      The libGimbalSmall2dPlugin.so plugin that lived here on the master
+      branch was a pitch-only Gazebo plugin tied to one servo channel.
+      On ros2-migration the gimbal is controlled by the
+      libgazebo_ros_joint_pose_trajectory.so plugin in the world file,
+      which moves both pan and tilt joints from a /gimbal/set_joint_trajectory
+      ROS 2 topic. See companion-computer/interface/gimbal_bridge.py for
+      the bridge that translates web-UI clicks (and MAV_CMD_DO_MOUNT_CONTROL)
+      into JointTrajectory messages.
+    -->
   </model>
 </sdf>
