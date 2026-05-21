@@ -148,19 +148,33 @@
         <always_on>1</always_on>
         <update_rate>10</update_rate>
         <visualize>1</visualize>
+        <!--
+          ROS 2 Humble gazebo_ros_pkgs camera plugin.
+
+          The legacy ROS 1 flat fields (<cameraName>, <imageTopicName>,
+          <frameName>, <hackBaseline>, <distortionK*>) have been replaced
+          by a <ros> sub-element plus snake_case keys.
+
+          With <namespace>/webcam</namespace>, the plugin publishes:
+            /webcam/image_raw      (sensor_msgs/msg/Image)
+            /webcam/camera_info    (sensor_msgs/msg/CameraInfo)
+
+          These topic names are intentionally identical to what the ROS 1
+          plugin produced on the master branch, so the companion-computer
+          subscribers and every attack walkthrough that targets
+          /webcam/image_raw keep working unmodified.
+        -->
         <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
-              <alwaysOn>true</alwaysOn>
-              <updateRate>0.0</updateRate>
-              <cameraName>webcam</cameraName>
-              <imageTopicName>image_raw</imageTopicName>
-              <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-              <frameName>camera_link</frameName>
-              <hackBaseline>0.07</hackBaseline>
-              <distortionK1>0.0</distortionK1>
-              <distortionK2>0.0</distortionK2>
-              <distortionK3>0.0</distortionK3>
-              <distortionT1>0.0</distortionT1>
-              <distortionT2>0.0</distortionT2>
+              <ros>
+                <namespace>/webcam</namespace>
+              </ros>
+              <frame_name>camera_link</frame_name>
+              <hack_baseline>0.07</hack_baseline>
+              <distortion_k1>0.0</distortion_k1>
+              <distortion_k2>0.0</distortion_k2>
+              <distortion_k3>0.0</distortion_k3>
+              <distortion_t1>0.0</distortion_t1>
+              <distortion_t2>0.0</distortion_t2>
           </plugin>
       </sensor>
 
