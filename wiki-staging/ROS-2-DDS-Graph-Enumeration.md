@@ -37,11 +37,11 @@ docker run -it --network=simulator --ip=10.13.0.10 \
 
 ### Step 2. (Passive) Sniff DDS discovery on the bridge
 
-DDS uses UDP in the 7400–7700 range for discovery (the exact ports depend on `ROS_DOMAIN_ID` and participant index; the lab uses domain 42 so the discovery port lands at 17400 + offsets). For the widest passive view, listen across the whole discovery range:
+DDS discovery ports are domain-dependent: `7400 + 250 × domain_id` (plus a small per-participant offset). The lab runs `ROS_DOMAIN_ID=42`, so discovery lands at `7400 + 250×42 = 17900` — the lab containers listen on **17910–17915**. The common `7400–7700` filter is the **domain-0** range and captures nothing here. Listen across the domain-42 discovery range instead:
 
 ```sh
 apt-get update && apt-get install -y tcpdump
-tcpdump -i any 'udp portrange 7400-7700' -nn -v
+tcpdump -i any 'udp portrange 17900-18200' -nn -v
 ```
 
 You should see UDP traffic between `10.13.0.3` (companion-computer) and `10.13.0.5` (simulator). Each burst contains:
@@ -57,6 +57,11 @@ You can identify these by their RTPS submessage IDs, but `tcpdump` alone won't d
 Configure the attacker container so it joins the same domain and Cyclone DDS unicast graph as the lab:
 
 ```sh
+# osrf/ros:humble-desktop ships only rmw_fastrtps_cpp; install the Cyclone RMW
+# or every ros2 command aborts with "librmw_cyclonedds_cpp.so: cannot open
+# shared object file".
+apt-get update && apt-get install -y ros-humble-rmw-cyclonedds-cpp
+
 cat > /etc/cyclonedds.xml <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <CycloneDDS xmlns="https://cdds.io/config">

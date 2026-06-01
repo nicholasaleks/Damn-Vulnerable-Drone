@@ -49,11 +49,12 @@ sections:
 
       - title: Step 2. (Passive) Sniff DDS discovery on the bridge
         description: |
-          DDS uses UDP in the 7400-7450 range for discovery (the exact ports depend on `ROS_DOMAIN_ID` and
-          participant index; the lab uses domain 42 so the discovery port lands at 17400 + offsets).
-          For the widest passive view, listen across the whole discovery range:
+          DDS discovery ports are domain-dependent: `7400 + 250 * domain_id` (plus a small per-participant
+          offset). The lab runs domain 42, so discovery lands at `7400 + 250*42 = 17900` — the lab containers
+          listen on 17910-17915. The common `7400-7700` filter is the domain-0 range and captures nothing here.
+          Listen across the domain-42 discovery range instead:
           ```apt-get update && apt-get install -y tcpdump
-          tcpdump -i any 'udp portrange 7400-7700' -nn -v
+          tcpdump -i any 'udp portrange 17900-18200' -nn -v
           ```
 
           You should see UDP traffic between 10.13.0.3 (companion-computer) and 10.13.0.5 (simulator). Each
@@ -68,7 +69,8 @@ sections:
       - title: Step 3. (Active) Join the graph and use the ros2 CLI
         description: |
           Configure the attacker container so it joins the same domain and Cyclone DDS unicast graph as the lab:
-          ```cat > /etc/cyclonedds.xml <<'EOF'
+          ```apt-get update && apt-get install -y ros-humble-rmw-cyclonedds-cpp
+          cat > /etc/cyclonedds.xml <<'EOF'
           <?xml version="1.0" encoding="UTF-8"?>
           <CycloneDDS xmlns="https://cdds.io/config">
             <Domain id="any">

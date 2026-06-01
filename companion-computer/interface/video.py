@@ -21,6 +21,7 @@ import threading
 import time
 
 import rclpy
+from rclpy.executors import SingleThreadedExecutor
 from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
@@ -37,7 +38,13 @@ class VideoStreamer:
         self.subscription = self.node.create_subscription(
             Image, '/webcam/image_raw', self._image_callback, qos_profile_sensor_data
         )
-        self._spin_thread = threading.Thread(target=self._spin, daemon=True)
+        # Dedicated SingleThreadedExecutor per node. rclpy.spin(node) shares
+        # a single process-wide global executor, so a second spin from
+        # another thread (e.g. gimbal_bridge) raises "generator already
+        # executing" and the callback never fires.
+        self._executor = SingleThreadedExecutor()
+        self._executor.add_node(self.node)
+        self._spin_thread = threading.Thread(target=self._executor.spin, daemon=True)
         self._spin_thread.start()
 
     def _image_callback(self, msg):
@@ -48,12 +55,6 @@ class VideoStreamer:
                 self.frame = jpeg.tobytes()
         except Exception as e:
             print(f"Error converting image: {e}")
-
-    def _spin(self):
-        try:
-            rclpy.spin(self.node)
-        except Exception:
-            pass
 
     def get_frame(self):
         while rclpy.ok():

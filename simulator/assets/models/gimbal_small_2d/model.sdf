@@ -133,22 +133,10 @@
      </collision>
 
       <!--
-        Sensor name is "webcam" (not "camera") deliberately. The ROS 2
-        gazebo_ros_camera plugin constructs its node namespace as
-        <ros><namespace> + sensor_name, then publishes topics relative
-        to that namespace. With an empty <namespace> and sensor name
-        "webcam", topics land at:
-            /webcam/image_raw      (sensor_msgs/msg/Image)
-            /webcam/camera_info    (sensor_msgs/msg/CameraInfo)
-        which matches what the ROS 1 plugin produced on master, so the
-        companion-computer subscribers and every attack walkthrough that
-        targets /webcam/image_raw keep working unmodified.
-
-        Earlier on this branch we set <namespace>/webcam</namespace>
-        with sensor name "camera" — but that produced
-        /webcam/camera/image_raw because the plugin appends the sensor
-        name to the namespace. Renaming the sensor is the simpler fix
-        than remapping every published topic.
+        Sensor renamed camera -> webcam. The ROS 2 gazebo_ros_camera
+        plugin builds topic names as <sensor_name>/image_raw, so this
+        sensor publishes to /webcam/image_raw (matching what the ROS 1
+        plugin produced on master and what the companion subscribes to).
       -->
       <sensor name="webcam" type="camera">
         <pose>0 0 0 -1.57 -1.57 0</pose>
@@ -179,51 +167,8 @@
 
     </link>
 
-    <!--
-      Pan link (NEW on ros2-migration). Inserted between base_link and
-      tilt_link to give the gimbal a yaw axis. Minimal inertial because
-      it has no mass of its own; it exists purely to host the pan joint.
-    -->
-    <link name='pan_link'>
-      <inertial>
-        <mass>0.001</mass>
-        <inertia>
-          <ixx>1e-6</ixx>
-          <ixy>0</ixy>
-          <ixz>0</ixz>
-          <iyy>1e-6</iyy>
-          <iyz>0</iyz>
-          <izz>1e-6</izz>
-        </inertia>
-      </inertial>
-    </link>
-
-    <!--
-      Pan joint (NEW). Rotates pan_link about Z relative to base_link.
-      Limits: +/-90 deg, matching typical small-gimbal pan range.
-    -->
-    <joint name='pan_joint' type='revolute'>
-      <parent>base_link</parent>
-      <child>pan_link</child>
-
-      <axis>
-        <xyz>0 0 1</xyz>
-        <dynamics>
-          <damping>0.5</damping>
-        </dynamics>
-        <use_parent_model_frame>1</use_parent_model_frame>
-        <limit>
-          <lower>-1.5707963</lower>
-          <upper>1.5707963</upper>
-          <effort>10</effort>
-          <velocity>-1</velocity>
-        </limit>
-      </axis>
-      <pose>0 0 0 0 0 0</pose>
-    </joint>
-
     <joint name='tilt_joint' type='revolute'>
-       <parent>pan_link</parent>
+       <parent>base_link</parent>
        <child>tilt_link</child>
 
       <physics>
@@ -239,26 +184,13 @@
         </dynamics>
         <use_parent_model_frame>1</use_parent_model_frame>
         <limit>
-          <lower>-1.5707963</lower>
-          <upper>1.5707963</upper>
+          <lower>-0.1</lower>
+          <upper>3.14159265</upper>
           <effort>10</effort>
           <velocity>-1</velocity>
         </limit>
       </axis>
       <pose>0 0 0.02 0 0 0</pose>
     </joint>
-
-    <!--
-      The libGimbalSmall2dPlugin.so plugin that lived here on the master
-      branch was a pitch-only Gazebo plugin tied to one servo channel.
-      It is replaced by two POSITION-control entries inside the iris
-      arducopter_plugin (see iris_with_ardupilot/model.sdf) targeting
-      gimbal_small_2d::pan_joint (servo channel 8 = ArduPilot SERVO9 =
-      Mount1Yaw) and gimbal_small_2d::tilt_joint (channel 9 = SERVO10 =
-      Mount1Pitch). libArduPilotPlugin reads ArduPilot's servo PWM output
-      and runs a per-joint PID to drive each joint to its target, so the
-      MAVLink mount command path -> ArduPilot -> servo PWM -> Gazebo
-      gimbal motion is fully end-to-end.
-    -->
   </model>
 </sdf>

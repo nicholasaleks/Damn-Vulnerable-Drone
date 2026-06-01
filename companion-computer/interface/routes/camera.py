@@ -21,11 +21,13 @@ logger.addHandler(file_handler)
 # ---------------------------------------------------------------------------
 # /gimbal/cmd publisher (module-level singleton).
 #
-# The web UI direction buttons POST to /camera/gimbal/<direction>, which is
-# translated to a geometry_msgs/Vector3 delta and published to /gimbal/cmd.
-# The gimbal_bridge subscriber (in the same Flask process) consumes the
-# message, accumulates the target, publishes a JointTrajectory to move
-# the Gazebo joints, and sends a MAV_CMD_DO_MOUNT_CONTROL MAVLink command.
+# The web UI direction buttons POST to /camera/gimbal/<direction>, which
+# is translated to a geometry_msgs/Vector3 delta and published to
+# /gimbal/cmd. The gimbal_bridge subscriber (in the same Flask process)
+# consumes the message, accumulates the target, and publishes a
+# trajectory_msgs/msg/JointTrajectory to /set_joint_trajectory; the
+# simulator's libgazebo_ros_joint_pose_trajectory plugin applies the
+# target directly to the gimbal joints. No MAVLink path involved.
 #
 # Per click delta in degrees:
 GIMBAL_STEP_DEG = 10.0

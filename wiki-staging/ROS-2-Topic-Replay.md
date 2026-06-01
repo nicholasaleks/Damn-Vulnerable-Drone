@@ -42,6 +42,11 @@ The `-v` bind mount lets you carry the bag file back to the host afterwards.
 ### Step 2. Join the lab's DDS graph
 
 ```sh
+# osrf/ros:humble-desktop ships only rmw_fastrtps_cpp; install the Cyclone RMW
+# or every ros2 command aborts with "librmw_cyclonedds_cpp.so: cannot open
+# shared object file".
+apt-get update && apt-get install -y ros-humble-rmw-cyclonedds-cpp
+
 cat > /etc/cyclonedds.xml <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <CycloneDDS xmlns="https://cdds.io/config">

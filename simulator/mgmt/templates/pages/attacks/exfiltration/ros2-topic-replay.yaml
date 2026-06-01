@@ -53,7 +53,8 @@ sections:
 
       - title: Step 2. Join the lab's DDS graph
         description: |
-          ```cat > /etc/cyclonedds.xml <<'EOF'
+          ```apt-get update && apt-get install -y ros-humble-rmw-cyclonedds-cpp
+          cat > /etc/cyclonedds.xml <<'EOF'
           <?xml version="1.0" encoding="UTF-8"?>
           <CycloneDDS xmlns="https://cdds.io/config">
             <Domain id="any">

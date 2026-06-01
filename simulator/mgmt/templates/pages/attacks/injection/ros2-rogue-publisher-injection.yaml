@@ -44,7 +44,8 @@ sections:
 
       - title: Step 2. Join the lab's DDS graph
         description: |
-          ```cat > /etc/cyclonedds.xml <<'EOF'
+          ```apt-get update && apt-get install -y ros-humble-rmw-cyclonedds-cpp
+          cat > /etc/cyclonedds.xml <<'EOF'
           <?xml version="1.0" encoding="UTF-8"?>
           <CycloneDDS xmlns="https://cdds.io/config">
             <Domain id="any">
@@ -71,10 +72,15 @@ sections:
           ```ros2 topic info /webcam/image_raw -v
           ```
           Note the QoS for the existing publisher (the gazebo_ros camera plugin). On the master branch this
-          will be `History: KEEP_LAST`, `Reliability: BEST_EFFORT`, `Durability: VOLATILE`. Your injector must
-          publish at a compatible QoS — `BEST_EFFORT` reliability matches both `BEST_EFFORT` and `RELIABLE`
-          subscribers, but `RELIABLE` publishers can't talk to `BEST_EFFORT` subscribers. The companion
-          script uses `qos_profile_sensor_data` which is exactly the legit profile.
+          will be `History: KEEP_LAST`, `Reliability: BEST_EFFORT`, `Durability: VOLATILE`. QoS matching is
+          Request-vs-Offered: a subscriber receives from a publisher only if the publisher's offered reliability
+          is >= the subscriber's requested reliability (`RELIABLE` > `BEST_EFFORT`). So a `RELIABLE` publisher
+          reaches both `RELIABLE` and `BEST_EFFORT` subscribers, while a `BEST_EFFORT` publisher reaches only
+          `BEST_EFFORT` subscribers. The companion subscribes `BEST_EFFORT`, so your injector lands whether it
+          publishes `BEST_EFFORT` or the default `RELIABLE`. The script uses `qos_profile_sensor_data` anyway —
+          it's lower-overhead and mirrors the profile you just read off `-v`. (The one case where QoS *blocks*
+          you is the reverse: reading the `BEST_EFFORT` camera with a default `RELIABLE` subscriber returns
+          nothing.)
 
       - title: Step 4. Drop the injector script into the attacker container
         description: |

@@ -30,6 +30,11 @@ docker run -it --network=simulator --ip=10.13.0.10 \
 ### Step 2. Join the lab's DDS graph
 
 ```sh
+# osrf/ros:humble-desktop ships only rmw_fastrtps_cpp; install the Cyclone RMW
+# or every ros2 command aborts with "librmw_cyclonedds_cpp.so: cannot open
+# shared object file".
+apt-get update && apt-get install -y ros-humble-rmw-cyclonedds-cpp
+
 cat > /etc/cyclonedds.xml <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <CycloneDDS xmlns="https://cdds.io/config">
@@ -58,7 +63,7 @@ source /opt/ros/humble/setup.bash
 ros2 topic info /webcam/image_raw -v
 ```
 
-Note the QoS for the existing publisher (the `gazebo_ros` camera plugin). On the migration branch this will be `History: KEEP_LAST`, `Reliability: BEST_EFFORT`, `Durability: VOLATILE`. Your injector must publish at a compatible QoS — `BEST_EFFORT` reliability matches both `BEST_EFFORT` and `RELIABLE` subscribers, but `RELIABLE` publishers can't talk to `BEST_EFFORT` subscribers. The script below uses `qos_profile_sensor_data` which is exactly the legit profile.
+Note the QoS for the existing publisher (the `gazebo_ros` camera plugin). On the migration branch this will be `History: KEEP_LAST`, `Reliability: BEST_EFFORT`, `Durability: VOLATILE`. QoS matching is **Request-vs-Offered**: a subscriber receives from a publisher only if the publisher's *offered* reliability is at least as strong as the subscriber's *requested* reliability (`RELIABLE` > `BEST_EFFORT`). So a `RELIABLE` publisher reaches **both** `RELIABLE` and `BEST_EFFORT` subscribers, while a `BEST_EFFORT` publisher reaches **only** `BEST_EFFORT` subscribers. The companion subscribes `BEST_EFFORT`, so your injector lands whether it publishes `BEST_EFFORT` or the default `RELIABLE`. The script below uses `qos_profile_sensor_data` anyway — it's lower-overhead and mirrors the profile you just read off `-v`. (The one case where QoS *blocks* you is the reverse: reading the `BEST_EFFORT` camera with a default `RELIABLE` subscriber returns nothing.)
 
 ### Step 4. Drop the injector script into the attacker container
 

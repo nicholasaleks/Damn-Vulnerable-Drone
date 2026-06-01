@@ -125,6 +125,11 @@ RUN apt-get update && apt-get install -y dos2unix
 RUN find . -type f -exec dos2unix {} \; && chmod +x deploy.sh
 RUN npm install v8flags grunt-cli
 RUN npm install
+# gzweb's get_local_models.py / webify_models*.py use `#!/usr/bin/python`
+# (Python 2). Focal doesn't ship a `python` symlink by default, and without
+# it `deploy.sh` silently fails to populate http/client/assets — the world
+# then renders as wireframe-on-grid in gzweb.
+RUN ln -s /usr/bin/python2.7 /usr/bin/python
 RUN /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy -- -m local"
 
 # ---------------------------------------------------------------------------

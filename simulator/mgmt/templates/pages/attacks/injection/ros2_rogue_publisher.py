@@ -53,8 +53,10 @@ def make_payload() -> bytes:
 class RoguePublisher(Node):
     def __init__(self):
         super().__init__('rogue_camera_publisher')
-        # QoS MUST match the legitimate publisher's profile or the legit
-        # subscribers will silently drop our messages.
+        # SensorData QoS mirrors the legit camera plugin. It's not strictly
+        # required: the companion subscribes BEST_EFFORT, and RxO matching
+        # (offered RELIABLE >= requested BEST_EFFORT) means a default RELIABLE
+        # publisher would be accepted too. We match anyway for lower overhead.
         self.pub = self.create_publisher(
             Image, '/webcam/image_raw', qos_profile_sensor_data
         )

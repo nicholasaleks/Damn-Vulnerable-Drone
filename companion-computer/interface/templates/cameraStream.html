@@ -10,8 +10,9 @@
             <h2 class="card-title">Gimbal Control</h2>
             <p class="text-muted">
                 Each click moves the gimbal 10&deg; in the indicated direction. Up/Down tilts the gimbal pitch joint; Left/Right pans the gimbal yaw joint.
-                Click events publish a <code>geometry_msgs/msg/Vector3</code> to the <code>/gimbal/cmd</code> ROS&nbsp;2 topic, which the on-board bridge translates
-                into both a Gazebo <code>JointTrajectory</code> and a <code>MAV_CMD_DO_MOUNT_CONTROL</code> MAVLink command.
+                Click events publish a <code>geometry_msgs/msg/Vector3</code> to the <code>/gimbal/cmd</code> ROS&nbsp;2 topic. The on-board bridge accumulates
+                the target and publishes a <code>trajectory_msgs/msg/JointTrajectory</code> to <code>/set_joint_trajectory</code>, which the simulator's
+                <code>libgazebo_ros_joint_pose_trajectory</code> plugin applies directly to the gimbal joints.
             </p>
             <div class="gimbal-dpad" style="display:inline-grid; grid-template-columns: repeat(3, 64px); grid-template-rows: repeat(3, 64px); gap: 8px;">
                 <div></div>

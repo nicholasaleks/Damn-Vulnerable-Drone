@@ -33,6 +33,11 @@ docker run -it --network=simulator --ip=10.13.0.10 \
 Inside the attacker container, set the same `ROS_DOMAIN_ID` the lab uses (42) and point Cyclone DDS at the lab's unicast peers (the simulator on `10.13.0.5` and the companion-computer on `10.13.0.3`). Multicast does not reliably traverse Docker bridges, so we use an explicit peers list — the same one the lab uses internally:
 
 ```sh
+# osrf/ros:humble-desktop ships only rmw_fastrtps_cpp; install the Cyclone RMW
+# or every ros2 command aborts with "librmw_cyclonedds_cpp.so: cannot open
+# shared object file".
+apt-get update && apt-get install -y ros-humble-rmw-cyclonedds-cpp
+
 cat > /etc/cyclonedds.xml <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <CycloneDDS xmlns="https://cdds.io/config">
@@ -78,10 +83,13 @@ import numpy as np
 class ImageFlooder(Node):
     def __init__(self):
         super().__init__('image_flooder')
-        # QoS must match the legitimate publisher's profile (the
-        # gazebo_ros_pkgs camera plugin uses SensorData by default:
-        # KEEP_LAST + BEST_EFFORT). Mismatched QoS = your messages
-        # get silently dropped at the subscriber.
+        # SensorData QoS (KEEP_LAST + BEST_EFFORT) mirrors the
+        # gazebo_ros_pkgs camera plugin. NOTE: a default RELIABLE
+        # publisher would ALSO be accepted by the companion's
+        # BEST_EFFORT subscriber (RxO: offered RELIABLE >= requested
+        # BEST_EFFORT), so QoS does not gate the flood. We use
+        # sensor_data anyway: lower overhead + it mirrors the profile
+        # you read off `ros2 topic info -v`.
         self.pub = self.create_publisher(
             Image, '/webcam/image_raw', qos_profile_sensor_data
         )
@@ -143,4 +151,4 @@ Two things to internalise:
 
 1. There is no `ROS_MASTER_URI` to point at, and there is no `rosnode kill` that can stop an attacker from rejoining. The graph is decentralised; the only way to deny a publisher is to authenticate participants — that's what SROS 2 was built for.
 
-2. ROS 2 has QoS profiles. The legitimate publisher (the `gazebo_ros` camera plugin) publishes with `SensorData` QoS (`KEEP_LAST`, `BEST_EFFORT`). If your attacker script uses the default `RELIABLE` QoS, the subscribers will not match it and your flooded messages will be silently discarded. Using `qos_profile_sensor_data` matches the legit profile.
+2. ROS 2 has QoS profiles, and matching is **Request-vs-Offered**: a subscriber receives from a publisher only if the publisher's *offered* reliability is at least as strong as the subscriber's *requested* reliability (`RELIABLE` > `BEST_EFFORT`). The camera publishes `BEST_EFFORT` and the companion subscribes `BEST_EFFORT`, so your flooder is accepted whether it publishes `BEST_EFFORT` **or** the default `RELIABLE` — **QoS does not gate this attack.** (Verified on the lab: a `RELIABLE` writer delivers 20/20 to a `BEST_EFFORT` reader.) The direction QoS *does* bite is the opposite one: try to **read** the `BEST_EFFORT` camera with a default `RELIABLE` subscriber and you get zero frames (`incompatible QoS ... RELIABILITY_QOS_POLICY`). We still publish with `qos_profile_sensor_data` because it is lower-overhead and mirrors the profile you read from `ros2 topic info -v`.
