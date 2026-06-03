@@ -65,7 +65,7 @@ RUN apt update -y && apt install -y \
 # ---------------------------------------------------------------------------
 # DDS config — explicit unicast peers (no multicast over Docker bridge)
 # ---------------------------------------------------------------------------
-COPY dds/cyclonedds.xml /etc/cyclonedds.xml
+COPY companion-computer/conf/cyclonedds.xml /etc/cyclonedds.xml
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp \
     CYCLONEDDS_URI=file:///etc/cyclonedds.xml \
     ROS_DOMAIN_ID=42
