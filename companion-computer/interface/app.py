@@ -293,8 +293,20 @@ def add_default_user() -> None:
         db.session.commit()
 
 
+def _ensure_mavros_endpoint() -> None:
+    """mavlink-routerd forwards to every UdpDestination row as an `-e` peer.
+    mavros listens on 14560 (kept off 14540 so it never contends with the
+    Flask pymavlink listener). Seeded outside the first-run guard below so an
+    existing telemetry.db still picks it up.
+    """
+    if not UdpDestination.query.filter_by(ip="127.0.0.1", port=14560).first():
+        db.session.add(UdpDestination(ip="127.0.0.1", port=14560))
+        db.session.commit()
+
+
 def initialize_udp_destinations() -> None:
-    if UdpDestination.query.first():
+    _ensure_mavros_endpoint()
+    if UdpDestination.query.filter(UdpDestination.port != 14560).first():
         return
     db.session.add(UdpDestination(ip="127.0.0.1", port=14540))
 
@@ -349,4 +361,9 @@ if __name__ == "__main__":
         start_gimbal_bridge(lambda: mavlink_connection.mav_connection)
         app.logger.info("Application startup")
 
-    socketio.run(app, debug=True, host="0.0.0.0", port=3000, allow_unsafe_werkzeug=True)
+    # debug=False: the Werkzeug reloader would otherwise fork a SECOND app
+    # process, giving two of every ROS node (two gimbal_bridge subscribers,
+    # two camera streamers, two MAVLink listeners on :14540) — which doubles
+    # log lines and shows phantom subscribers in `ros2 topic info -v`. The
+    # reloader is useless here anyway since code is baked into the image.
+    socketio.run(app, debug=False, host="0.0.0.0", port=3000, allow_unsafe_werkzeug=True)

@@ -40,6 +40,23 @@ RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key \
         ros-humble-rmw-cyclonedds-cpp \
     && rm -rf /var/lib/apt/lists/*
 
+# ---------------------------------------------------------------------------
+# mavros — ROS 2 <-> MAVLink bridge (APM/ArduPilot profile)
+#
+# Puts the flight-control surface on the DDS graph (/mavros/imu/data,
+# /mavros/global_position/*, /mavros/setpoint_velocity/cmd_vel, the
+# /mavros/cmd/* services, etc.). It connects to a dedicated mavlink-router
+# endpoint (14560), so it never contends with the Flask pymavlink listener
+# on 14540 and is idle until telemetry is started from the web UI.
+#
+# install_geographiclib_datasets.sh is REQUIRED: the global_position plugin
+# aborts on launch without the GeographicLib geoid datasets. This is the #1
+# mavros bring-up failure.
+RUN apt update -y && apt install -y \
+        ros-humble-mavros ros-humble-mavros-msgs ros-humble-mavros-extras \
+    && /opt/ros/humble/lib/mavros/install_geographiclib_datasets.sh \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN apt update -y && apt install -y \
     gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-tools gstreamer1.0-rtsp \
     python3-gi python3-gst-1.0 gir1.2-gst-rtsp-server-1.0 \
@@ -79,6 +96,9 @@ RUN ARCH=$(uname -m) && \
 
 RUN mkdir -p /etc/mavlink-router
 COPY companion-computer/conf/mavlink-router.conf /etc/mavlink-router/main.conf
+
+# mavros MAVLink-identity overrides (see the file's header for the sysid rationale)
+COPY companion-computer/conf/mavros/apm_config.yaml /etc/mavros/apm_config.yaml
 
 # ---------------------------------------------------------------------------
 # Web Interface (Flask)

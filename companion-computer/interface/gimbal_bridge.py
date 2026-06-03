@@ -87,7 +87,10 @@ class GimbalBridge(Node):
 
         self._publish_trajectory()
 
-        self.get_logger().info(
+        # debug-level: fires on every /gimbal/cmd, so it floods the compose
+        # output during normal use. The one-time "Gimbal bridge up" info line
+        # in __init__ is enough to confirm the bridge is running.
+        self.get_logger().debug(
             f'cmd dx={msg.x:+.1f} dy={msg.y:+.1f} -> '
             f'tilt={self._tilt_deg:+.1f}deg pan={self._pan_deg:+.1f}deg'
         )
