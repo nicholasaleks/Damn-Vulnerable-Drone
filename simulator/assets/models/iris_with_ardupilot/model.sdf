@@ -10,16 +10,33 @@
       <pose>0 -0.01 0.070 1.57 0 1.57</pose>
     </include>
 
+    <!--
+      Gimbal pan (yaw). This joint attaches the gimbal to the drone; its
+      axis is 0 0 1 (drone +z / yaw). It was locked (0..0); unlocking it to
+      +/-90deg makes it the pan DOF, driven via /set_joint_trajectory by the
+      companion's gimbal_bridge. Reusing this existing joint (rather than
+      adding a new pan_link) avoids the inertia that crashed SITL before.
+    -->
     <joint name="iris_gimbal_mount" type="revolute">
       <parent>iris::base_link</parent>
       <child>gimbal_small_2d::base_link</child>
+      <physics>
+        <ode>
+          <implicit_spring_damper>1</implicit_spring_damper>
+        </ode>
+      </physics>
       <axis>
-        <limit>
-          <lower>0</lower>
-          <upper>0</upper>
-        </limit>
         <xyz>0 0 1</xyz>
         <use_parent_model_frame>true</use_parent_model_frame>
+        <dynamics>
+          <damping>0.5</damping>
+        </dynamics>
+        <limit>
+          <lower>-1.5708</lower>
+          <upper>1.5708</upper>
+          <effort>10</effort>
+          <velocity>-1</velocity>
+        </limit>
       </axis>
     </joint>
     
@@ -593,6 +610,19 @@
         <multiplier>-838</multiplier>
         <controlVelocitySlowdownSim>1</controlVelocitySlowdownSim>
       </control>
+    </plugin>
+
+    <!--
+      ROS 2 native gimbal control. The companion's gimbal_bridge
+      publishes trajectory_msgs/msg/JointTrajectory to
+      /set_joint_trajectory; this plugin applies the target position
+      directly to gimbal_small_2d::tilt_joint. Bypasses ArduPilot and
+      the MAVLink mount path entirely (those caused FDM-side NaN that
+      crashed SITL with SIGFPE during init).
+    -->
+    <plugin name="gimbal_joint_trajectory_controller"
+            filename="libgazebo_ros_joint_pose_trajectory.so">
+      <update_rate>50</update_rate>
     </plugin>
 
   </model>

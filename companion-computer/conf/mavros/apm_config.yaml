@@ -1,0 +1,30 @@
+# mavros parameter overrides for the Damn Vulnerable Drone companion.
+#
+# The ONLY values we override from mavros's stock apm_config are the MAVLink
+# identities — everything else falls back to mavros defaults, which are fine
+# for the lab.
+#
+# system_id MUST NOT be 1. On this bus:
+#   * the autopilot is SYSID_THISMAV = 1
+#   * the GCS / MAVProxy is SYSID_MYGCS = 255 (SYSID_ENFORCE = 0)
+# The Flask telemetry listener (interface/mavlink_connection.py) caches a
+# vehicle's MAV_TYPE keyed only by sysid and overwrites it on every HEARTBEAT.
+# If mavros announced on sysid 1, its (non-quad) heartbeat would flip the
+# autopilot's cached type and the listener would start dropping real telemetry.
+# sysid 2 keeps mavros cleanly isolated: autopilot_sysid locks to 1 and every
+# sysid-2 frame is dropped by the listener's existing filter.
+#
+# target_system 1 / component 1 addresses ArduPilot SITL. SYSID_ENFORCE=0 means
+# the autopilot accepts commands from our sysid 2.
+#
+# Note: ArduPilot only honours RC_CHANNELS_OVERRIDE from SYSID_MYGCS (255). If a
+# later attack walkthrough wants the /mavros/rc/override demo to actuate, either
+# set system_id here to 255 (accepting it shares the GCS sysid) or set the
+# autopilot's SYSID_MYGCS to 2. Arming, mode changes and setpoint injection work
+# at sysid 2 as-is.
+/**:
+  ros__parameters:
+    system_id: 2
+    component_id: 191          # MAV_COMP_ID_ONBOARD_COMPUTER
+    target_system_id: 1
+    target_component_id: 1

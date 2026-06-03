@@ -5,6 +5,30 @@
     <h1>Camera Streaming</h1>
     <p>Stream live video from any connected camera devices. Only 1 camera can be streamed at a time.</p>
 
+    <div class="card mb-3">
+        <div class="card-body">
+            <h2 class="card-title">Gimbal Control</h2>
+            <p class="text-muted">
+                Each click moves the gimbal 10&deg; in the indicated direction. Up/Down tilts the gimbal pitch joint; Left/Right pans the gimbal yaw joint.
+                Click events publish a <code>geometry_msgs/msg/Vector3</code> to the <code>/gimbal/cmd</code> ROS&nbsp;2 topic. The on-board bridge accumulates
+                the target and publishes a <code>trajectory_msgs/msg/JointTrajectory</code> to <code>/set_joint_trajectory</code>, which the simulator's
+                <code>libgazebo_ros_joint_pose_trajectory</code> plugin applies directly to the gimbal joints.
+            </p>
+            <div class="gimbal-dpad" style="display:inline-grid; grid-template-columns: repeat(3, 64px); grid-template-rows: repeat(3, 64px); gap: 8px;">
+                <div></div>
+                <button type="button" class="btn btn-primary gimbal-btn" data-direction="up" aria-label="Tilt up">&#9650;</button>
+                <div></div>
+                <button type="button" class="btn btn-primary gimbal-btn" data-direction="left" aria-label="Pan left">&#9664;</button>
+                <div></div>
+                <button type="button" class="btn btn-primary gimbal-btn" data-direction="right" aria-label="Pan right">&#9654;</button>
+                <div></div>
+                <button type="button" class="btn btn-primary gimbal-btn" data-direction="down" aria-label="Tilt down">&#9660;</button>
+                <div></div>
+            </div>
+            <div id="gimbalStatus" class="mt-2 text-muted small"></div>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-body">
             <h2 class="card-title">Configuration</h2>

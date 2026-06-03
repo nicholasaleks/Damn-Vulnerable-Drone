@@ -11,7 +11,6 @@ from logging.handlers import RotatingFileHandler
 from typing import Optional
 import queue
 
-import rospy
 from flask import (
     Flask,
     flash,
@@ -33,7 +32,9 @@ from flask_socketio import SocketIO, emit
 from flask_sock import Sock
 
 from extensions import db
+import mavlink_connection
 from mavlink_connection import initialize_socketio, listen_to_mavlink
+from gimbal_bridge import start_gimbal_bridge
 from models import TelemetryStatus, UdpDestination, User
 from routes.camera import camera_bp
 from routes.logs import logs_bp
@@ -147,7 +148,6 @@ def create_app() -> Flask:
     socketio.init_app(app, cors_allowed_origins="*")
     sock.init_app(app)  # <-- NEW (Flask-Sock)
     initialize_socketio(socketio)  # your existing pipeline that emits 'mavlink_message'
-    rospy.init_node("camera_display_node", anonymous=True)
 
     # DB
     app.config.update(
@@ -293,8 +293,20 @@ def add_default_user() -> None:
         db.session.commit()
 
 
+def _ensure_mavros_endpoint() -> None:
+    """mavlink-routerd forwards to every UdpDestination row as an `-e` peer.
+    mavros listens on 14560 (kept off 14540 so it never contends with the
+    Flask pymavlink listener). Seeded outside the first-run guard below so an
+    existing telemetry.db still picks it up.
+    """
+    if not UdpDestination.query.filter_by(ip="127.0.0.1", port=14560).first():
+        db.session.add(UdpDestination(ip="127.0.0.1", port=14560))
+        db.session.commit()
+
+
 def initialize_udp_destinations() -> None:
-    if UdpDestination.query.first():
+    _ensure_mavros_endpoint()
+    if UdpDestination.query.filter(UdpDestination.port != 14560).first():
         return
     db.session.add(UdpDestination(ip="127.0.0.1", port=14540))
 
@@ -342,6 +354,16 @@ if __name__ == "__main__":
         add_default_user()
         initialize_udp_destinations()
         threading.Thread(target=start_mavlink_thread, daemon=True).start()
+        # Bridge ROS 2 /gimbal/cmd <-> Gazebo JointTrajectory + MAVLink
+        # mount control. Lazy mav_connection getter because the MAVLink
+        # listener thread above hasn't necessarily finished its first
+        # handshake yet when we get here.
+        start_gimbal_bridge(lambda: mavlink_connection.mav_connection)
         app.logger.info("Application startup")
 
-    socketio.run(app, debug=True, host="0.0.0.0", port=3000, allow_unsafe_werkzeug=True)
+    # debug=False: the Werkzeug reloader would otherwise fork a SECOND app
+    # process, giving two of every ROS node (two gimbal_bridge subscribers,
+    # two camera streamers, two MAVLink listeners on :14540) — which doubles
+    # log lines and shows phantom subscribers in `ros2 topic info -v`. The
+    # reloader is useless here anyway since code is baked into the image.
+    socketio.run(app, debug=False, host="0.0.0.0", port=3000, allow_unsafe_werkzeug=True)

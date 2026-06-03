@@ -29,6 +29,9 @@ services:
       - serial-uart-socket:/sockets
     environment:
       - WIFI_ENABLED
+      - ROS_DOMAIN_ID=42
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - CYCLONEDDS_URI=file:///etc/cyclonedds.xml
     networks:
       simulator:
         ipv4_address: 10.13.0.3
@@ -79,6 +82,9 @@ services:
     environment:
       - WIFI_ENABLED
       - LITE=false
+      - ROS_DOMAIN_ID=42
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - CYCLONEDDS_URI=file:///etc/cyclonedds.xml
     networks:
       simulator:
         ipv4_address: 10.13.0.5
