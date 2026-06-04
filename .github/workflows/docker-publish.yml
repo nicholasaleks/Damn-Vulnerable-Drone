@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         include:
           # ───── full images ─────
@@ -95,7 +96,7 @@ jobs:
           tags:       ${{ steps.meta.outputs.tags }}
           labels:     ${{ steps.meta.outputs.labels }}
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.USERNAME }}/${{ matrix.name }}:buildcache
-          cache-to:   type=registry,ref=${{ env.REGISTRY }}/${{ env.USERNAME }}/${{ matrix.name }}:buildcache,mode=max
+          cache-to:   type=registry,ref=${{ env.REGISTRY }}/${{ env.USERNAME }}/${{ matrix.name }}:buildcache,mode=max,ignore-error=true
 
       # ──────────────────────────────────────────────────────────────
       #  add / refresh the :latest tag **only for master branch**
