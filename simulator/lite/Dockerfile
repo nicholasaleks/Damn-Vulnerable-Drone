@@ -30,7 +30,8 @@ RUN pip3 install --no-cache-dir \
     requests \
     flask-sock \
     "python-socketio[client]==5.11.2" \
-    docker
+    docker \
+    pyyaml
 
 # Copy ONLY the mgmt app from the full project.
 # IMPORTANT: build context is the repo root so this path is valid.
