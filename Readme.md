@@ -168,7 +168,7 @@ The following instructions are meant to be executed on the latest version of [Ka
 
 **Step 6.** Add docker permissions to user
 
-`sudo usermod -aG docker $USER`
+`sudo usermod -aG docker $USER && newgrp docker`
 
 ## Clone the repository
 
