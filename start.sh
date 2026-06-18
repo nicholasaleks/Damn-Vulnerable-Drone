@@ -215,7 +215,7 @@ if [[ -z "$wifi_simulation" ]]; then
     fi
   else
     echo -e "${RED}Warning: Non-Kali systems not tested for virtual Wi-Fi setup."
-    echo -e "${RED}Use 'docker compose -f docker-compose[-lite].yaml up --build' if needed.${NC}"
+    echo -e "${RED}Use 'docker compose -f docker-compose[-lite].yaml up' if needed.${NC}"
     exit 1
   fi
 fi
@@ -239,7 +239,7 @@ if [[ "$wifi_simulation" == "y" ]]; then
     # breaks DNS and any in-flight image pulls.
     stop_all_stacks
     echo -e "${CYAN}[+] Starting Docker Compose (mode: ${sim_mode})...${NC}"
-    compose up -d --build
+    compose up -d
 
     # Container IDs via compose (robust even without container_name)
     CC_CID="$(compose ps -q "$CC_SVC" || true)"
@@ -354,7 +354,7 @@ elif [[ "$wifi_simulation" == "n" ]]; then
     echo -e "${CYAN}Starting simulation without virtual Wi-Fi..."
     stop_all_stacks
     echo -e "${CYAN}[+] Starting Docker Compose (mode: ${sim_mode})...${NC}"
-    compose up -d --build
+    compose up -d
 
     echo -e "${CYAN}"
     print_text_banner
