@@ -33,8 +33,8 @@ RUN apt-get update && apt-get install -y sudo socat net-tools lsb-release python
 
 RUN pip3 install MAVProxy pymavlink
 
-# Clone ArduPilot from GitHub
-RUN git clone https://github.com/ArduPilot/ardupilot.git ardupilot
+# Clone ArduPilot from GitHub (shallow, directly at the release tag)
+RUN git clone --branch ${COPTER_TAG} --depth 1 https://github.com/ArduPilot/ardupilot.git ardupilot
 WORKDIR /ardupilot
 
 # Create non root user for pip
@@ -46,9 +46,6 @@ RUN chmod 0440 /etc/sudoers.d/${USER_NAME}
 RUN chown -R ${USER_NAME}:${USER_NAME} /${USER_NAME}
 
 USER ${USER_NAME}
-
-# Checkout ArduCopter...
-RUN git checkout ${COPTER_TAG}
 
 # Update submodules
 RUN git submodule update --init --recursive
