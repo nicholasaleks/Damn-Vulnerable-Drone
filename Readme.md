@@ -144,31 +144,7 @@ Lite Mode is recommended for users who cannot meet the GPU requirements of Full 
 
 ## Getting Docker (Key Dependency)
 
-The following instructions are meant to be executed on the latest version of [Kali Linux](https://www.kali.org/).
-
-**Step 1.** Add the docker apt source
-
-`printf '%s\n' "deb https://download.docker.com/linux/debian bullseye stable" | sudo tee /etc/apt/sources.list.d/docker-ce.list`
-
-**Step 2.** Import the GPG Key
-
-`curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/docker-ce-archive-keyring.gpg`
-
-**Step 3.** Update the apt repository
-
-`sudo apt update -y`
-
-**Step 4.** Install Docker and Docker Compose
-
-`sudo apt install docker-ce docker-ce-cli containerd.io -y`
-
-**Step 5.** Start the Docker Service
-
-`sudo systemctl enable docker --now`
-
-**Step 6.** Add docker permissions to user
-
-`sudo usermod -aG docker $USER && newgrp docker`
+The following instructions are meant to be executed on the latest version of [Kali Linux](https://www.kali.org/), please also follow the official kali guide on how to install docker [here](https://www.kali.org/docs/containers/installing-docker-on-kali/)
 
 ## Clone the repository
 
