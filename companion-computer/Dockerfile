@@ -52,9 +52,17 @@ RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key \
 # install_geographiclib_datasets.sh is REQUIRED: the global_position plugin
 # aborts on launch without the GeographicLib geoid datasets. This is the #1
 # mavros bring-up failure.
-RUN apt update -y && apt install -y \
+#
+# ros2-testing is enabled for this step only: the 2026-09 main-repo sync
+# dropped ros-humble-mavros / -extras (amd64 and arm64; only -msgs remained),
+# while testing carries 2.16.0. The list is removed afterwards so no other
+# layer pulls from testing. Drop it once main has mavros again.
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2-testing/ubuntu jammy main" \
+        > /etc/apt/sources.list.d/ros2-testing.list \
+    && apt update -y && apt install -y \
         ros-humble-mavros ros-humble-mavros-msgs ros-humble-mavros-extras \
     && /opt/ros/humble/lib/mavros/install_geographiclib_datasets.sh \
+    && rm /etc/apt/sources.list.d/ros2-testing.list \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt update -y && apt install -y \
