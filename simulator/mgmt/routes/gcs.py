@@ -1,10 +1,16 @@
 # simulator/mgmt/routes/gcs.py
+import time
 from flask import make_response, request
 from docker.errors import NotFound
 from . import bp
 from .utils import get_container
 
 GUIDE_URL = "https://github.com/nicholasaleks/Damn-Vulnerable-Drone/wiki/Running-QGround-Control-from-Apple-Silicon-(arm64)-hosts"
+
+QGC_LOG = "/tmp/qgc.log"
+# How long QGC must stay up after launch before we report success. A missing
+# DISPLAY / unsupported arch makes the AppImage exit well within this window.
+LAUNCH_GRACE_S = 3.0
 
 def _is_macos_request() -> bool:
     """
@@ -52,16 +58,34 @@ def open_qgc():
             if rc != 0:
                 return make_response(f"{error_txt}: {script_path}", 400)
 
-        exec_result = container.exec_run(script_path, user="gcs")
-        output = exec_result.output.decode(errors="ignore").strip()
+        rc, _ = container.exec_run("pgrep -u gcs -f QGroundControl")
+        if rc == 0:
+            return make_response("QGroundControl is already running", 200)
 
-        if exec_result.exit_code == 0:
-            return make_response(f"Success:\n{output}", 200)
-        else:
-            return make_response(
-                f"Command failed with exit code {exec_result.exit_code}:\n{output}",
-                400,
-            )
+        # QGC runs in the foreground of the launch script, so a blocking exec
+        # would not return until the app is closed. Start it detached and
+        # watch the exec for a few seconds to catch immediate failures.
+        api = container.client.api
+        exec_id = api.exec_create(
+            container.id,
+            ["bash", "-c", f'"{script_path}" > {QGC_LOG} 2>&1'],
+            user="gcs",
+        )["Id"]
+        api.exec_start(exec_id, detach=True)
+
+        deadline = time.time() + LAUNCH_GRACE_S
+        while time.time() < deadline:
+            info = api.exec_inspect(exec_id)
+            if not info["Running"]:
+                _, log = container.exec_run(f"tail -n 20 {QGC_LOG}")
+                output = log.decode(errors="ignore").strip()
+                return make_response(
+                    f"Command failed with exit code {info['ExitCode']}:\n{output}",
+                    400,
+                )
+            time.sleep(0.25)
+
+        return make_response("Success: QGroundControl launched", 200)
     except NotFound:
         return make_response(f"Container not found: {container_name}", 400)
     except Exception as e:

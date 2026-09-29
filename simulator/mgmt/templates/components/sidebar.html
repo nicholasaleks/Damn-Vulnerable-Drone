@@ -102,7 +102,7 @@
       const launchBtn = document.getElementById('open_qgc');
       let controller = null;
       let timeoutId = null;
-      const LAUNCH_TIMEOUT_MS = 6000;
+      const LAUNCH_TIMEOUT_MS = 15000;
   
       function setBusy(busy) {
         launchBtn.disabled = busy;
@@ -134,7 +134,7 @@
         } else if (reason === 'timeout') {
           Swal.fire({
             title: "Launch timed out",
-            html: "No response within 6s. Check the GCS container logs if your application has not launched.",
+            html: "No response within " + (LAUNCH_TIMEOUT_MS / 1000) + "s. Check the GCS container logs if your application has not launched.",
             icon: "warning"
           });
         }
